@@ -20,6 +20,8 @@ with AWA.Modules.Beans;
 with AWA.Modules.Get;
 with Util.Log.Loggers;
 with Jason.Projects.Beans;
+with ADO.Sessions;
+with AWA.Services.Contexts;
 package body Jason.Projects.Modules is
 
    Log : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("Jason.Projects.Module");
@@ -56,4 +58,19 @@ package body Jason.Projects.Modules is
       return Get;
    end Get_Project_Module;
 
+
+   --  ------------------------------
+   --  Create
+   --  ------------------------------
+   procedure Create (Model  : in Project_Module;
+                     Entity : in out Jason.Projects.Models.Project_Ref'Class) is
+      pragma Unreferenced (Model);
+
+      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+   begin
+      Ctx.Start;
+      Entity.Save (DB);
+      Ctx.Commit;
+   end Create;
 end Jason.Projects.Modules;

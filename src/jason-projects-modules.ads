@@ -18,6 +18,7 @@
 with ASF.Applications;
 
 with AWA.Modules;
+with Jason.Projects.Models;
 package Jason.Projects.Modules is
 
    --  The name under which the module is registered.
@@ -38,6 +39,10 @@ package Jason.Projects.Modules is
    --  Get the projects module.
    function Get_Project_Module return Project_Module_Access;
 
+
+   --  Create
+   procedure Create (Model  : in Project_Module;
+                     Entity : in out Jason.Projects.Models.Project_Ref'Class);
 private
 
    type Project_Module is new AWA.Modules.Module with null record;
