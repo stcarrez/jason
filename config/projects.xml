@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="1.0">
+
+  <application>
+    <message-bundle var='projectsMsg'>projects</message-bundle>
+  </application>
+
+  <managed-bean>
+    <description>An example of a bean (change description and bean name)</description>
+    <managed-bean-name>project</managed-bean-name>
+    <managed-bean-class>Jason.Projects.Beans.Projects_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <filter-mapping>
+    <filter-name>service</filter-name>
+    <url-pattern>/projects/*.html</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>auth-filter</filter-name>
+    <url-pattern>/projects/*.html</url-pattern>
+  </filter-mapping>
+
+  <url-policy>
+    <permission>anonymous</permission>
+    <url-pattern>/projects/.*\.html</url-pattern>
+  </url-policy>
+
+  <url-policy>
+    <permission>logged-user</permission>
+    <url-pattern>/projects/admin/.*</url-pattern>
+  </url-policy>
+
+</module>

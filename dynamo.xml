@@ -1,0 +1,22 @@
+<project>
+    <name>jason</name>
+    <property name="author_email">Stephane.Carrez@gmail.com</property>
+    <property name="search_dirs">/build/local-gnat-2016/share/dynamo/awa_flotcharts;/build/local-gnat-2016/share/dynamo/awa_markedit;.;/build/local-gnat-2016/share/dynamo/awa_storages;/build/local-gnat-2016/share/dynamo/awa_blogs;/build/local-gnat-2016/share/dynamo/awa_counters;/build/local-gnat-2016/share/dynamo/awa_tags;/build/local-gnat-2016/share/dynamo/awa_comments;/build/local-gnat-2016/share/dynamo/awa_mail;/build/local-gnat-2016/share/dynamo/awa_workspaces;/build/local-gnat-2016/share/dynamo/awa;/build/local-gnat-2016/share/dynamo/ado;/build/local-gnat-2016/share/dynamo/asf</property>
+    <property name="is_ado">FALSE</property>
+    <property name="license">apache</property>
+    <property name="is_gtk">FALSE</property>
+    <property name="author">Stephane.Carrez</property>
+    <property name="is_web">TRUE</property>
+    <property name="database">mysql://localhost:3306/jason?user=jason&amp;password=jason</property>
+    <property name="is_tool">FALSE</property>
+    <depend name="asf"></depend>
+    <depend name="ado"></depend>
+    <depend name="awa"></depend>
+    <depend name="awa-workspaces"></depend>
+    <depend name="awa-mail"></depend>
+    <depend name="awa-comments"></depend>
+    <depend name="awa-tags"></depend>
+    <depend name="awa_counters"></depend>
+    <depend name="awa-blogs"></depend>
+    <depend name="awa-storages"></depend>
+</project>

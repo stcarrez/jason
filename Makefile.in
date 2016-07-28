@@ -1,0 +1,22 @@
+NAME=jason
+LIBNAME=lib
+
+PLUGINS=
+
+include rules.mk
+
+# Model generation arguments with Dynamo
+# --package XXX.XXX.Models db uml/xxx.zargo
+DYNAMO_ARGS=--package Jason.Projects.Models \
+  --package Jason.Tickets.Models \
+  db uml/jason.zargo
+
+post-build:
+	for i in  ; do \
+	   $(MAKE) -C plugins/$$i ; \
+	done
+
+post-generate:
+	for i in  ; do \
+	   $(MAKE) -C plugins/$$i generate ; \
+	done
