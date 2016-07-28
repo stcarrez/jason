@@ -73,4 +73,19 @@ package body Jason.Projects.Modules is
       Entity.Save (DB);
       Ctx.Commit;
    end Create;
+
+   --  ------------------------------
+   --  Save
+   --  ------------------------------
+   procedure Save (Model  : in Project_Module;
+                   Entity : in out Jason.Projects.Models.Project_Ref'Class) is
+      pragma Unreferenced (Model);
+
+      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+   begin
+      Ctx.Start;
+      Entity.Save (DB);
+      Ctx.Commit;
+   end Save;
 end Jason.Projects.Modules;

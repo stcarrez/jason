@@ -19,10 +19,15 @@ with ASF.Applications;
 
 with AWA.Modules;
 with Jason.Projects.Models;
+with Security.Permissions;
 package Jason.Projects.Modules is
 
    --  The name under which the module is registered.
    NAME : constant String := "projects";
+
+   package ACL_Create_Projects is new Security.Permissions.Definition ("project-create");
+   package ACL_Delete_Projects is new Security.Permissions.Definition ("project-delete");
+   package ACL_Update_Projects is new Security.Permissions.Definition ("project-update");
 
    --  ------------------------------
    --  Module projects
@@ -43,6 +48,10 @@ package Jason.Projects.Modules is
    --  Create
    procedure Create (Model  : in Project_Module;
                      Entity : in out Jason.Projects.Models.Project_Ref'Class);
+
+   --  Save
+   procedure Save (Model  : in Project_Module;
+                   Entity : in out Jason.Projects.Models.Project_Ref'Class);
 private
 
    type Project_Module is new AWA.Modules.Module with null record;
