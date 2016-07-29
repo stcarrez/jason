@@ -32,4 +32,36 @@
     <url-pattern>/projects/admin/.*</url-pattern>
   </url-policy>
 
+  <auth-permission>
+    <name>project-create</name>
+  </auth-permission>
+
+  <entity-permission>
+    <name>project-update</name>
+    <entity-type>project</entity-type>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
+    <name>project-delete</name>
+    <entity-type>project</entity-type>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+    </sql>
+  </entity-permission>
+
+    <navigation-rule>
+        <from-view-id>/projects/edit.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/projects/forms/edit-response.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
 </module>
