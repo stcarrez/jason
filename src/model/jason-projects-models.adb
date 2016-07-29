@@ -938,6 +938,87 @@ package body Jason.Projects.Models is
       ADO.Objects.Set_Created (Object);
    end Load;
 
+
+   --  ------------------------------
+   --  Get the bean attribute identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in List_Info;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if Name = "id" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Id));
+      elsif Name = "title" then
+         return Util.Beans.Objects.To_Object (From.Title);
+      elsif Name = "status" then
+         return Jason.Projects.Models.Status_Type_Objects.To_Object (From.Status);
+      elsif Name = "create_date" then
+         return Util.Beans.Objects.Time.To_Object (From.Create_Date);
+      end if;
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+
+
+   --  ------------------------------
+   --  Set the value identified by the name
+   --  ------------------------------
+   overriding
+   procedure Set_Value (Item  : in out List_Info;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      if Name = "id" then
+         Item.Id := ADO.Identifier (Util.Beans.Objects.To_Long_Long_Integer (Value));
+      elsif Name = "title" then
+         Item.Title := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "status" then
+         Item.Status := Jason.Projects.Models.Status_Type_Objects.To_Value (Value);
+      elsif Name = "create_date" then
+         Item.Create_Date := Util.Beans.Objects.Time.To_Time (Value);
+      end if;
+   end Set_Value;
+
+
+   --  --------------------
+   --  Run the query controlled by <b>Context</b> and append the list in <b>Object</b>.
+   --  --------------------
+   procedure List (Object  : in out List_Info_List_Bean'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class) is
+   begin
+      List (Object.List, Session, Context);
+   end List;
+
+   --  --------------------
+   --  The list of projects.
+   --  --------------------
+   procedure List (Object  : in out List_Info_Vector;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class) is
+      procedure Read (Into : in out List_Info);
+
+      Stmt : ADO.Statements.Query_Statement
+          := Session.Create_Statement (Context);
+      Pos  : Natural := 0;
+      procedure Read (Into : in out List_Info) is
+      begin
+         Into.Id := Stmt.Get_Identifier (0);
+         Into.Title := Stmt.Get_Unbounded_String (1);
+         Into.Status := Jason.Projects.Models.Status_Type'Val (Stmt.Get_Integer (2));
+         Into.Create_Date := Stmt.Get_Time (3);
+      end Read;
+   begin
+      Stmt.Execute;
+      List_Info_Vectors.Clear (Object);
+      while Stmt.Has_Elements loop
+         Object.Insert_Space (Before => Pos);
+         Object.Update_Element (Index => Pos, Process => Read'Access);
+         Pos := Pos + 1;
+         Stmt.Next;
+      end loop;
+   end List;
+
+
    procedure Op_Load (Bean    : in out Project_Bean;
                       Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
    procedure Op_Load (Bean    : in out Project_Bean;

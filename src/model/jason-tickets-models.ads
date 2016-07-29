@@ -26,6 +26,8 @@ with ADO.Objects;
 with ADO.Statements;
 with ADO.SQL;
 with ADO.Schemas;
+with ADO.Queries;
+with ADO.Queries.Loaders;
 with Ada.Calendar;
 with Ada.Containers.Vectors;
 with Ada.Strings.Unbounded;
@@ -306,6 +308,58 @@ package Jason.Tickets.Models is
                    Session : in out ADO.Sessions.Session'Class;
                    Query   : in ADO.SQL.Query'Class);
 
+   --  --------------------
+   --    The list of blogs.
+   --  --------------------
+   type List_Info is
+     new Util.Beans.Basic.Bean with  record
+
+      --  the blog identifier.
+      Id : ADO.Identifier;
+
+      --  the blog title.
+      Title : Ada.Strings.Unbounded.Unbounded_String;
+
+      --  the blog uuid.
+      Uid : Ada.Strings.Unbounded.Unbounded_String;
+
+      --  the blog creation date.
+      Create_Date : Ada.Calendar.Time;
+   end record;
+
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in List_Info;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the bean attribute identified by the name.
+   overriding
+   procedure Set_Value (Item  : in out List_Info;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+
+   package List_Info_Beans is
+      new Util.Beans.Basic.Lists (Element_Type => List_Info);
+   package List_Info_Vectors renames List_Info_Beans.Vectors;
+   subtype List_Info_List_Bean is List_Info_Beans.List_Bean;
+
+   type List_Info_List_Bean_Access is access all List_Info_List_Bean;
+
+   --  Run the query controlled by <b>Context</b> and append the list in <b>Object</b>.
+   procedure List (Object  : in out List_Info_List_Bean'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class);
+
+   subtype List_Info_Vector is List_Info_Vectors.Vector;
+
+   --  Run the query controlled by <b>Context</b> and append the list in <b>Object</b>.
+   procedure List (Object  : in out List_Info_Vector;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class);
+
+   Query_List : constant ADO.Queries.Query_Definition_Access;
+
 
    type Ticket_Bean is abstract new Jason.Tickets.Models.Ticket_Ref
      and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with null record;
@@ -512,4 +566,14 @@ private
 
    procedure Set_Field (Object : in out Attribute_Ref'Class;
                         Impl   : out Attribute_Access);
+
+   package File_1 is
+      new ADO.Queries.Loaders.File (Path => "tickets-list.xml",
+                                    Sha1 => "F4A1D930AE6F7879CE692FA4ABD58F67D91F074A");
+
+   package Def_Listinfo_List is
+      new ADO.Queries.Loaders.Query (Name => "list",
+                                     File => File_1.File'Access);
+   Query_List : constant ADO.Queries.Query_Definition_Access
+   := Def_Listinfo_List.Query'Access;
 end Jason.Tickets.Models;
