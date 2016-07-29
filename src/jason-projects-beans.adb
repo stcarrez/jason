@@ -16,25 +16,27 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 
-with ASF.Events.Faces.Actions;
 package body Jason.Projects.Beans is
 
    --  ------------------------------
-   --  Example of action method.
+   --  Create project action.
    --  ------------------------------
-   procedure Action (Bean    : in out Project_Bean;
+   overriding
+   procedure Create (Bean    : in out Project_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
    begin
       null;
-   end Action;
+   end Create;
 
-   package Action_Binding is
-     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
-                                                      Method => Action,
-                                                      Name   => "action");
-
-   Project_Bean_Binding : aliased constant Util.Beans.Methods.Method_Binding_Array
-     := (Action_Binding.Proxy'Access, null);
+   --  ------------------------------
+   --  Load project information.
+   --  ------------------------------
+   overriding
+   procedure Load (Bean    : in out Project_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      null;
+   end Load;
 
    --  ------------------------------
    --  Get the value identified by the name.
@@ -62,17 +64,6 @@ package body Jason.Projects.Beans is
          From.Count := Util.Beans.Objects.To_Integer (Value);
       end if;
    end Set_Value;
-
-   --  ------------------------------
-   --  This bean provides some methods that can be used in a Method_Expression
-   --  ------------------------------
-   overriding
-   function Get_Method_Bindings (From : in Project_Bean)
-                                 return Util.Beans.Methods.Method_Binding_Array_Access is
-      pragma Unreferenced (From);
-   begin
-      return Project_Bean_Binding'Access;
-   end Get_Method_Bindings;
 
    --  ------------------------------
    --  Create the Project_Bean bean instance.

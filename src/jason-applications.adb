@@ -36,6 +36,16 @@ package body Jason.Applications is
    Log     : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("Jason");
 
    --  ------------------------------
+   --  Create the Jason application instance.
+   --  ------------------------------
+   function Create return Application_Access is
+      App  : constant Application_Access := new Application;
+   begin
+      App.Self := App;
+      return App;
+   end Create;
+
+   --  ------------------------------
    --  Initialize the application:
    --  <ul>
    --     <li>Register the servlets and filters.

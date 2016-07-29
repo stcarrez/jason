@@ -65,6 +65,9 @@ package Jason.Applications is
    overriding
    procedure Initialize_Modules (App : in out Application);
 
+   --  Create the Jason application instance.
+   function Create return Application_Access;
+
 private
 
    type Application is new AWA.Applications.Application with record
@@ -91,8 +94,8 @@ private
       Tag_Module        : aliased AWA.Tags.Modules.Tag_Module;
 
       --  Add your modules here.
-      Project_Module  : aliased Jason.Projects.Modules.Project_Module;
-      Ticket_Module  : aliased Jason.Tickets.Modules.Ticket_Module;
+      Project_Module    : aliased Jason.Projects.Modules.Project_Module;
+      Ticket_Module     : aliased Jason.Tickets.Modules.Ticket_Module;
    end record;
 
 end Jason.Applications;

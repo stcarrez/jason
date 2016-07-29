@@ -20,12 +20,11 @@ with Ada.Strings.Unbounded;
 
 with Util.Beans.Basic;
 with Util.Beans.Objects;
-with Util.Beans.Methods;
 with Jason.Projects.Modules;
+with Jason.Projects.Models;
 package Jason.Projects.Beans is
 
-   type Project_Bean is new Util.Beans.Basic.Bean
-     and Util.Beans.Methods.Method_Bean with record
+   type Project_Bean is new Jason.Projects.Models.Project_Bean with record
       Module : Jason.Projects.Modules.Project_Module_Access := null;
       Count  : Natural := 0;
    end record;
@@ -42,14 +41,15 @@ package Jason.Projects.Beans is
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object);
 
-   --  This bean provides some methods that can be used in a Method_Expression
+   --  Create project action.
    overriding
-   function Get_Method_Bindings (From : in Project_Bean)
-                                 return Util.Beans.Methods.Method_Binding_Array_Access;
-
-   --  Example of action method.
-   procedure Action (Bean    : in out Project_Bean;
+   procedure Create (Bean    : in out Project_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Load project information.
+   overriding
+   procedure Load (Bean    : in out Project_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
 
    --  Create the Projects_Bean bean instance.
    function Create_Project_Bean (Module : in Jason.Projects.Modules.Project_Module_Access)
