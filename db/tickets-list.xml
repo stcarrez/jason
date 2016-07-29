@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query-mapping package='Jason.Tickets.Models'>
+    <description>
+      List of tickets
+    </description>
+    <class name="Jason.Tickets.Models.List_Info" bean="yes">
+        <comment>The list of tickets.</comment>
+        <property type='Identifier' name="id">
+            <comment>the ticket identifier.</comment>
+        </property>
+        <property type='Integer' name="ident">
+            <comment>the ticket ident number.</comment>
+        </property>
+        <property type='String' name="summary">
+            <comment>the ticket summary.</comment>
+        </property>
+        <property type='Integer' name="priority">
+            <comment>the ticket priority.</comment>
+        </property>
+        <property type='Date' name="create_date">
+            <comment>the ticket creation date.</comment>
+        </property>
+        <property type='Date' name="update_date">
+            <comment>the ticket modification date.</comment>
+        </property>
+        <property type='Jason.Tickets.Models.Status_Type' name="status">
+            <comment>the ticket status.</comment>
+        </property>
+    </class>
+    <query name='list'>
+       <comment>Get the list of tickets that the current user can update</comment>
+       <sql>
+    SELECT
+      ticket.id,
+      ticket.ident,
+      ticket.summary,
+      ticket.priority,
+      ticket.create_date,
+      ticket.update_date,
+      ticket.status
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table AND acl.user_id = :user_id
+    ORDER BY ticket.create_date DESC
+    LIMIT :first, :last
+       </sql>
+       <sql-count>
+    SELECT
+      count(ticket.id)
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table AND acl.user_id = :user_id
+       </sql-count>
+    </query>
+</query-mapping>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query-mapping package='Jason.Projects.Models'>
+    <description>
+      List of projects
+    </description>
+    <class name="Jason.Projects.Models.List_Info" bean="yes">
+        <comment>The list of projects.</comment>
+        <property type='Identifier' name="id">
+            <comment>the project identifier.</comment>
+        </property>
+        <property type='String' name="title">
+            <comment>the project title.</comment>
+        </property>
+        <property type='Jason.Projects.Models.Status_Type' name="status">
+            <comment>the project status.</comment>
+        </property>
+        <property type='Date' name="create_date">
+            <comment>the project creation date.</comment>
+        </property>
+    </class>
+    <query name='list'>
+       <comment>Get the list of projects that the current user can update</comment>
+       <sql>
+    SELECT
+      project.id,
+      project.name,
+      project.status,
+      project.create_date
+    FROM jason_project AS project
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table AND acl.user_id = :user_id
+    ORDER BY project.create_date DESC
+    LIMIT :first, :last
+       </sql>
+       <sql-count>
+    SELECT
+      count(project.id)
+    FROM jason_project AS project
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table AND acl.user_id = :user_id
+       </sql-count>
+    </query>
+</query-mapping>
