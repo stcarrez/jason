@@ -1,0 +1,24 @@
+<div class='awa-form ui-widget'
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:w="http://code.google.com/p/ada-asf/widget"
+     xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:form id='edit-form'>
+        <h:inputHidden id='entity-id' value='#{project.id}' required='false'/>
+        <div class='container_12'>
+            <div class='awa-messages'>
+                <h:message styleClass='awa-error'/>
+            </div>
+            <w:inputText styleClass="awa-required"
+                         id='title' size='50' required='true' value='#{project.title}'
+                         title='#{projectMsg.projects_edit_title_label}'/>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save' value='Save' action="#{project.save}"
+                            styleClass="ui-button ui-state-default ui-corner-all"/>
+                </li>
+            </ul>
+        </div>
+    </h:form>
+
+</div>
