@@ -69,6 +69,8 @@ CREATE TABLE jason_ticket (
   `update_date` DATETIME NOT NULL,
   /*  */
   `project_id` BIGINT NOT NULL,
+  /*  */
+  `creator_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
 INSERT INTO entity_type (name) VALUES ("jason_attribute_definition");
