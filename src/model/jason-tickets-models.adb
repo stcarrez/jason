@@ -1034,12 +1034,18 @@ package body Jason.Tickets.Models is
    begin
       if Name = "id" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Id));
-      elsif Name = "title" then
-         return Util.Beans.Objects.To_Object (From.Title);
-      elsif Name = "uid" then
-         return Util.Beans.Objects.To_Object (From.Uid);
+      elsif Name = "ident" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Ident));
+      elsif Name = "summary" then
+         return Util.Beans.Objects.To_Object (From.Summary);
+      elsif Name = "priority" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
       elsif Name = "create_date" then
          return Util.Beans.Objects.Time.To_Object (From.Create_Date);
+      elsif Name = "update_date" then
+         return Util.Beans.Objects.Time.To_Object (From.Update_Date);
+      elsif Name = "status" then
+         return Jason.Tickets.Models.Status_Type_Objects.To_Object (From.Status);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1055,12 +1061,18 @@ package body Jason.Tickets.Models is
    begin
       if Name = "id" then
          Item.Id := ADO.Identifier (Util.Beans.Objects.To_Long_Long_Integer (Value));
-      elsif Name = "title" then
-         Item.Title := Util.Beans.Objects.To_Unbounded_String (Value);
-      elsif Name = "uid" then
-         Item.Uid := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "ident" then
+         Item.Ident := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "summary" then
+         Item.Summary := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "priority" then
+         Item.Priority := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "create_date" then
          Item.Create_Date := Util.Beans.Objects.Time.To_Time (Value);
+      elsif Name = "update_date" then
+         Item.Update_Date := Util.Beans.Objects.Time.To_Time (Value);
+      elsif Name = "status" then
+         Item.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
       end if;
    end Set_Value;
 
@@ -1076,7 +1088,7 @@ package body Jason.Tickets.Models is
    end List;
 
    --  --------------------
-   --  The list of blogs.
+   --  The list of tickets.
    --  --------------------
    procedure List (Object  : in out List_Info_Vector;
                    Session : in out ADO.Sessions.Session'Class;
@@ -1089,9 +1101,12 @@ package body Jason.Tickets.Models is
       procedure Read (Into : in out List_Info) is
       begin
          Into.Id := Stmt.Get_Identifier (0);
-         Into.Title := Stmt.Get_Unbounded_String (1);
-         Into.Uid := Stmt.Get_Unbounded_String (2);
-         Into.Create_Date := Stmt.Get_Time (3);
+         Into.Ident := Stmt.Get_Integer (1);
+         Into.Summary := Stmt.Get_Unbounded_String (2);
+         Into.Priority := Stmt.Get_Integer (3);
+         Into.Create_Date := Stmt.Get_Time (4);
+         Into.Update_Date := Stmt.Get_Time (5);
+         Into.Status := Jason.Tickets.Models.Status_Type'Val (Stmt.Get_Integer (6));
       end Read;
    begin
       Stmt.Execute;

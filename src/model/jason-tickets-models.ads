@@ -309,22 +309,31 @@ package Jason.Tickets.Models is
                    Query   : in ADO.SQL.Query'Class);
 
    --  --------------------
-   --    The list of blogs.
+   --    The list of tickets.
    --  --------------------
    type List_Info is
      new Util.Beans.Basic.Bean with  record
 
-      --  the blog identifier.
+      --  the ticket identifier.
       Id : ADO.Identifier;
 
-      --  the blog title.
-      Title : Ada.Strings.Unbounded.Unbounded_String;
+      --  the ticket ident number.
+      Ident : Integer;
 
-      --  the blog uuid.
-      Uid : Ada.Strings.Unbounded.Unbounded_String;
+      --  the ticket summary.
+      Summary : Ada.Strings.Unbounded.Unbounded_String;
 
-      --  the blog creation date.
+      --  the ticket priority.
+      Priority : Integer;
+
+      --  the ticket creation date.
       Create_Date : Ada.Calendar.Time;
+
+      --  the ticket modification date.
+      Update_Date : Ada.Calendar.Time;
+
+      --  the ticket status.
+      Status : Jason.Tickets.Models.Status_Type;
    end record;
 
    --  Get the bean attribute identified by the name.
@@ -569,7 +578,7 @@ private
 
    package File_1 is
       new ADO.Queries.Loaders.File (Path => "tickets-list.xml",
-                                    Sha1 => "F4A1D930AE6F7879CE692FA4ABD58F67D91F074A");
+                                    Sha1 => "FECD3FFDE62C37E939ADE9CB37530A80FBCFC177");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",

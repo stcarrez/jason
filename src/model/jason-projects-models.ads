@@ -106,6 +106,14 @@ package Jason.Projects.Models is
    function Get_Last_Ticket (Object : in Project_Ref)
                  return Integer;
 
+   --
+   procedure Set_Update_Date (Object : in out Project_Ref;
+                              Value  : in Ada.Calendar.Time);
+
+   --
+   function Get_Update_Date (Object : in Project_Ref)
+                 return Ada.Calendar.Time;
+
    --  Set the project owner.
    procedure Set_Owner (Object : in out Project_Ref;
                         Value  : in AWA.Users.Models.User_Ref'Class);
@@ -354,6 +362,9 @@ package Jason.Projects.Models is
    procedure Create (Bean : in out Project_Bean;
                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
+   procedure Save (Bean : in out Project_Bean;
+                  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
 
 private
    PROJECT_NAME : aliased constant String := "jason_project";
@@ -363,10 +374,11 @@ private
    COL_3_1_NAME : aliased constant String := "create_date";
    COL_4_1_NAME : aliased constant String := "status";
    COL_5_1_NAME : aliased constant String := "last_ticket";
-   COL_6_1_NAME : aliased constant String := "owner_id";
+   COL_6_1_NAME : aliased constant String := "update_date";
+   COL_7_1_NAME : aliased constant String := "owner_id";
 
    PROJECT_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 7,
+     (Count => 8,
       Table => PROJECT_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -375,7 +387,8 @@ private
          4 => COL_3_1_NAME'Access,
          5 => COL_4_1_NAME'Access,
          6 => COL_5_1_NAME'Access,
-         7 => COL_6_1_NAME'Access
+         7 => COL_6_1_NAME'Access,
+         8 => COL_7_1_NAME'Access
 )
      );
    PROJECT_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -393,6 +406,7 @@ private
        Create_Date : Ada.Calendar.Time;
        Status : Jason.Projects.Models.Status_Type;
        Last_Ticket : Integer;
+       Update_Date : Ada.Calendar.Time;
        Owner : AWA.Users.Models.User_Ref;
    end record;
 
