@@ -17,6 +17,8 @@
 -----------------------------------------------------------------------
 
 with Ada.Strings.Unbounded;
+with ADO;
+with AWA.Tags.Beans;
 
 with Util.Beans.Basic;
 with Util.Beans.Objects;
@@ -27,6 +29,12 @@ package Jason.Projects.Beans is
    type Project_Bean is new Jason.Projects.Models.Project_Bean with record
       Module : Jason.Projects.Modules.Project_Module_Access := null;
       Count  : Natural := 0;
+      Id            : ADO.Identifier := ADO.NO_IDENTIFIER;
+
+      --  List of tags associated with the wiki page.
+      Tags          : aliased AWA.Tags.Beans.Tag_List_Bean;
+      Tags_Bean     : Util.Beans.Basic.Readonly_Bean_Access;
+
    end record;
    type Project_Bean_Access is access all Project_Bean'Class;
 
@@ -44,6 +52,11 @@ package Jason.Projects.Beans is
    --  Create project action.
    overriding
    procedure Create (Bean    : in out Project_Bean;
+                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Save project action.
+   overriding
+   procedure Save (Bean    : in out Project_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
 
    --  Load project information.

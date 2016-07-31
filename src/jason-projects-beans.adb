@@ -15,7 +15,10 @@
 --  See the License for the specific language governing permissions and
 --  limitations under the License.
 -----------------------------------------------------------------------
-
+with AWA.Services.Contexts;
+with ADO.Sessions;
+with ADO.Queries;
+with ADO.Utils;
 package body Jason.Projects.Beans is
 
    --  ------------------------------
@@ -25,8 +28,20 @@ package body Jason.Projects.Beans is
    procedure Create (Bean    : in out Project_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
    begin
-      null;
+      Bean.Module.Create (Bean);
+      Bean.Tags.Update_Tags (Bean.Get_Id);
    end Create;
+
+   --  ------------------------------
+   --  Save project action.
+   --  ------------------------------
+   overriding
+   procedure Save (Bean    : in out Project_Bean;
+                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Bean.Module.Save (Bean);
+      Bean.Tags.Update_Tags (Bean.Get_Id);
+   end Save;
 
    --  ------------------------------
    --  Load project information.
@@ -34,8 +49,16 @@ package body Jason.Projects.Beans is
    overriding
    procedure Load (Bean    : in out Project_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+
+      use type ADO.Identifier;
+
    begin
-      null;
+      if Bean.Id = ADO.NO_IDENTIFIER then
+         Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("failed");
+         return;
+      end if;
+      Bean.Module.Load_Project (Bean, Bean.Tags, Bean.Id);
+      Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("loaded");
    end Load;
 
    --  ------------------------------
@@ -47,8 +70,10 @@ package body Jason.Projects.Beans is
    begin
       if Name = "count" then
          return Util.Beans.Objects.To_Object (From.Count);
+      elsif Name = "tags" then
+         return Util.Beans.Objects.To_Object (From.Tags_Bean, Util.Beans.Objects.STATIC);
       else
-         return Util.Beans.Objects.Null_Object;
+         return Jason.Projects.Models.Project_Bean (From).Get_Value (Name);
       end if;
    end Get_Value;
 
@@ -60,8 +85,11 @@ package body Jason.Projects.Beans is
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object) is
    begin
-      if Name = "count" then
-         From.Count := Util.Beans.Objects.To_Integer (Value);
+      if Name = "id" and not Util.Beans.Objects.Is_Empty (Value) then
+         From.Id := ADO.Utils.To_Identifier (Value);
+         From.Module.Load_Project (From, From.Tags, From.Id);
+      else
+         Jason.Projects.Models.Project_Bean (From).Set_Value (Name, Value);
       end if;
    end Set_Value;
 
@@ -73,6 +101,9 @@ package body Jason.Projects.Beans is
       Object : constant Project_Bean_Access := new Project_Bean;
    begin
       Object.Module := Module;
+      Object.Tags_Bean := Object.Tags'Access;
+      Object.Tags.Set_Entity_Type (Jason.Projects.Models.PROJECT_TABLE);
+      Object.Tags.Set_Permission ("project-update");
       return Object.all'Access;
    end Create_Project_Bean;
 
