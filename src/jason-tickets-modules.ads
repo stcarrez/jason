@@ -18,10 +18,16 @@
 with ASF.Applications;
 
 with AWA.Modules;
+with Jason.Tickets.Models;
+with Security.Permissions;
 package Jason.Tickets.Modules is
 
    --  The name under which the module is registered.
    NAME : constant String := "tickets";
+
+   package ACL_Create_Tickets is new Security.Permissions.Definition ("ticket-create");
+   package ACL_Delete_Tickets is new Security.Permissions.Definition ("ticket-delete");
+   package ACL_Update_Tickets is new Security.Permissions.Definition ("ticket-update");
 
    --  ------------------------------
    --  Module tickets
@@ -38,6 +44,14 @@ package Jason.Tickets.Modules is
    --  Get the tickets module.
    function Get_Ticket_Module return Ticket_Module_Access;
 
+
+   --  Create
+   procedure Create (Model  : in Ticket_Module;
+                     Entity : in out Jason.Tickets.Models.Ticket_Ref'Class);
+
+   --  Save
+   procedure Save (Model  : in Ticket_Module;
+                   Entity : in out Jason.Tickets.Models.Ticket_Ref'Class);
 private
 
    type Ticket_Module is new AWA.Modules.Module with null record;
