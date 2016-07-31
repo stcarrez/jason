@@ -490,6 +490,8 @@ CREATE TABLE jason_project (
   `status` TINYINT NOT NULL,
   /* the last ticket number that was allocated. */
   `last_ticket` INTEGER NOT NULL,
+  /*  */
+  `update_date` DATETIME NOT NULL,
   /* the project owner. */
   `owner_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
