@@ -20,3 +20,11 @@ post-generate:
 	for i in  ; do \
 	   $(MAKE) -C plugins/$$i generate ; \
 	done
+
+build-tests: build
+	$(GNATMAKE) -p $(MAKE_ARGS) -Ptests
+
+runtest:
+	bin/jason_harness -config jason.properties
+
+test:	build-tests runtest
