@@ -34,6 +34,7 @@ with Ada.Strings.Unbounded;
 with Util.Beans.Objects;
 with Util.Beans.Objects.Enums;
 with Util.Beans.Basic.Lists;
+with AWA.Users.Models;
 with Jason.Projects.Models;
 with Util.Beans.Methods;
 pragma Warnings (On);
@@ -146,6 +147,14 @@ package Jason.Tickets.Models is
    --
    function Get_Project (Object : in Ticket_Ref)
                  return Jason.Projects.Models.Project_Ref'Class;
+
+   --
+   procedure Set_Creator (Object : in out Ticket_Ref;
+                          Value  : in AWA.Users.Models.User_Ref'Class);
+
+   --
+   function Get_Creator (Object : in Ticket_Ref)
+                 return AWA.Users.Models.User_Ref'Class;
 
    --  Load the entity identified by 'Id'.
    --  Raises the NOT_FOUND exception if it does not exist.
@@ -392,6 +401,9 @@ package Jason.Tickets.Models is
    procedure Create (Bean : in out Ticket_Bean;
                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
+   procedure Save (Bean : in out Ticket_Bean;
+                  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
    type Ticket_List_Bean is abstract limited
      new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
       Project_Id : ADO.Identifier;
@@ -441,9 +453,10 @@ private
    COL_7_1_NAME : aliased constant String := "description";
    COL_8_1_NAME : aliased constant String := "update_date";
    COL_9_1_NAME : aliased constant String := "project_id";
+   COL_10_1_NAME : aliased constant String := "creator_id";
 
    TICKET_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 10,
+     (Count => 11,
       Table => TICKET_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -455,7 +468,8 @@ private
          7 => COL_6_1_NAME'Access,
          8 => COL_7_1_NAME'Access,
          9 => COL_8_1_NAME'Access,
-         10 => COL_9_1_NAME'Access
+         10 => COL_9_1_NAME'Access,
+         11 => COL_10_1_NAME'Access
 )
      );
    TICKET_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -477,6 +491,7 @@ private
        Description : Ada.Strings.Unbounded.Unbounded_String;
        Update_Date : Ada.Calendar.Time;
        Project : Jason.Projects.Models.Project_Ref;
+       Creator : AWA.Users.Models.User_Ref;
    end record;
 
    type Ticket_Access is access all Ticket_Impl;

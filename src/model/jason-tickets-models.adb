@@ -267,6 +267,23 @@ package body Jason.Tickets.Models is
       return Impl.Project;
    end Get_Project;
 
+
+   procedure Set_Creator (Object : in out Ticket_Ref;
+                          Value  : in AWA.Users.Models.User_Ref'Class) is
+      Impl : Ticket_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_Object (Impl.all, 11, Impl.Creator, Value);
+   end Set_Creator;
+
+   function Get_Creator (Object : in Ticket_Ref)
+                  return AWA.Users.Models.User_Ref'Class is
+      Impl : constant Ticket_Access
+         := Ticket_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Creator;
+   end Get_Creator;
+
    --  Copy of the object.
    procedure Copy (Object : in Ticket_Ref;
                    Into   : in out Ticket_Ref) is
@@ -290,6 +307,7 @@ package body Jason.Tickets.Models is
             Copy.Description := Impl.Description;
             Copy.Update_Date := Impl.Update_Date;
             Copy.Project := Impl.Project;
+            Copy.Creator := Impl.Creator;
          end;
       end if;
       Into := Result;
@@ -464,6 +482,11 @@ package body Jason.Tickets.Models is
                           Value => Object.Project);
          Object.Clear_Modified (10);
       end if;
+      if Object.Is_Modified (11) then
+         Stmt.Save_Field (Name  => COL_10_1_NAME, --  creator_id
+                          Value => Object.Creator);
+         Object.Clear_Modified (11);
+      end if;
       if Stmt.Has_Save_Fields then
          Object.Version := Object.Version + 1;
          Stmt.Save_Field (Name  => "version",
@@ -514,6 +537,8 @@ package body Jason.Tickets.Models is
                         Value => Object.Update_Date);
       Query.Save_Field (Name  => COL_9_1_NAME, --  project_id
                         Value => Object.Project);
+      Query.Save_Field (Name  => COL_10_1_NAME, --  creator_id
+                        Value => Object.Creator);
       Query.Execute (Result);
       if Result /= 1 then
          raise ADO.Objects.INSERT_ERROR;
@@ -603,6 +628,9 @@ package body Jason.Tickets.Models is
       Object.Update_Date := Stmt.Get_Time (8);
       if not Stmt.Is_Null (9) then
          Object.Project.Set_Key_Value (Stmt.Get_Identifier (9), Session);
+      end if;
+      if not Stmt.Is_Null (10) then
+         Object.Creator.Set_Key_Value (Stmt.Get_Identifier (10), Session);
       end if;
       Object.Version := Stmt.Get_Integer (1);
       ADO.Objects.Set_Created (Object);
@@ -1142,10 +1170,22 @@ package body Jason.Tickets.Models is
      new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Bean,
                                                       Method => Op_Create,
                                                       Name   => "create");
+   procedure Op_Save (Bean    : in out Ticket_Bean;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Save (Bean    : in out Ticket_Bean;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Ticket_Bean'Class (Bean).Save (Outcome);
+   end Op_Save;
+   package Binding_Ticket_Bean_3 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Bean,
+                                                      Method => Op_Save,
+                                                      Name   => "save");
 
    Binding_Ticket_Bean_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
      := (1 => Binding_Ticket_Bean_1.Proxy'Access,
-         2 => Binding_Ticket_Bean_2.Proxy'Access
+         2 => Binding_Ticket_Bean_2.Proxy'Access,
+         3 => Binding_Ticket_Bean_3.Proxy'Access
      );
 
    --  ------------------------------
