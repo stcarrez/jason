@@ -16,8 +16,9 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 with ASF.Applications;
-
+with ADO;
 with AWA.Modules;
+with AWA.Tags.Beans;
 with Jason.Projects.Models;
 with Security.Permissions;
 package Jason.Projects.Modules is
@@ -52,6 +53,13 @@ package Jason.Projects.Modules is
    --  Save
    procedure Save (Model  : in Project_Module;
                    Entity : in out Jason.Projects.Models.Project_Ref'Class);
+
+   --  Load the project information.
+   procedure Load_Project (Model   : in Project_Module;
+                           Project : in out Jason.Projects.Models.Project_Ref'Class;
+                           Tags    : in out AWA.Tags.Beans.Tag_List_Bean;
+                           Id      : in ADO.Identifier);
+
 private
 
    type Project_Module is new AWA.Modules.Module with null record;
