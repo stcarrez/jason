@@ -46,7 +46,7 @@ package body Jason.Projects.Tests is
       P.Set_Name ("test-project");
       P.Set_Status (Jason.Projects.Models.OPEN);
       P.Create (Outcome);
-      T.Assert (True, "Foo is ok");
+      T.Assert (P.Is_Inserted, "Project was created");
    end Test_Create;
 
 end Jason.Projects.Tests;
