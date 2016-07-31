@@ -6,6 +6,7 @@
                <supported-locale>en</supported-locale>
         </locale-config>
         <message-bundle var='jasonMsg'>jason</message-bundle>
+        <message-bundle var='projectMsg'>projects</message-bundle>
     </application>
     <servlet-mapping>
       <servlet-name>measures</servlet-name>

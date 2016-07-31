@@ -12,25 +12,75 @@
     <managed-bean-scope>request</managed-bean-scope>
   </managed-bean>
 
+  <managed-bean>
+    <description>The project tag search bean.</description>
+    <managed-bean-name>projectTagSearch</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_Search_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>jason_project</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The list of tags associated with all projects.</description>
+    <managed-bean-name>projectTagCloud</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_Info_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>jason_project</value>
+    </managed-property>
+  </managed-bean>
+
+  <managed-bean>
+    <description>The project tag editor bean.</description>
+    <managed-bean-name>projectTags</managed-bean-name>
+    <managed-bean-class>AWA.Tags.Beans.Tag_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>jason_project</value>
+    </managed-property>
+    <managed-property>
+      <property-name>permission</property-name>
+      <property-class>String</property-class>
+      <value>project-update</value>
+    </managed-property>
+  </managed-bean>
+
   <filter-mapping>
     <filter-name>service</filter-name>
     <url-pattern>/projects/*.html</url-pattern>
+    <url-pattern>/projects/view/#{project.id}</url-pattern>
+    <url-pattern>/projects/edit/#{project.id}</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
     <filter-name>auth-filter</filter-name>
     <url-pattern>/projects/*.html</url-pattern>
+    <url-pattern>/projects/view/#{project.id}</url-pattern>
+    <url-pattern>/projects/edit/#{project.id}</url-pattern>
   </filter-mapping>
 
   <url-policy>
-    <permission>anonymous</permission>
-    <url-pattern>/projects/.*\.html</url-pattern>
+    <permission>logged-user</permission>
+    <url-pattern>/projects/.*</url-pattern>
   </url-policy>
 
-  <url-policy>
-    <permission>logged-user</permission>
-    <url-pattern>/projects/admin/.*</url-pattern>
-  </url-policy>
+  <url-mapping>
+    <pattern>/projects/view/#{project.id}</pattern>
+    <view-id>/projects/view.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/edit/#{project.id}</pattern>
+    <view-id>/projects/edit.html</view-id>
+  </url-mapping>
 
   <auth-permission>
     <name>project-create</name>
@@ -38,7 +88,7 @@
 
   <entity-permission>
     <name>project-update</name>
-    <entity-type>project</entity-type>
+    <entity-type>jason_project</entity-type>
     <sql>
        SELECT acl.id FROM awa_acl AS acl
        WHERE acl.entity_type = :entity_type
@@ -48,7 +98,7 @@
 
   <entity-permission>
     <name>project-delete</name>
-    <entity-type>project</entity-type>
+    <entity-type>jason_project</entity-type>
     <sql>
        SELECT acl.id FROM awa_acl AS acl
        WHERE acl.entity_type = :entity_type
@@ -60,7 +110,17 @@
         <from-view-id>/projects/edit.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>success</from-outcome>
-            <to-view-id>/projects/forms/edit-response.xhtml</to-view-id>
+            <to-view-id>/projects/view/#{project.id}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/projects/create.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/projects/view/#{project.id}</to-view-id>
+            <redirect/>
         </navigation-case>
     </navigation-rule>
 
