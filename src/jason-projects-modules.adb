@@ -15,9 +15,10 @@
 --  See the License for the specific language governing permissions and
 --  limitations under the License.
 -----------------------------------------------------------------------
-
+with Ada.Calendar;
 with AWA.Modules.Beans;
 with AWA.Modules.Get;
+with AWA.Permissions.Services;
 with Util.Log.Loggers;
 with Jason.Projects.Beans;
 with ADO.Sessions;
@@ -38,6 +39,9 @@ package body Jason.Projects.Modules is
                          Props  : in ASF.Applications.Config) is
    begin
       Log.Info ("Initializing the projects module");
+
+      --  Setup the resource bundles.
+      App.Register ("projectMsg", "projects");
 
       --  Register here any bean class, servlet, filter.
       Register.Register (Plugin => Plugin,
@@ -67,11 +71,21 @@ package body Jason.Projects.Modules is
       pragma Unreferenced (Model);
 
       Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      User  : constant ADO.Identifier := Ctx.Get_User_Identifier;
       DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
    begin
       Ctx.Start;
+      Entity.Set_Create_Date (Ada.Calendar.Clock);
+      Entity.Set_Owner (Ctx.Get_User);
       Entity.Save (DB);
+
+      --  Add the permission for the user to use the new project.
+      AWA.Permissions.Services.Add_Permission (Session => DB,
+                                               User    => User,
+                                               Entity  => Entity);
       Ctx.Commit;
+      Log.Info ("Project {0} created for user {1}",
+                ADO.Identifier'Image (Entity.Get_Id), ADO.Identifier'Image (User));
    end Create;
 
    --  ------------------------------
@@ -84,9 +98,34 @@ package body Jason.Projects.Modules is
       Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
       DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
    begin
+      Log.Info ("Updating project {0}", ADO.Identifier'Image (Entity.Get_Id));
+
+      --  Check that the user has the update permission on the given project.
+      AWA.Permissions.Check (Permission => ACL_Update_Projects.Permission,
+                             Entity     => Entity);
+
       Ctx.Start;
+      Entity.Set_Update_Date (Ada.Calendar.Clock);
       Entity.Save (DB);
       Ctx.Commit;
    end Save;
+
+   --  ------------------------------
+   --  Load the project information.
+   --  ------------------------------
+   procedure Load_Project (Model   : in Project_Module;
+                           Project : in out Jason.Projects.Models.Project_Ref'Class;
+                           Tags    : in out AWA.Tags.Beans.Tag_List_Bean;
+                           Id      : in ADO.Identifier) is
+      DB    : ADO.Sessions.Session := Model.Get_Session;
+      Found : Boolean;
+   begin
+      --  Check that the user has the view page permission on the given wiki page.
+      --  AWA.Permissions.Check (Permission => ACL_View_Wiki_Page.Permission,
+      --                       Entity     => Id);
+
+      Project.Load (DB, Id, Found);
+      Tags.Load_Tags (DB, Id);
+   end Load_Project;
 
 end Jason.Projects.Modules;
