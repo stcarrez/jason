@@ -1,0 +1,35 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                template="/WEB-INF/layouts/layout.xhtml">
+    <ui:param name="title" value="#{projectMsg.projects_title}" />
+    <ui:param name="pageStyle" value="awax"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewAction action='#{project.load}'/>
+        </f:metadata>
+        <div id='awa-content'>
+            <div class="project-title">
+                <ul class="awa-page-actions">
+                        <li>
+                            <a class='awa-button' href="#{contextPath}/projects/edit/#{project.id}">#{projectMsg.project_page_edit_label}</a>
+                        </li>
+                    <li>
+                        <a class='awa-button' href="#{contextPath}/projects/history/#{project.id}">#{projectMsg.project_page_history_label}</a>
+                    </li>
+                </ul>
+                <h2>#{project.name}</h2>
+            </div>
+            <awa:tagList value='#{project.tags}' id='qtags' styleClass="awa-tag-list tagedit-list"
+                         tagLink="#{contextPath}/projects/tags/#{tagName}"
+                         var="tagName"
+                         tagClass="tagedit-listelement tagedit-listelement-old"/>
+            <ui:include src="views/project-info.xhtml"/>
+        </div>
+    </ui:define>
+
+</ui:composition>

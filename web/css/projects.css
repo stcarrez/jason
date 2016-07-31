@@ -1,0 +1,13 @@
+.project-title {
+    float: left;
+    clear: both;
+    width: 95%;
+    margin-top: 15px;
+    border-bottom: 2px solid #47C;
+    padding-bottom: 2px;
+    padding-left: 48px;
+}
+.project-title h2 {
+    line-height: 1.33em;
+    font-size: 1.33em;
+}

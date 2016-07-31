@@ -4,15 +4,12 @@
                 xmlns:c="http://java.sun.com/jstl/core"
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{projectMsg.projects_title}" />
-    <ui:param name="pageStyle" value=""/>
+    <ui:param name="pageStyle" value="awa"/>
 
     <!-- Main page body -->
     <ui:define name="pageBody">
-        <f:metadata>
-            <f:viewAction action='#{project.load}'/>
-        </f:metadata>
         <div id='awa-content'>
-            <ui:include src="forms/edit-form.xhtml"/>
+            <ui:include src="forms/create-form.xhtml"/>
         </div>
     </ui:define>
 
