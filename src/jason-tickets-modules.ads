@@ -16,9 +16,11 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 with ASF.Applications;
-
+with ADO;
 with AWA.Modules;
+with AWA.Tags.Beans;
 with Jason.Tickets.Models;
+with Jason.Projects.Models;
 with Security.Permissions;
 package Jason.Tickets.Modules is
 
@@ -44,10 +46,17 @@ package Jason.Tickets.Modules is
    --  Get the tickets module.
    function Get_Ticket_Module return Ticket_Module_Access;
 
+   --  Load the ticket.
+   procedure Load_Ticket (Model    : in Ticket_Module;
+                          Ticket   : in out Jason.Tickets.Models.Ticket_Ref'Class;
+                          Project  : in out Jason.Projects.Models.Project_Ref'Class;
+                          Tags     : in out AWA.Tags.Beans.Tag_List_Bean;
+                          Id       : in ADO.Identifier);
 
    --  Create
-   procedure Create (Model  : in Ticket_Module;
-                     Entity : in out Jason.Tickets.Models.Ticket_Ref'Class);
+   procedure Create (Model      : in Ticket_Module;
+                     Entity     : in out Jason.Tickets.Models.Ticket_Ref'Class;
+                     Project_Id : in ADO.Identifier);
 
    --  Save
    procedure Save (Model  : in Ticket_Module;
