@@ -378,6 +378,77 @@ package Jason.Tickets.Models is
 
    Query_List : constant ADO.Queries.Query_Definition_Access;
 
+   --  --------------------
+   --    The ticket information.
+   --  --------------------
+   type Ticket_Info is abstract
+     new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
+
+      --  the ticket identifier.
+      Id : ADO.Identifier;
+
+      --  the ticket ident number.
+      Ident : Integer;
+
+      --  the ticket summary.
+      Summary : Ada.Strings.Unbounded.Unbounded_String;
+
+      --  the ticket description.
+      Description : Ada.Strings.Unbounded.Unbounded_String;
+
+      --  the ticket priority.
+      Priority : Integer;
+
+      --  the ticket creation date.
+      Create_Date : Ada.Calendar.Time;
+
+      --  the ticket modification date.
+      Update_Date : Ada.Calendar.Time;
+
+      --  the ticket status.
+      Status : Jason.Tickets.Models.Status_Type;
+
+      --  the project identifier.
+      Project_Id : ADO.Identifier;
+
+      --  the project name.
+      Project_Name : Ada.Strings.Unbounded.Unbounded_String;
+
+      --  the ticket creator's name.
+      Creator : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
+
+   --  This bean provides some methods that can be used in a Method_Expression.
+   overriding
+   function Get_Method_Bindings (From : in Ticket_Info)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access;
+
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Info;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the bean attribute identified by the name.
+   overriding
+   procedure Set_Value (Item  : in out Ticket_Info;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   procedure Load (Bean : in out Ticket_Info;
+                  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   --  Read in the object the data from the query result and prepare to read the next row.
+   --  If there is no row, raise the ADO.NOT_FOUND exception.
+   procedure Read (Into : in out Ticket_Info;
+                   Stmt : in out ADO.Statements.Query_Statement'Class);
+
+   --  Run the query controlled by <b>Context</b> and load the result in <b>Object</b>.
+   procedure Load (Object  : in out Ticket_Info'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class);
+
+   Query_Info : constant ADO.Queries.Query_Definition_Access;
+
 
    type Ticket_Bean is abstract new Jason.Tickets.Models.Ticket_Ref
      and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with null record;
@@ -438,6 +509,30 @@ package Jason.Tickets.Models is
                         Value : in Util.Beans.Objects.Object);
 
    procedure Load (Bean : in out Ticket_List_Bean;
+                  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   type Ticket_Info_Bean is abstract limited
+     new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
+      Ticket_Id : ADO.Identifier;
+   end record;
+
+   --  This bean provides some methods that can be used in a Method_Expression.
+   overriding
+   function Get_Method_Bindings (From : in Ticket_Info_Bean)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access;
+
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Info_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the bean attribute identified by the name.
+   overriding
+   procedure Set_Value (Item  : in out Ticket_Info_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   procedure Load (Bean : in out Ticket_Info_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
 
@@ -600,4 +695,14 @@ private
                                      File => File_1.File'Access);
    Query_List : constant ADO.Queries.Query_Definition_Access
    := Def_Listinfo_List.Query'Access;
+
+   package File_2 is
+      new ADO.Queries.Loaders.File (Path => "ticket-info.xml",
+                                    Sha1 => "D5C042D77C9A68858F200A871CDDD130F6E8262D");
+
+   package Def_Ticketinfo_Info is
+      new ADO.Queries.Loaders.Query (Name => "info",
+                                     File => File_2.File'Access);
+   Query_Info : constant ADO.Queries.Query_Definition_Access
+   := Def_Ticketinfo_Info.Query'Access;
 end Jason.Tickets.Models;

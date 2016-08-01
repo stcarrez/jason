@@ -1147,6 +1147,138 @@ package body Jason.Tickets.Models is
       end loop;
    end List;
 
+   procedure Op_Load (Bean    : in out Ticket_Info;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Load (Bean    : in out Ticket_Info;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Ticket_Info'Class (Bean).Load (Outcome);
+   end Op_Load;
+   package Binding_Ticket_Info_1 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Info,
+                                                      Method => Op_Load,
+                                                      Name   => "load");
+
+   Binding_Ticket_Info_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
+     := (1 => Binding_Ticket_Info_1.Proxy'Access
+     );
+
+   --  ------------------------------
+   --  This bean provides some methods that can be used in a Method_Expression.
+   --  ------------------------------
+   overriding
+   function Get_Method_Bindings (From : in Ticket_Info)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access is
+      pragma Unreferenced (From);
+   begin
+      return Binding_Ticket_Info_Array'Access;
+   end Get_Method_Bindings;
+   --  ------------------------------
+   --  Get the bean attribute identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in Ticket_Info;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if Name = "id" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Id));
+      elsif Name = "ident" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Ident));
+      elsif Name = "summary" then
+         return Util.Beans.Objects.To_Object (From.Summary);
+      elsif Name = "description" then
+         return Util.Beans.Objects.To_Object (From.Description);
+      elsif Name = "priority" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
+      elsif Name = "create_date" then
+         return Util.Beans.Objects.Time.To_Object (From.Create_Date);
+      elsif Name = "update_date" then
+         return Util.Beans.Objects.Time.To_Object (From.Update_Date);
+      elsif Name = "status" then
+         return Jason.Tickets.Models.Status_Type_Objects.To_Object (From.Status);
+      elsif Name = "project_id" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Project_Id));
+      elsif Name = "project_name" then
+         return Util.Beans.Objects.To_Object (From.Project_Name);
+      elsif Name = "creator" then
+         return Util.Beans.Objects.To_Object (From.Creator);
+      end if;
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+
+
+   --  ------------------------------
+   --  Set the value identified by the name
+   --  ------------------------------
+   overriding
+   procedure Set_Value (Item  : in out Ticket_Info;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      if Name = "id" then
+         Item.Id := ADO.Identifier (Util.Beans.Objects.To_Long_Long_Integer (Value));
+      elsif Name = "ident" then
+         Item.Ident := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "summary" then
+         Item.Summary := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "description" then
+         Item.Description := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "priority" then
+         Item.Priority := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "create_date" then
+         Item.Create_Date := Util.Beans.Objects.Time.To_Time (Value);
+      elsif Name = "update_date" then
+         Item.Update_Date := Util.Beans.Objects.Time.To_Time (Value);
+      elsif Name = "status" then
+         Item.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
+      elsif Name = "project_id" then
+         Item.Project_Id := ADO.Identifier (Util.Beans.Objects.To_Long_Long_Integer (Value));
+      elsif Name = "project_name" then
+         Item.Project_Name := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "creator" then
+         Item.Creator := Util.Beans.Objects.To_Unbounded_String (Value);
+      end if;
+   end Set_Value;
+
+
+   --  --------------------
+   --  Read in the object the data from the query result and prepare to read the next row.
+   --  If there is no row, raise the ADO.NOT_FOUND exception.
+   --  --------------------
+   procedure Read (Into : in out Ticket_Info;
+                   Stmt : in out ADO.Statements.Query_Statement'Class) is
+   begin
+      if not Stmt.Has_Elements then
+         raise ADO.Objects.NOT_FOUND;
+      end if;
+      Into.Id := Stmt.Get_Identifier (0);
+      Into.Ident := Stmt.Get_Integer (1);
+      Into.Summary := Stmt.Get_Unbounded_String (2);
+      Into.Description := Stmt.Get_Unbounded_String (3);
+      Into.Priority := Stmt.Get_Integer (4);
+      Into.Create_Date := Stmt.Get_Time (5);
+      Into.Update_Date := Stmt.Get_Time (6);
+      Into.Status := Jason.Tickets.Models.Status_Type'Val (Stmt.Get_Integer (7));
+      Into.Project_Id := Stmt.Get_Identifier (8);
+      Into.Project_Name := Stmt.Get_Unbounded_String (9);
+      Into.Creator := Stmt.Get_Unbounded_String (10);
+      Stmt.Next;
+   end Read;
+
+   --  --------------------
+   --  Run the query controlled by <b>Context</b> and load the result in <b>Object</b>.
+   --  --------------------
+   procedure Load (Object  : in out Ticket_Info'Class;
+                   Session : in out ADO.Sessions.Session'Class;
+                   Context : in out ADO.Queries.Context'Class) is
+      Stmt : ADO.Statements.Query_Statement := Session.Create_Statement (Context);
+   begin
+      Stmt.Execute;
+      Read (Object, Stmt);
+      if Stmt.Has_Elements then
+         raise ADO.Objects.NOT_FOUND;
+      end if;
+   end Load;
 
    procedure Op_Load (Bean    : in out Ticket_Bean;
                       Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
@@ -1290,6 +1422,59 @@ package body Jason.Tickets.Models is
          Item.Tag := Util.Beans.Objects.To_Unbounded_String (Value);
       elsif Name = "page_size" then
          Item.Page_Size := Util.Beans.Objects.To_Integer (Value);
+      end if;
+   end Set_Value;
+
+   procedure Op_Load (Bean    : in out Ticket_Info_Bean;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Load (Bean    : in out Ticket_Info_Bean;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Ticket_Info_Bean'Class (Bean).Load (Outcome);
+   end Op_Load;
+   package Binding_Ticket_Info_Bean_1 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Info_Bean,
+                                                      Method => Op_Load,
+                                                      Name   => "load");
+
+   Binding_Ticket_Info_Bean_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
+     := (1 => Binding_Ticket_Info_Bean_1.Proxy'Access
+     );
+
+   --  ------------------------------
+   --  This bean provides some methods that can be used in a Method_Expression.
+   --  ------------------------------
+   overriding
+   function Get_Method_Bindings (From : in Ticket_Info_Bean)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access is
+      pragma Unreferenced (From);
+   begin
+      return Binding_Ticket_Info_Bean_Array'Access;
+   end Get_Method_Bindings;
+   --  ------------------------------
+   --  Get the bean attribute identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in Ticket_Info_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if Name = "ticket_id" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Ticket_Id));
+      end if;
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+
+
+   --  ------------------------------
+   --  Set the value identified by the name
+   --  ------------------------------
+   overriding
+   procedure Set_Value (Item  : in out Ticket_Info_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      if Name = "ticket_id" then
+         Item.Ticket_Id := ADO.Identifier (Util.Beans.Objects.To_Long_Long_Integer (Value));
       end if;
    end Set_Value;
 
