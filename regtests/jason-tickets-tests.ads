@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------
---  jason-testsuite -- Testsuite for jason
+--  jason-tickets-tests -- Tests for tickets
 --  Copyright (C) 2016 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
@@ -16,28 +16,13 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 
-with AWA.Tests;
-with ASF.Server.Tests;
-with Jason.Applications;
-with Jason.Projects.Tests;
-with Jason.Tickets.Tests;
-package body Jason.Testsuite is
+with Util.Tests;
+package Jason.Tickets.Tests is
 
-   Tests : aliased Util.Tests.Test_Suite;
+   procedure Add_Tests (Suite : in Util.Tests.Access_Test_Suite);
 
-   function Suite return Util.Tests.Access_Test_Suite is
-   begin
-      Jason.Projects.Tests.Add_Tests (Tests'Access);
-      Jason.Tickets.Tests.Add_Tests (Tests'Access);
-      return Tests'Access;
-   end Suite;
+   type Test is new Util.Tests.Test with null record;
 
-   procedure Initialize (Props : in Util.Properties.Manager) is
-      App  : constant Jason.Applications.Application_Access := Jason.Applications.Create;
-   begin
---      Jason.Applications.Initialize (App);
---        ASF.Server.Tests.Set_Context (App.all'Access);
-      AWA.Tests.Initialize (App.all'Access, Props, True);
-   end Initialize;
+   procedure Test_Create (T : in out Test);
 
-end Jason.Testsuite;
+end Jason.Tickets.Tests;
