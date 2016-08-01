@@ -1,0 +1,30 @@
+<div class='awa-form ui-widget'
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:w="http://code.google.com/p/ada-asf/widget"
+     xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:form id='create-form'>
+        <h:inputHidden id='entity-id' value='#{ticket.id}' required='false'/>
+        <h:inputHidden id='project-id' value='#{ticket.project_id}' required='true'/>
+        <div class='container_12'>
+            <div class='awa-messages'>
+                <h:message styleClass='awa-error'/>
+            </div>
+            <w:inputText styleClass="awa-required"
+                         id='summary' size='50' required='true' value='#{ticket.summary}'
+                         title='#{ticketMsg.ticket_summary_label}'/>
+            <w:inputText id='description' title="#{ticketMsg.ticket_description_label}"
+                         styleClass="awa-required ui-corner-all" size='80'
+                         placeholder="#{ticketMsg.ticket_description_placeholder}"
+                         value="#{ticket.description}" required="true"/>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save' value='#{ticketMsg.ticket_create_button}'
+                                     action="#{ticket.create}"
+                            styleClass="ui-button ui-state-default ui-corner-all"/>
+                </li>
+            </ul>
+        </div>
+    </h:form>
+
+</div>

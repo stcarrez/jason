@@ -1,0 +1,46 @@
+<div class='awa-form ui-widget'
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+     xmlns:w="http://code.google.com/p/ada-asf/widget"
+     xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:form id='edit-form'>
+        <h:inputHidden id='entity-id' value='#{ticket.id}' required='false'/>
+        <h:inputHidden id='project-id' value='#{ticket.project_id}' required='false'/>
+        <div class='container_12'>
+            <h2>Ticket #{ticket.id} - #{ticket.summary}</h2>
+            <div class='awa-messages'>
+                <h:message styleClass='awa-error'/>
+            </div>
+            <w:inputText styleClass="awa-required"
+                         id='summary' size='50' required='true' value='#{ticket.summary}'
+                         title='#{ticketMsg.ticket_summary_label}'/>
+            <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='qtags'>#{ticketMsg.ticket_tags_label}</label>
+                </dt>
+                <dd>
+                    <awa:tagList value='#{ticket.tags}' id='ptags'
+                                 autoCompleteUrl='#{contextPath}/tickets/lists/tag-search.html'/>
+                </dd>
+            </dl>
+            <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='text'>#{ticketMsg.ticket_description_label}</label>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='description' rows='20' required='true'
+                                     value='#{ticket.description}'/>
+                </dd>
+            </dl>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save' value='#{ticketMsg.ticket_save_button}'
+                                     action="#{ticket.save}"
+                                     styleClass="ui-button ui-state-default ui-corner-all"/>
+                </li>
+            </ul>
+        </div>
+    </h:form>
+
+</div>

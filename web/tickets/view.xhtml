@@ -1,0 +1,40 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                template="/WEB-INF/layouts/layout.xhtml">
+    <ui:param name="title" value="#{ticketMsg.tickets_page_title}" />
+    <ui:param name="pageStyle" value="awax"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewAction action='#{ticket.load}'/>
+        </f:metadata>
+        <div id='awa-content'>
+            <ui:include src="/projects/views/project-nav.xhtml">
+                <ui:param name="project_id" value="#{ticket.project_id}"/>
+            </ui:include>
+            <div class="project-title">
+                <ul class="awa-page-actions">
+                        <li>
+                            <a class='awa-button' href="#{contextPath}/tickets/edit/#{ticket.id}">#{projectMsg.project_page_edit_label}</a>
+                        </li>
+                    <li>
+                        <a class='awa-button' href="#{contextPath}/tickets/history/#{ticket.id}">#{projectMsg.project_page_history_label}</a>
+                    </li>
+                </ul>
+                <h2>Ticket #{ticket.id} - #{ticket.summary} - prj #{ticket.project_id}</h2>
+            </div>
+            <awa:tagList value='#{ticket.tags}' id='qtags' styleClass="awa-tag-list tagedit-list"
+                         tagLink="#{contextPath}/tickets/tags/#{tagName}"
+                         var="tagName"
+                         tagClass="tagedit-listelement tagedit-listelement-old"/>
+            <div>
+                #{ticket.description}
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>
