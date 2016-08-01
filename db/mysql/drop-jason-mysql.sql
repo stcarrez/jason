@@ -4,6 +4,17 @@ DROP TABLE IF EXISTS `jason_ticket`;
 DROP TABLE IF EXISTS `jason_attribute`;
 DROP TABLE IF EXISTS `jason_project`;
 DROP TABLE IF EXISTS `jason_attribute_definition`;
+/* Copied from awa-wikis-drop-mysql.sql*/
+/* File generated automatically by dynamo */
+DROP TABLE IF EXISTS `awa_wiki_space`;
+DROP TABLE IF EXISTS `awa_wiki_page`;
+DROP TABLE IF EXISTS `awa_wiki_content`;
+/* Copied from awa-images-drop-mysql.sql*/
+/* File generated automatically by dynamo */
+DROP TABLE IF EXISTS `awa_image`;
+/* Copied from awa-jobs-drop-mysql.sql*/
+/* File generated automatically by dynamo */
+DROP TABLE IF EXISTS `awa_job`;
 /* Copied from awa-storages-drop-mysql.sql*/
 /* File generated automatically by dynamo */
 DROP TABLE IF EXISTS `awa_store_local`;
