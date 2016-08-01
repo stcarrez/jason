@@ -15,9 +15,12 @@
 --  See the License for the specific language governing permissions and
 --  limitations under the License.
 -----------------------------------------------------------------------
+with Ada.Calendar;
 
 with AWA.Modules.Beans;
 with AWA.Modules.Get;
+with AWA.Permissions;
+with AWA.Users.Models;
 with Util.Log.Loggers;
 with Jason.Tickets.Beans;
 with ADO.Sessions;
@@ -58,20 +61,53 @@ package body Jason.Tickets.Modules is
       return Get;
    end Get_Ticket_Module;
 
+   --  ------------------------------
+   --  Load the ticket.
+   --  ------------------------------
+   procedure Load_Ticket (Model    : in Ticket_Module;
+                          Ticket   : in out Jason.Tickets.Models.Ticket_Ref'Class;
+                          Project  : in out Jason.Projects.Models.Project_Ref'Class;
+                          Tags     : in out AWA.Tags.Beans.Tag_List_Bean;
+                          Id       : in ADO.Identifier) is
+      DB    : ADO.Sessions.Session := Model.Get_Session;
+      Found : Boolean;
+   begin
+      Ticket.Load (DB, Id, Found);
+      Project := Ticket.Get_Project;
+      Tags.Load_Tags (DB, Id);
+   end Load_Ticket;
 
    --  ------------------------------
    --  Create
    --  ------------------------------
-   procedure Create (Model  : in Ticket_Module;
-                     Entity : in out Jason.Tickets.Models.Ticket_Ref'Class) is
+   procedure Create (Model      : in Ticket_Module;
+                     Entity     : in out Jason.Tickets.Models.Ticket_Ref'Class;
+                     Project_Id : in ADO.Identifier) is
       pragma Unreferenced (Model);
 
       Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
       DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      User  : constant ADO.Identifier := Ctx.Get_User_Identifier;
+      Project : Jason.Projects.Models.Project_Ref;
    begin
+      --  Check that the user has the create ticket permission on the given project.
+      AWA.Permissions.Check (Permission => ACL_Create_Tickets.Permission,
+                             Entity     => Project_Id);
+
       Ctx.Start;
+      Project.Load (DB, Project_Id);
+      Project.Set_Last_Ticket (Project.Get_Last_Ticket + 1);
+      Entity.Set_Create_Date (Ada.Calendar.Clock);
+      Entity.Set_Status (Jason.Tickets.Models.OPEN);
+      Entity.Set_Creator (Ctx.Get_User);
+      Entity.Set_Project (Project);
+      Entity.Set_Ident (Project.Get_Last_Ticket);
       Entity.Save (DB);
+      Project.Save (DB);
       Ctx.Commit;
+
+      Log.Info ("Ticket {0} created for user {1}",
+                ADO.Identifier'Image (Entity.Get_Id), ADO.Identifier'Image (User));
    end Create;
 
    --  ------------------------------
@@ -84,8 +120,13 @@ package body Jason.Tickets.Modules is
       Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
       DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
    begin
+      --  Check that the user has the update ticket permission on the given ticket.
+      AWA.Permissions.Check (Permission => ACL_Update_Tickets.Permission,
+                             Entity     => Entity);
+
       Ctx.Start;
       Entity.Save (DB);
       Ctx.Commit;
    end Save;
+
 end Jason.Tickets.Modules;
