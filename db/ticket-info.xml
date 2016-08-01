@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query-mapping package='Jason.Tickets.Models'>
+    <description>
+      Information about a ticket
+    </description>
+    <class name="Jason.Tickets.Models.Ticket_Info" bean="yes">
+        <comment>The ticket information.</comment>
+        <property type='Identifier' name="id">
+            <comment>the ticket identifier.</comment>
+        </property>
+        <property type='Integer' name="ident">
+            <comment>the ticket ident number.</comment>
+        </property>
+        <property type='String' name="summary">
+            <comment>the ticket summary.</comment>
+        </property>
+        <property type='String' name="description">
+            <comment>the ticket description.</comment>
+        </property>
+        <property type='Integer' name="priority">
+            <comment>the ticket priority.</comment>
+        </property>
+        <property type='Date' name="create_date">
+            <comment>the ticket creation date.</comment>
+        </property>
+        <property type='Date' name="update_date">
+            <comment>the ticket modification date.</comment>
+        </property>
+        <property type='Jason.Tickets.Models.Status_Type' name="status">
+            <comment>the ticket status.</comment>
+        </property>
+        <property type='Identifier' name="project_id">
+            <comment>the project identifier.</comment>
+        </property>
+        <property type='String' name="project_name">
+            <comment>the project name.</comment>
+        </property>
+        <property type='String' name="creator">
+            <comment>the ticket creator's name.</comment>
+        </property>
+        <method name="load">
+            <comment>load the bean</comment>
+        </method>
+    </class>
+    <query name='info'>
+       <comment>Get the information about the ticket</comment>
+       <sql>
+    SELECT
+      ticket.id,
+      ticket.ident,
+      ticket.summary,
+      ticket.description,
+      ticket.priority,
+      ticket.create_date,
+      ticket.update_date,
+      ticket.status,
+      ticket.project_id,
+      project.name,
+      user.name
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table AND acl.user_id = :user_id
+    INNER JOIN jason_project AS project ON ticket.project_id = project.id
+    INNER JOIN awa_user AS user ON ticket.creator_id = user.id
+    WHERE ticket.id = :id
+       </sql>
+    </query>
+</query-mapping>
