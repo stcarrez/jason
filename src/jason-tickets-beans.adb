@@ -16,25 +16,38 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 
-with ASF.Events.Faces.Actions;
+with ADO.Utils;
+with Jason.Projects.Models;
 package body Jason.Tickets.Beans is
 
    --  ------------------------------
-   --  Example of action method.
+   --  Create ticket action.
    --  ------------------------------
-   procedure Action (Bean    : in out Ticket_Bean;
+   overriding
+   procedure Create (Bean    : in out Ticket_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
    begin
-      null;
-   end Action;
+      Bean.Module.Create (Bean, Bean.Project_Id);
+      Bean.Tags.Update_Tags (Bean.Get_Id);
+   end Create;
 
-   package Action_Binding is
-     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Bean,
-                                                      Method => Action,
-                                                      Name   => "action");
+   --  Save ticket action.
+   overriding
+   procedure Save (Bean    : in out Ticket_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Bean.Module.Save (Bean);
+      Bean.Tags.Update_Tags (Bean.Get_Id);
+   end Save;
 
-   Ticket_Bean_Binding : aliased constant Util.Beans.Methods.Method_Binding_Array
-     := (Action_Binding.Proxy'Access, null);
+   --  Load ticket action.
+   overriding
+   procedure Load (Bean    : in out Ticket_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Bean.Module.Load_Ticket (Bean, Bean.Project, Bean.Tags, Bean.Ticket_Id);
+      Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("loaded");
+   end Load;
 
    --  ------------------------------
    --  Get the value identified by the name.
@@ -43,10 +56,22 @@ package body Jason.Tickets.Beans is
    function Get_Value (From : in Ticket_Bean;
                        Name : in String) return Util.Beans.Objects.Object is
    begin
-      if Name = "count" then
-         return Util.Beans.Objects.To_Object (From.Count);
+      if Name = "project_id" then
+         if From.Project.Is_Inserted then
+            return ADO.Utils.To_Object (From.Project.Get_Id);
+         else
+            return ADO.Utils.To_Object (From.Project_Id);
+         end if;
+      elsif Name = "ticket_id" or Name = "id" then
+         if From.Is_Inserted or From.Is_Loaded then
+            return ADO.Utils.To_Object (From.Get_Id);
+         else
+            return ADO.Utils.To_Object (From.Ticket_Id);
+         end if;
+      elsif Name = "tags" then
+         return Util.Beans.Objects.To_Object (From.Tags_Bean, Util.Beans.Objects.STATIC);
       else
-         return Util.Beans.Objects.Null_Object;
+         return Jason.Tickets.Models.Ticket_Bean (From).Get_Value (Name);
       end if;
    end Get_Value;
 
@@ -58,21 +83,17 @@ package body Jason.Tickets.Beans is
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object) is
    begin
-      if Name = "count" then
-         From.Count := Util.Beans.Objects.To_Integer (Value);
+      if Name = "project_id" and not Util.Beans.Objects.Is_Empty (Value) then
+         From.Project_Id := ADO.Utils.To_Identifier (Value);
+      elsif Name = "ticket_id" and not Util.Beans.Objects.Is_Empty (Value) then
+         From.Ticket_Id := ADO.Utils.To_Identifier (Value);
+      elsif Name = "id" and not Util.Beans.Objects.Is_Empty (Value) then
+         From.Ticket_Id := ADO.Utils.To_Identifier (Value);
+         From.Module.Load_Ticket (From, From.Project, From.Tags, From.Ticket_Id);
+      else
+         Jason.Tickets.Models.Ticket_Bean (From).Set_Value (Name, Value);
       end if;
    end Set_Value;
-
-   --  ------------------------------
-   --  This bean provides some methods that can be used in a Method_Expression
-   --  ------------------------------
-   overriding
-   function Get_Method_Bindings (From : in Ticket_Bean)
-                                 return Util.Beans.Methods.Method_Binding_Array_Access is
-      pragma Unreferenced (From);
-   begin
-      return Ticket_Bean_Binding'Access;
-   end Get_Method_Bindings;
 
    --  ------------------------------
    --  Create the Ticket_Bean bean instance.
@@ -82,6 +103,9 @@ package body Jason.Tickets.Beans is
       Object : constant Ticket_Bean_Access := new Ticket_Bean;
    begin
       Object.Module := Module;
+      Object.Tags_Bean := Object.Tags'Access;
+      Object.Tags.Set_Entity_Type (Jason.Tickets.Models.TICKET_TABLE);
+      Object.Tags.Set_Permission ("ticket-update");
       return Object.all'Access;
    end Create_Ticket_Bean;
 

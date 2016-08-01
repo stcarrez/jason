@@ -17,17 +17,25 @@
 -----------------------------------------------------------------------
 
 with Ada.Strings.Unbounded;
-
+with ADO;
 with Util.Beans.Basic;
 with Util.Beans.Objects;
 with Util.Beans.Methods;
+with AWA.Tags.Beans;
 with Jason.Tickets.Modules;
+with Jason.Tickets.Models;
+with Jason.Projects.Models;
 package Jason.Tickets.Beans is
 
-   type Ticket_Bean is new Util.Beans.Basic.Bean
-     and Util.Beans.Methods.Method_Bean with record
-      Module : Jason.Tickets.Modules.Ticket_Module_Access := null;
-      Count  : Natural := 0;
+   type Ticket_Bean is new Jason.Tickets.Models.Ticket_Bean with record
+      Module     : Jason.Tickets.Modules.Ticket_Module_Access := null;
+      Project_Id : ADO.Identifier := ADO.NO_IDENTIFIER;
+      Ticket_Id  : ADO.Identifier := ADO.NO_IDENTIFIER;
+      Project    : Jason.Projects.Models.Project_Ref;
+
+      --  List of tags associated with the wiki page.
+      Tags          : aliased AWA.Tags.Beans.Tag_List_Bean;
+      Tags_Bean     : Util.Beans.Basic.Readonly_Bean_Access;
    end record;
    type Ticket_Bean_Access is access all Ticket_Bean'Class;
 
@@ -42,14 +50,20 @@ package Jason.Tickets.Beans is
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object);
 
-   --  This bean provides some methods that can be used in a Method_Expression
+   --  Create ticket action.
    overriding
-   function Get_Method_Bindings (From : in Ticket_Bean)
-                                 return Util.Beans.Methods.Method_Binding_Array_Access;
-
-   --  Example of action method.
-   procedure Action (Bean    : in out Ticket_Bean;
+   procedure Create (Bean    : in out Ticket_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Save ticket action.
+   overriding
+   procedure Save (Bean    : in out Ticket_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Load ticket action.
+   overriding
+   procedure Load (Bean    : in out Ticket_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
 
    --  Create the Tickets_Bean bean instance.
    function Create_Ticket_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
