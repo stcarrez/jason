@@ -28,7 +28,7 @@
             </a>
         </li>
         <li class="awa-nav-left">
-            <a href="#{contextPath}/tickets/list/#{project_id}/recent#{page_link}" class="awa-nav-icon"
+            <a href="#{contextPath}/projects/list/recent#{page_link}" class="awa-nav-icon"
                title="#{projectMsg.project_list_tickets_title}">
                 <img src="#{contextPath}/images/wikis/wiki-document.png" alt="#{projectMsg.project_list_tickets_title}"/>
                 <span>#{projectMsg.project_list_tickets_title}</span>
@@ -44,11 +44,13 @@
     <ui:insert name="page-nav"/>
     <h:panelGroup rendered="#{not empty sort}">
         <li class="wiki-nav-right" id="wiki-nav-sort">
-            <label for="sort">#{wikiMsg.wiki_sort_by_label}</label>
+            <label for="sort">#{projectMsg.project_sort_by_label}</label>
             <w:chosen id="sort" value="#{sort}">
-                <f:selectItem itemValue="name" itemLabel="#{wikiMsg.wiki_sort_by_name}"/>
-                <f:selectItem itemValue="popular" itemLabel="#{wikiMsg.wiki_sort_by_popular}"/>
-                <f:selectItem itemValue="recent" itemLabel="#{wikiMsg.wiki_sort_by_recent}"/>
+                <f:selectItem itemValue="newest" itemLabel="#{projectMsg.project_sort_by_newest}"/>
+                <f:selectItem itemValue="oldest" itemLabel="#{projectMsg.project_sort_by_oldest}"/>
+                <f:selectItem itemValue="popular" itemLabel="#{projectMsg.project_sort_by_popular}"/>
+                <f:selectItem itemValue="recent" itemLabel="#{projectMsg.project_sort_by_recent}"/>
+                <f:selectItem itemValue="not-recent" itemLabel="#{projectMsg.project_sort_by_not_recent}"/>
                 <f:facet name="options">width: "60%",disable_search: true</f:facet>
                 <f:facet name="events">.bind("change", function() {
                     if ("#{page_link}" == "") {
@@ -59,5 +61,5 @@
                 })</f:facet>
             </w:chosen>
         </li>
-    </h:panelGroup>
+     </h:panelGroup>
 </ul>

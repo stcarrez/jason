@@ -1,6 +1,7 @@
 <ui:composition xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
                 xmlns:c="http://java.sun.com/jstl/core"
                 xmlns:awa="http://code.google.com/p/ada-awa/jsf"
                 template="/WEB-INF/layouts/layout.xhtml">
@@ -13,6 +14,10 @@
             <f:viewAction action='#{project.load}'/>
         </f:metadata>
         <div id='awa-content'>
+            <ui:include src="/projects/views/project-nav.xhtml">
+                <ui:param name="project_id" value="#{ticket.project_id}"/>
+                <ui:param name="sort" value="recent"/>
+            </ui:include>
             <div class="project-title">
                 <ul class="awa-page-actions">
                         <li>
@@ -29,7 +34,12 @@
                          var="tagName"
                          tagClass="tagedit-listelement tagedit-listelement-old"/>
             <ui:include src="views/project-info.xhtml"/>
+            <ajax:include styleClass="asf-container" async="true"
+                          src="/tickets/list/#{project.id}"/>
         </div>
+    </ui:define>
+    <ui:define name="pageScript">
+        <script type="text/javascript" src="#{jquery.chosenPath}"></script>
     </ui:define>
 
 </ui:composition>

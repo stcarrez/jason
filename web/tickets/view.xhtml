@@ -13,10 +13,11 @@
             <f:viewAction action='#{ticket.load}'/>
         </f:metadata>
         <div id='awa-content'>
-            <ui:include src="/projects/views/project-nav.xhtml">
+            <ui:include src="/tickets/views/ticket-nav.xhtml">
                 <ui:param name="project_id" value="#{ticket.project_id}"/>
+                <ui:param name="sort" value="recent"/>
             </ui:include>
-            <div class="project-title">
+            <div class="ticket-title">
                 <ul class="awa-page-actions">
                         <li>
                             <a class='awa-button' href="#{contextPath}/tickets/edit/#{ticket.id}">#{projectMsg.project_page_edit_label}</a>
@@ -25,7 +26,7 @@
                         <a class='awa-button' href="#{contextPath}/tickets/history/#{ticket.id}">#{projectMsg.project_page_history_label}</a>
                     </li>
                 </ul>
-                <h2>Ticket #{ticket.id} - #{ticket.summary} - prj #{ticket.project_id}</h2>
+                <h2>Ticket #{ticket.id} - #{ticket.summary}</h2>
             </div>
             <awa:tagList value='#{ticket.tags}' id='qtags' styleClass="awa-tag-list tagedit-list"
                          tagLink="#{contextPath}/tickets/tags/#{tagName}"
@@ -34,7 +35,13 @@
             <div>
                 #{ticket.description}
             </div>
+            <div>
+                <a href="#{contextPath}/projects/view/#{ticket.project_id}">Project #{ticket.project_id}</a>
+            </div>
         </div>
+    </ui:define>
+    <ui:define name="pageScript">
+        <script type="text/javascript" src="#{jquery.chosenPath}"></script>
     </ui:define>
 
 </ui:composition>
