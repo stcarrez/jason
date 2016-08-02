@@ -26,7 +26,11 @@
         <property type='Jason.Tickets.Models.Status_Type' name="status">
             <comment>the ticket status.</comment>
         </property>
+        <property type='String' name="creator">
+            <comment>the ticket creator's name.</comment>
+        </property>
     </class>
+
     <query name='list'>
        <comment>Get the list of tickets that the current user can update</comment>
        <sql>
@@ -37,17 +41,52 @@
       ticket.priority,
       ticket.create_date,
       ticket.update_date,
-      ticket.status
+      ticket.status,
+      user.name
     FROM jason_ticket AS ticket
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table AND acl.user_id = :user_id
-    ORDER BY ticket.create_date DESC
-    LIMIT :first, :last
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_user AS user ON ticket.creator_id = user.id
+    WHERE ticket.project_id = :project_id AND :ticket_filter
+    ORDER BY :order1
+    LIMIT :count OFFSET :first
        </sql>
        <sql-count>
     SELECT
       count(ticket.id)
     FROM jason_ticket AS ticket
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    WHERE ticket.project_id = :project_id AND :ticket_filter
        </sql-count>
     </query>
+
+    <query name='list-tag-filter'>
+       <comment>Get the list of tickets that the current user can update</comment>
+       <sql>
+    SELECT
+      ticket.id,
+      ticket.ident,
+      ticket.summary,
+      ticket.priority,
+      ticket.create_date,
+      ticket.update_date,
+      ticket.status,
+      user.name
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_user AS user ON ticket.creator_id = user.id
+    WHERE ticket.project_id = :project_id AND :ticket_filter
+    ORDER BY :order1
+    LIMIT :count OFFSET :first
+       </sql>
+       <sql-count>
+    SELECT
+      count(ticket.id)
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    WHERE ticket.project_id = :project_id AND :ticket_filter
+       </sql-count>
+    </query>
+
 </query-mapping>
