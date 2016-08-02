@@ -343,6 +343,9 @@ package Jason.Tickets.Models is
 
       --  the ticket status.
       Status : Jason.Tickets.Models.Status_Type;
+
+      --  the ticket creator's name.
+      Creator : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
    --  Get the bean attribute identified by the name.
@@ -377,6 +380,8 @@ package Jason.Tickets.Models is
                    Context : in out ADO.Queries.Context'Class);
 
    Query_List : constant ADO.Queries.Query_Definition_Access;
+
+   Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access;
 
    --  --------------------
    --    The ticket information.
@@ -490,6 +495,7 @@ package Jason.Tickets.Models is
 
       --  the number of tickets per page.
       Page_Size : Integer;
+      Sort : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
    --  This bean provides some methods that can be used in a Method_Expression.
@@ -688,13 +694,19 @@ private
 
    package File_1 is
       new ADO.Queries.Loaders.File (Path => "tickets-list.xml",
-                                    Sha1 => "FECD3FFDE62C37E939ADE9CB37530A80FBCFC177");
+                                    Sha1 => "7454796A928A422E3F15CB2BDFCC8928F0B2E623");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",
                                      File => File_1.File'Access);
    Query_List : constant ADO.Queries.Query_Definition_Access
    := Def_Listinfo_List.Query'Access;
+
+   package Def_Listinfo_List_Tag_Filter is
+      new ADO.Queries.Loaders.Query (Name => "list-tag-filter",
+                                     File => File_1.File'Access);
+   Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access
+   := Def_Listinfo_List_Tag_Filter.Query'Access;
 
    package File_2 is
       new ADO.Queries.Loaders.File (Path => "ticket-info.xml",

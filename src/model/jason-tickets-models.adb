@@ -1074,6 +1074,8 @@ package body Jason.Tickets.Models is
          return Util.Beans.Objects.Time.To_Object (From.Update_Date);
       elsif Name = "status" then
          return Jason.Tickets.Models.Status_Type_Objects.To_Object (From.Status);
+      elsif Name = "creator" then
+         return Util.Beans.Objects.To_Object (From.Creator);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1101,6 +1103,8 @@ package body Jason.Tickets.Models is
          Item.Update_Date := Util.Beans.Objects.Time.To_Time (Value);
       elsif Name = "status" then
          Item.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
+      elsif Name = "creator" then
+         Item.Creator := Util.Beans.Objects.To_Unbounded_String (Value);
       end if;
    end Set_Value;
 
@@ -1135,6 +1139,7 @@ package body Jason.Tickets.Models is
          Into.Create_Date := Stmt.Get_Time (4);
          Into.Update_Date := Stmt.Get_Time (5);
          Into.Status := Jason.Tickets.Models.Status_Type'Val (Stmt.Get_Integer (6));
+         Into.Creator := Stmt.Get_Unbounded_String (7);
       end Read;
    begin
       Stmt.Execute;
@@ -1399,6 +1404,8 @@ package body Jason.Tickets.Models is
          return Util.Beans.Objects.To_Object (From.Tag);
       elsif Name = "page_size" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Page_Size));
+      elsif Name = "sort" then
+         return Util.Beans.Objects.To_Object (From.Sort);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1422,6 +1429,8 @@ package body Jason.Tickets.Models is
          Item.Tag := Util.Beans.Objects.To_Unbounded_String (Value);
       elsif Name = "page_size" then
          Item.Page_Size := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "sort" then
+         Item.Sort := Util.Beans.Objects.To_Unbounded_String (Value);
       end if;
    end Set_Value;
 
