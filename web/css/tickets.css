@@ -27,3 +27,27 @@
 .ticket-list-submitter {
     width: 10%;
 }
+.ticket-list-priority span {
+    width: 40px;
+    display: inline-block;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    text-align: center;
+}
+.ticket-prio-1 span {
+    background-color: red;
+    color: white;
+}
+.ticket-prio-2 span {
+    background-color: orange;
+}
+.ticket-prio-3 span {
+    background-color: yellow;
+}
+.ticket-prio-4 span {
+    background-color: green;
+}
+.ticket-prio-5 span {
+    background-color: blue;
+    color: white;
+}

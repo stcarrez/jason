@@ -1,5 +1,6 @@
 <div class='awa-form ui-widget'
      xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:awa="http://code.google.com/p/ada-awa/jsf"
      xmlns:w="http://code.google.com/p/ada-asf/widget"
      xmlns:h="http://java.sun.com/jsf/html">
 
@@ -13,10 +14,24 @@
             <w:inputText styleClass="awa-required"
                          id='summary' size='50' required='true' value='#{ticket.summary}'
                          title='#{ticketMsg.ticket_summary_label}'/>
-            <w:inputText id='description' title="#{ticketMsg.ticket_description_label}"
-                         styleClass="awa-required ui-corner-all" size='80'
-                         placeholder="#{ticketMsg.ticket_description_placeholder}"
-                         value="#{ticket.description}" required="true"/>
+            <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='qtags'>#{ticketMsg.ticket_tags_label}</label>
+                </dt>
+                <dd>
+                    <awa:tagList value='#{ticket.tags}' id='ptags'
+                                 autoCompleteUrl='#{contextPath}/tickets/lists/tag-search.html'/>
+                </dd>
+            </dl>
+            <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='text'>#{ticketMsg.ticket_description_label}</label>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='description' rows='20' required='true'
+                                     value='#{ticket.description}'/>
+                </dd>
+            </dl>
             <ul class='awa-buttons'>
                 <li>
                     <h:commandButton id='save' value='#{ticketMsg.ticket_create_button}'
