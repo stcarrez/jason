@@ -44,8 +44,11 @@ package body Jason.Tickets.Modules is
 
       --  Register here any bean class, servlet, filter.
       Register.Register (Plugin => Plugin,
-                         Name   => "Jason.Tickets.Beans.Tickets_Bean",
+                         Name   => "Jason.Tickets.Beans.Ticket_Bean",
                          Handler => Jason.Tickets.Beans.Create_Ticket_Bean'Access);
+      Register.Register (Plugin => Plugin,
+                         Name   => "Jason.Tickets.Beans.Ticket_List_Bean",
+                         Handler => Jason.Tickets.Beans.Create_Ticket_List_Bean'Access);
 
       AWA.Modules.Module (Plugin).Initialize (App, Props);
 

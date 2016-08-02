@@ -17,6 +17,13 @@
 -----------------------------------------------------------------------
 
 with ADO.Utils;
+with ADO.Queries;
+with ADO.Sessions;
+with ADO.Datasets;
+with ADO.Parameters;
+with ADO.Sessions.Entities;
+with AWA.Tags.Modules;
+with AWA.Services.Contexts;
 with Jason.Projects.Models;
 package body Jason.Tickets.Beans is
 
@@ -108,5 +115,136 @@ package body Jason.Tickets.Beans is
       Object.Tags.Set_Permission ("ticket-update");
       return Object.all'Access;
    end Create_Ticket_Bean;
+
+   --  Get the value identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_List_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+      Pos : Natural;
+   begin
+      if Name = "tags" then
+         Pos := From.Tickets.Get_Row_Index;
+         if Pos = 0 then
+            return Util.Beans.Objects.Null_Object;
+         end if;
+         declare
+            Item : constant Models.List_Info := From.Tickets.List.Element (Pos - 1);
+         begin
+            return From.Tags.Get_Tags (Item.Id);
+         end;
+      elsif Name = "tickets" then
+         return Util.Beans.Objects.To_Object (Value   => From.Tickets_Bean,
+                                              Storage => Util.Beans.Objects.STATIC);
+      else
+         return Jason.Tickets.Models.Ticket_List_Bean (From).Get_Value (Name);
+      end if;
+   end Get_Value;
+
+   --  Set the value identified by the name.
+   overriding
+   procedure Set_Value (From  : in out Ticket_List_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      if not Util.Beans.Objects.Is_Empty (Value) or else Name = "tags" then
+         Jason.Tickets.Models.Ticket_List_Bean (From).Set_Value (Name, Value);
+      end if;
+   end Set_Value;
+
+   --  Load list of tickets.
+   overriding
+   procedure Load (Bean    : in out Ticket_List_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      use type ADO.Identifier;
+      use type Ada.Strings.Unbounded.Unbounded_String;
+
+      Ctx         : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      User        : constant ADO.Identifier := Ctx.Get_User_Identifier;
+      Session     : ADO.Sessions.Session := Bean.Module.Get_Session;
+      Query       : ADO.Queries.Context;
+      Count_Query : ADO.Queries.Context;
+      Tag_Id      : ADO.Identifier;
+      First       : constant Natural  := (Bean.Page - 1) * Bean.Page_Size;
+   begin
+      AWA.Tags.Modules.Find_Tag_Id (Session, Ada.Strings.Unbounded.To_String (Bean.Tag), Tag_Id);
+      if Tag_Id /= ADO.NO_IDENTIFIER then
+         Query.Set_Query (Jason.Tickets.Models.Query_List_Tag_Filter);
+         Query.Bind_Param (Name => "tag", Value => Tag_Id);
+         Count_Query.Set_Count_Query (Jason.Tickets.Models.Query_List_Tag_Filter);
+         Count_Query.Bind_Param (Name => "tag", Value => Tag_Id);
+      else
+         Query.Set_Query (Jason.Tickets.Models.Query_List);
+         Count_Query.Set_Count_Query (Jason.Tickets.Models.Query_List);
+      end if;
+      if Bean.Sort = "newest" then
+         Query.Bind_Param (Name  => "order1",
+                           Value => ADO.Parameters.Token '("ticket.create_date DESC"));
+      elsif Bean.Sort = "oldest" then
+         Query.Bind_Param (Name  => "order1",
+                           Value => ADO.Parameters.Token '("ticket.create_date ASC"));
+      elsif Bean.Sort = "recent" then
+         Query.Bind_Param (Name  => "order1",
+                           Value => ADO.Parameters.Token '("ticket.update_date DESC"));
+      elsif Bean.Sort = "not-recent" then
+         Query.Bind_Param (Name  => "order1",
+                           Value => ADO.Parameters.Token '("ticket.update_date ASC"));
+      else
+         Query.Bind_Param (Name  => "order1",
+                           Value => ADO.Parameters.Token '("ticket.ident DESC"));
+      end if;
+      Query.Bind_Param (Name => "ticket_filter",
+                        Value => ADO.Parameters.Token '("ticket.status >= 0"));
+      Count_Query.Bind_Param (Name => "ticket_filter",
+                              Value => ADO.Parameters.Token '("ticket.status >= 0"));
+      Query.Bind_Param (Name => "project_id", Value => Bean.Project_Id);
+      Query.Bind_Param (Name => "first", Value => First);
+      Query.Bind_Param (Name => "count", Value => Bean.Page_Size);
+      Query.Bind_Param (Name => "user_id", Value => User);
+      Count_Query.Bind_Param (Name => "project_id", Value => Bean.Project_Id);
+      Count_Query.Bind_Param (Name => "user_id", Value => User);
+      ADO.Sessions.Entities.Bind_Param (Params  => Query,
+                                        Name    => "ticket_table",
+                                        Table   => Jason.Tickets.Models.TICKET_TABLE,
+                                        Session => Session);
+      ADO.Sessions.Entities.Bind_Param (Params  => Query,
+                                        Name    => "project_table",
+                                        Table   => Jason.Projects.Models.PROJECT_TABLE,
+                                        Session => Session);
+      ADO.Sessions.Entities.Bind_Param (Params  => Count_Query,
+                                        Name    => "ticket_table",
+                                        Table   => Jason.Tickets.Models.TICKET_TABLE,
+                                        Session => Session);
+      ADO.Sessions.Entities.Bind_Param (Params  => Count_Query,
+                                        Name    => "project_table",
+                                        Table   => Jason.Projects.Models.PROJECT_TABLE,
+                                        Session => Session);
+      Jason.Tickets.Models.List (Bean.Tickets, Session, Query);
+      Bean.Count := ADO.Datasets.Get_Count (Session, Count_Query);
+      declare
+         List : ADO.Utils.Identifier_Vector;
+         Iter : Models.List_Info_Vectors.Cursor := Bean.Tickets.List.First;
+      begin
+         while Models.List_Info_Vectors.Has_Element (Iter) loop
+            List.Append (Models.List_Info_Vectors.Element (Iter).Id);
+            Models.List_Info_Vectors.Next (Iter);
+         end loop;
+         Bean.Tags.Load_Tags (Session, Jason.Tickets.Models.TICKET_TABLE.Table.all,
+                              List);
+      end;
+   end Load;
+
+   --  Create the Tickets_List_Bean bean instance.
+   function Create_Ticket_List_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+                                     return Util.Beans.Basic.Readonly_Bean_Access is
+      Object  : constant Ticket_List_Bean_Access := new Ticket_List_Bean;
+   begin
+      Object.Module     := Module;
+      Object.Page_Size  := 20;
+      Object.Count      := 0;
+      Object.Page       := 1;
+      Object.Project_Id := ADO.NO_IDENTIFIER;
+      Object.Tickets_Bean := Object.Tickets'Access;
+      return Object.all'Access;
+   end Create_Ticket_List_Bean;
 
 end Jason.Tickets.Beans;

@@ -69,4 +69,40 @@ package Jason.Tickets.Beans is
    function Create_Ticket_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
       return Util.Beans.Basic.Readonly_Bean_Access;
 
+   --  ------------------------------
+   --  Bean that collects the list of tickets filtered by tag, priority and project.
+   --  ------------------------------
+   type Ticket_List_Bean is new Jason.Tickets.Models.Ticket_List_Bean with record
+      Module        : Jason.Tickets.Modules.Ticket_Module_Access := null;
+      Project       : Jason.Projects.Models.Project_Ref;
+
+      --  List of tickets.
+      Tickets       : aliased Jason.Tickets.Models.List_Info_List_Bean;
+      Tickets_Bean  : Jason.Tickets.Models.List_Info_List_Bean_Access;
+
+      --  List of tags associated with the tickets.
+      Tags          : AWA.Tags.Beans.Entity_Tag_Map;
+   end record;
+   type Ticket_List_Bean_Access is access all Ticket_List_Bean'Class;
+
+   --  Get the value identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_List_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the value identified by the name.
+   overriding
+   procedure Set_Value (From  : in out Ticket_List_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   --  Load list of tickets.
+   overriding
+   procedure Load (Bean    : in out Ticket_List_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Create the Tickets_List_Bean bean instance.
+   function Create_Ticket_List_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+      return Util.Beans.Basic.Readonly_Bean_Access;
+
 end Jason.Tickets.Beans;
