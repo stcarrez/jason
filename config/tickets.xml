@@ -8,8 +8,21 @@
   <managed-bean>
     <description>An example of a bean (change description and bean name)</description>
     <managed-bean-name>ticket</managed-bean-name>
-    <managed-bean-class>Jason.Tickets.Beans.Tickets_Bean</managed-bean-class>
+    <managed-bean-class>Jason.Tickets.Beans.Ticket_Bean</managed-bean-class>
     <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
+    <description>List of tickets.</description>
+    <managed-bean-name>ticketList</managed-bean-name>
+
+    <managed-bean-class>Jason.Tickets.Beans.Ticket_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>page_size</property-name>
+      <property-class>Integer</property-class>
+      <value>20</value>
+    </managed-property>
   </managed-bean>
 
   <managed-bean>
@@ -58,6 +71,7 @@
     <url-pattern>/tickets/*.html</url-pattern>
     <url-pattern>/tickets/edit/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/view/#{ticket.ticket_id}</url-pattern>
+    <url-pattern>/tickets/list/#{ticketList.project_id}</url-pattern>
     <url-pattern>/tickets/create/#{ticket.project_id}</url-pattern>
   </filter-mapping>
 
@@ -66,6 +80,7 @@
     <url-pattern>/tickets/*.html</url-pattern>
     <url-pattern>/tickets/edit/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/view/#{ticket.ticket_id}</url-pattern>
+    <url-pattern>/tickets/list/#{ticketList.project_id}</url-pattern>
     <url-pattern>/tickets/create/#{ticket.project_id}</url-pattern>
   </filter-mapping>
 
@@ -79,12 +94,18 @@
     <url-pattern>/tickets/admin/.*</url-pattern>
     <url-pattern>/tickets/edit/.*</url-pattern>
     <url-pattern>/tickets/view/.*</url-pattern>
+    <url-pattern>/tickets/list/.*</url-pattern>
     <url-pattern>/tickets/create/.*</url-pattern>
   </url-policy>
 
   <url-mapping>
     <pattern>/tickets/edit/#{ticket.ticket_id}</pattern>
     <view-id>/tickets/edit.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/tickets/list/#{ticketList.project_id}</pattern>
+    <view-id>/tickets/list.html</view-id>
   </url-mapping>
 
   <url-mapping>
