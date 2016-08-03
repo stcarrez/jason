@@ -47,18 +47,18 @@
         <li>
             <h:panelGroup rendered="#{ticketList.page gt 1}">
                 <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page - 1}#{pageParam}"
-                   title="#{wikiMsg.wiki_previous_page_title}">#{wikiMsg.wiki_previous_page}</a>
+                   title="#{ticketMsg.ticket_previous_page_title}">#{ticketMsg.ticket_previous_page}</a>
             </h:panelGroup>
         </li>
         <li>
-            <h:outputFormat value="#{wikiMsg.wiki_list_page_number}">
+            <h:outputFormat value="#{ticketMsg.ticket_list_page_number}">
                 <f:param value="#{ticketList.page}"/>
             </h:outputFormat>
         </li>
-        <li>
+        <li>#{ticketList.page_count}
             <h:panelGroup rendered="#{ticketList.page lt ticketList.page_count}">
                 <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page + 1}#{pageParam}"
-                   title="#{wikiMsg.wiki_next_page_title}">#{wikiMsg.wiki_next_page}</a>
+                   title="#{ticketMsg.ticket_next_page_title}">#{ticketMsg.ticket_next_page}</a>
             </h:panelGroup>
         </li>
     </ul>

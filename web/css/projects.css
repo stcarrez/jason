@@ -14,3 +14,20 @@
 .project-title {
     background: url(../images/projects/project-view-26.png) no-repeat;
 }
+.project-ticket-list {
+    float: left;
+    padding-left: 1%;
+    padding-right: 1%;
+    width: 98%;
+    margin-top: 1em;
+}
+.project-tickets {
+    float: left;
+    clear: both;
+    width: 100%;
+    margin-top: 1em;
+}
+.project-tickets h3 {
+    line-height: 1.1em;
+    font-size: 1.1em;
+}

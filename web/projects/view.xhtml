@@ -34,7 +34,10 @@
                          var="tagName"
                          tagClass="tagedit-listelement tagedit-listelement-old"/>
             <ui:include src="views/project-info.xhtml"/>
-            <ajax:include styleClass="asf-container" async="true"
+            <div class="project-tickets">
+                <h3>#{projectMsg.project_view_tickets_title}</h3>
+            </div>
+            <ajax:include styleClass="asf-container project-ticket-list" async="true"
                           src="/tickets/list/#{project.id}"/>
         </div>
     </ui:define>

@@ -5,8 +5,21 @@
         xmlns:c="http://java.sun.com/jstl/core"
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
-    <div>
-        Name: #{project.name}
+    <dl>
+        <dt></dt>
+        <dd></dd>
+    </dl>
+    <div class="project-">
+        Project description
+    </div>
+    <div class="">
+        Creation date: #{project.create_date}
+    </div>
+    <div class="">
+        Last update: #{project.update_date}
+    </div>
+    <div class="">
+        Status: #{project.status}
     </div>
     <div class="awa-button">
         <a href="#{contextPath}/tickets/create/#{project.id}" title="Create">Create ticket</a>
