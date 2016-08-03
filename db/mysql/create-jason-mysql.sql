@@ -686,6 +686,8 @@ CREATE TABLE jason_ticket (
   `description` TEXT NOT NULL,
   /* the last ticket update date. */
   `update_date` DATETIME NOT NULL,
+  /* the ticket type. */
+  `ticket_type` TINYINT NOT NULL,
   /*  */
   `project_id` BIGINT NOT NULL,
   /*  */
