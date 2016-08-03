@@ -114,6 +114,18 @@ package Jason.Projects.Models is
    function Get_Update_Date (Object : in Project_Ref)
                  return Ada.Calendar.Time;
 
+   --  Set the project description.
+   procedure Set_Description (Object : in out Project_Ref;
+                              Value  : in Ada.Strings.Unbounded.Unbounded_String);
+   procedure Set_Description (Object : in out Project_Ref;
+                              Value : in String);
+
+   --  Get the project description.
+   function Get_Description (Object : in Project_Ref)
+                 return Ada.Strings.Unbounded.Unbounded_String;
+   function Get_Description (Object : in Project_Ref)
+                 return String;
+
    --  Set the project owner.
    procedure Set_Owner (Object : in out Project_Ref;
                         Value  : in AWA.Users.Models.User_Ref'Class);
@@ -375,10 +387,11 @@ private
    COL_4_1_NAME : aliased constant String := "status";
    COL_5_1_NAME : aliased constant String := "last_ticket";
    COL_6_1_NAME : aliased constant String := "update_date";
-   COL_7_1_NAME : aliased constant String := "owner_id";
+   COL_7_1_NAME : aliased constant String := "description";
+   COL_8_1_NAME : aliased constant String := "owner_id";
 
    PROJECT_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 8,
+     (Count => 9,
       Table => PROJECT_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -388,7 +401,8 @@ private
          5 => COL_4_1_NAME'Access,
          6 => COL_5_1_NAME'Access,
          7 => COL_6_1_NAME'Access,
-         8 => COL_7_1_NAME'Access
+         8 => COL_7_1_NAME'Access,
+         9 => COL_8_1_NAME'Access
 )
      );
    PROJECT_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -407,6 +421,7 @@ private
        Status : Jason.Projects.Models.Status_Type;
        Last_Ticket : Integer;
        Update_Date : Ada.Calendar.Time;
+       Description : Ada.Strings.Unbounded.Unbounded_String;
        Owner : AWA.Users.Models.User_Ref;
    end record;
 

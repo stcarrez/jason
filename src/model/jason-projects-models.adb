@@ -203,12 +203,42 @@ package body Jason.Projects.Models is
    end Get_Update_Date;
 
 
+   procedure Set_Description (Object : in out Project_Ref;
+                               Value : in String) is
+      Impl : Project_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_String (Impl.all, 8, Impl.Description, Value);
+   end Set_Description;
+
+   procedure Set_Description (Object : in out Project_Ref;
+                              Value  : in Ada.Strings.Unbounded.Unbounded_String) is
+      Impl : Project_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_Unbounded_String (Impl.all, 8, Impl.Description, Value);
+   end Set_Description;
+
+   function Get_Description (Object : in Project_Ref)
+                 return String is
+   begin
+      return Ada.Strings.Unbounded.To_String (Object.Get_Description);
+   end Get_Description;
+   function Get_Description (Object : in Project_Ref)
+                  return Ada.Strings.Unbounded.Unbounded_String is
+      Impl : constant Project_Access
+         := Project_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Description;
+   end Get_Description;
+
+
    procedure Set_Owner (Object : in out Project_Ref;
                         Value  : in AWA.Users.Models.User_Ref'Class) is
       Impl : Project_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 8, Impl.Owner, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 9, Impl.Owner, Value);
    end Set_Owner;
 
    function Get_Owner (Object : in Project_Ref)
@@ -239,6 +269,7 @@ package body Jason.Projects.Models is
             Copy.Status := Impl.Status;
             Copy.Last_Ticket := Impl.Last_Ticket;
             Copy.Update_Date := Impl.Update_Date;
+            Copy.Description := Impl.Description;
             Copy.Owner := Impl.Owner;
          end;
       end if;
@@ -400,9 +431,14 @@ package body Jason.Projects.Models is
          Object.Clear_Modified (7);
       end if;
       if Object.Is_Modified (8) then
-         Stmt.Save_Field (Name  => COL_7_1_NAME, --  owner_id
-                          Value => Object.Owner);
+         Stmt.Save_Field (Name  => COL_7_1_NAME, --  description
+                          Value => Object.Description);
          Object.Clear_Modified (8);
+      end if;
+      if Object.Is_Modified (9) then
+         Stmt.Save_Field (Name  => COL_8_1_NAME, --  owner_id
+                          Value => Object.Owner);
+         Object.Clear_Modified (9);
       end if;
       if Stmt.Has_Save_Fields then
          Object.Version := Object.Version + 1;
@@ -448,7 +484,9 @@ package body Jason.Projects.Models is
                         Value => Object.Last_Ticket);
       Query.Save_Field (Name  => COL_6_1_NAME, --  update_date
                         Value => Object.Update_Date);
-      Query.Save_Field (Name  => COL_7_1_NAME, --  owner_id
+      Query.Save_Field (Name  => COL_7_1_NAME, --  description
+                        Value => Object.Description);
+      Query.Save_Field (Name  => COL_8_1_NAME, --  owner_id
                         Value => Object.Owner);
       Query.Execute (Result);
       if Result /= 1 then
@@ -492,6 +530,8 @@ package body Jason.Projects.Models is
          return Util.Beans.Objects.To_Object (Long_Long_Integer (Impl.Last_Ticket));
       elsif Name = "update_date" then
          return Util.Beans.Objects.Time.To_Object (Impl.Update_Date);
+      elsif Name = "description" then
+         return Util.Beans.Objects.To_Object (Impl.Description);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -531,8 +571,9 @@ package body Jason.Projects.Models is
       Object.Status := Status_Type'Val (Stmt.Get_Integer (4));
       Object.Last_Ticket := Stmt.Get_Integer (5);
       Object.Update_Date := Stmt.Get_Time (6);
-      if not Stmt.Is_Null (7) then
-         Object.Owner.Set_Key_Value (Stmt.Get_Identifier (7), Session);
+      Object.Description := Stmt.Get_Unbounded_String (7);
+      if not Stmt.Is_Null (8) then
+         Object.Owner.Set_Key_Value (Stmt.Get_Identifier (8), Session);
       end if;
       Object.Version := Stmt.Get_Integer (1);
       ADO.Objects.Set_Created (Object);
@@ -1117,6 +1158,8 @@ package body Jason.Projects.Models is
          Item.Set_Last_Ticket (Util.Beans.Objects.To_Integer (Value));
       elsif Name = "update_date" then
          Item.Set_Update_Date (Util.Beans.Objects.Time.To_Time (Value));
+      elsif Name = "description" then
+         Item.Set_Description (Util.Beans.Objects.To_String (Value));
       end if;
    end Set_Value;
 
