@@ -132,6 +132,8 @@ package body Jason.Tickets.Beans is
          begin
             return From.Tags.Get_Tags (Item.Id);
          end;
+      elsif Name = "page_count" then
+         return Util.Beans.Objects.To_Object ((From.Count + From.Page_Size - 1) / From.Page_Size);
       elsif Name = "tickets" then
          return Util.Beans.Objects.To_Object (Value   => From.Tickets_Bean,
                                               Storage => Util.Beans.Objects.STATIC);
