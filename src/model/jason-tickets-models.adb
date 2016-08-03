@@ -71,6 +71,7 @@ package body Jason.Tickets.Models is
       Impl.Priority := 0;
       Impl.Status := Jason.Tickets.Models.Status_Type'First;
       Impl.Update_Date := ADO.DEFAULT_TIME;
+      Impl.Ticket_Type := Jason.Tickets.Models.Ticket_Type'First;
       ADO.Objects.Set_Object (Object, Impl.all'Access);
    end Allocate;
 
@@ -251,12 +252,31 @@ package body Jason.Tickets.Models is
    end Get_Update_Date;
 
 
+   procedure Set_Ticket_Type (Object : in out Ticket_Ref;
+                              Value  : in Jason.Tickets.Models.Ticket_Type) is
+      procedure Set_Field_Enum is
+         new ADO.Objects.Set_Field_Operation (Ticket_Type);
+      Impl : Ticket_Access;
+   begin
+      Set_Field (Object, Impl);
+      Set_Field_Enum (Impl.all, 10, Impl.Ticket_Type, Value);
+   end Set_Ticket_Type;
+
+   function Get_Ticket_Type (Object : in Ticket_Ref)
+                  return Jason.Tickets.Models.Ticket_Type is
+      Impl : constant Ticket_Access
+         := Ticket_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Ticket_Type;
+   end Get_Ticket_Type;
+
+
    procedure Set_Project (Object : in out Ticket_Ref;
                           Value  : in Jason.Projects.Models.Project_Ref'Class) is
       Impl : Ticket_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 10, Impl.Project, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 11, Impl.Project, Value);
    end Set_Project;
 
    function Get_Project (Object : in Ticket_Ref)
@@ -273,7 +293,7 @@ package body Jason.Tickets.Models is
       Impl : Ticket_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 11, Impl.Creator, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 12, Impl.Creator, Value);
    end Set_Creator;
 
    function Get_Creator (Object : in Ticket_Ref)
@@ -306,6 +326,7 @@ package body Jason.Tickets.Models is
             Copy.Status := Impl.Status;
             Copy.Description := Impl.Description;
             Copy.Update_Date := Impl.Update_Date;
+            Copy.Ticket_Type := Impl.Ticket_Type;
             Copy.Project := Impl.Project;
             Copy.Creator := Impl.Creator;
          end;
@@ -478,14 +499,19 @@ package body Jason.Tickets.Models is
          Object.Clear_Modified (9);
       end if;
       if Object.Is_Modified (10) then
-         Stmt.Save_Field (Name  => COL_9_1_NAME, --  project_id
-                          Value => Object.Project);
+         Stmt.Save_Field (Name  => COL_9_1_NAME, --  ticket_type
+                          Value => Integer (Ticket_Type'Pos (Object.Ticket_Type)));
          Object.Clear_Modified (10);
       end if;
       if Object.Is_Modified (11) then
-         Stmt.Save_Field (Name  => COL_10_1_NAME, --  creator_id
-                          Value => Object.Creator);
+         Stmt.Save_Field (Name  => COL_10_1_NAME, --  project_id
+                          Value => Object.Project);
          Object.Clear_Modified (11);
+      end if;
+      if Object.Is_Modified (12) then
+         Stmt.Save_Field (Name  => COL_11_1_NAME, --  creator_id
+                          Value => Object.Creator);
+         Object.Clear_Modified (12);
       end if;
       if Stmt.Has_Save_Fields then
          Object.Version := Object.Version + 1;
@@ -535,9 +561,11 @@ package body Jason.Tickets.Models is
                         Value => Object.Description);
       Query.Save_Field (Name  => COL_8_1_NAME, --  update_date
                         Value => Object.Update_Date);
-      Query.Save_Field (Name  => COL_9_1_NAME, --  project_id
+      Query.Save_Field (Name  => COL_9_1_NAME, --  ticket_type
+                        Value => Integer (Ticket_Type'Pos (Object.Ticket_Type)));
+      Query.Save_Field (Name  => COL_10_1_NAME, --  project_id
                         Value => Object.Project);
-      Query.Save_Field (Name  => COL_10_1_NAME, --  creator_id
+      Query.Save_Field (Name  => COL_11_1_NAME, --  creator_id
                         Value => Object.Creator);
       Query.Execute (Result);
       if Result /= 1 then
@@ -585,6 +613,8 @@ package body Jason.Tickets.Models is
          return Util.Beans.Objects.To_Object (Impl.Description);
       elsif Name = "update_date" then
          return Util.Beans.Objects.Time.To_Object (Impl.Update_Date);
+      elsif Name = "ticket_type" then
+         return Jason.Tickets.Models.Ticket_Type_Objects.To_Object (Impl.Ticket_Type);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -626,11 +656,12 @@ package body Jason.Tickets.Models is
       Object.Status := Status_Type'Val (Stmt.Get_Integer (6));
       Object.Description := Stmt.Get_Unbounded_String (7);
       Object.Update_Date := Stmt.Get_Time (8);
-      if not Stmt.Is_Null (9) then
-         Object.Project.Set_Key_Value (Stmt.Get_Identifier (9), Session);
-      end if;
+      Object.Ticket_Type := Ticket_Type'Val (Stmt.Get_Integer (9));
       if not Stmt.Is_Null (10) then
-         Object.Creator.Set_Key_Value (Stmt.Get_Identifier (10), Session);
+         Object.Project.Set_Key_Value (Stmt.Get_Identifier (10), Session);
+      end if;
+      if not Stmt.Is_Null (11) then
+         Object.Creator.Set_Key_Value (Stmt.Get_Identifier (11), Session);
       end if;
       Object.Version := Stmt.Get_Integer (1);
       ADO.Objects.Set_Created (Object);
@@ -1358,6 +1389,8 @@ package body Jason.Tickets.Models is
          Item.Set_Description (Util.Beans.Objects.To_String (Value));
       elsif Name = "update_date" then
          Item.Set_Update_Date (Util.Beans.Objects.Time.To_Time (Value));
+      elsif Name = "ticket_type" then
+         Item.Set_Ticket_Type (Ticket_Type_Objects.To_Value (Value));
       end if;
    end Set_Value;
 

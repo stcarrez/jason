@@ -52,6 +52,11 @@ package Jason.Tickets.Models is
    package Status_Type_Objects is
       new Util.Beans.Objects.Enums (Status_Type);
 
+   type Ticket_Type is (INCIDENT, ISSUE, WORK, ENHANCEMENT, LIMITATION, CHANGE_REQUEST);
+   for Ticket_Type use (INCIDENT => 0, ISSUE => 1, WORK => 2, ENHANCEMENT => 3, LIMITATION => 4, CHANGE_REQUEST => 5);
+   package Ticket_Type_Objects is
+      new Util.Beans.Objects.Enums (Ticket_Type);
+
    type Ticket_Ref is new ADO.Objects.Object_Ref with null record;
 
    type Attribute_Ref is new ADO.Objects.Object_Ref with null record;
@@ -139,6 +144,14 @@ package Jason.Tickets.Models is
    --  Get the last ticket update date.
    function Get_Update_Date (Object : in Ticket_Ref)
                  return Ada.Calendar.Time;
+
+   --  Set the ticket type.
+   procedure Set_Ticket_Type (Object : in out Ticket_Ref;
+                              Value  : in Jason.Tickets.Models.Ticket_Type);
+
+   --  Get the ticket type.
+   function Get_Ticket_Type (Object : in Ticket_Ref)
+                 return Jason.Tickets.Models.Ticket_Type;
 
    --
    procedure Set_Project (Object : in out Ticket_Ref;
@@ -553,11 +566,12 @@ private
    COL_6_1_NAME : aliased constant String := "status";
    COL_7_1_NAME : aliased constant String := "description";
    COL_8_1_NAME : aliased constant String := "update_date";
-   COL_9_1_NAME : aliased constant String := "project_id";
-   COL_10_1_NAME : aliased constant String := "creator_id";
+   COL_9_1_NAME : aliased constant String := "ticket_type";
+   COL_10_1_NAME : aliased constant String := "project_id";
+   COL_11_1_NAME : aliased constant String := "creator_id";
 
    TICKET_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 11,
+     (Count => 12,
       Table => TICKET_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -570,7 +584,8 @@ private
          8 => COL_7_1_NAME'Access,
          9 => COL_8_1_NAME'Access,
          10 => COL_9_1_NAME'Access,
-         11 => COL_10_1_NAME'Access
+         11 => COL_10_1_NAME'Access,
+         12 => COL_11_1_NAME'Access
 )
      );
    TICKET_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -591,6 +606,7 @@ private
        Status : Jason.Tickets.Models.Status_Type;
        Description : Ada.Strings.Unbounded.Unbounded_String;
        Update_Date : Ada.Calendar.Time;
+       Ticket_Type : Jason.Tickets.Models.Ticket_Type;
        Project : Jason.Projects.Models.Project_Ref;
        Creator : AWA.Users.Models.User_Ref;
    end record;
