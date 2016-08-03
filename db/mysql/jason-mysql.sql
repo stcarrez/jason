@@ -29,6 +29,8 @@ CREATE TABLE jason_project (
   `last_ticket` INTEGER NOT NULL,
   /*  */
   `update_date` DATETIME NOT NULL,
+  /* the project description. */
+  `description` text NOT NULL,
   /* the project owner. */
   `owner_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
