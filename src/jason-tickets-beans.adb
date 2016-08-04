@@ -32,16 +32,9 @@ package body Jason.Tickets.Beans is
      new AWA.Helpers.Selectors.Create_From_Enum (Jason.Tickets.Models.Status_Type,
                                                  "ticket_status");
 
-   --  ------------------------------
-   --  Create ticket action.
-   --  ------------------------------
-   overriding
-   procedure Create (Bean    : in out Ticket_Bean;
-                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
-   begin
-      Bean.Module.Create (Bean, Bean.Project_Id);
-      Bean.Tags.Update_Tags (Bean.Get_Id);
-   end Create;
+   function Create_From_Ticket_Type is
+     new AWA.Helpers.Selectors.Create_From_Enum (Jason.Tickets.Models.Ticket_Type,
+                                                 "ticket_type");
 
    --  ------------------------------
    --  Get a select item list which contains a list of ticket status.
@@ -55,6 +48,30 @@ package body Jason.Tickets.Beans is
                                              Context => null,
                                              Create  => Create_From_Status'Access).all'Access;
    end Create_Status_List;
+
+   --  ------------------------------
+   --  Get a select item list which contains a list of ticket types.
+   --  ------------------------------
+   function Create_Type_List (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+                                return Util.Beans.Basic.Readonly_Bean_Access is
+      pragma Unreferenced (Module);
+      use AWA.Helpers;
+   begin
+      return Selectors.Create_Selector_Bean (Bundle  => "tickets",
+                                             Context => null,
+                                             Create  => Create_From_Ticket_Type'Access).all'Access;
+   end Create_Type_List;
+
+   --  ------------------------------
+   --  Create ticket action.
+   --  ------------------------------
+   overriding
+   procedure Create (Bean    : in out Ticket_Bean;
+                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Bean.Module.Create (Bean, Bean.Project_Id);
+      Bean.Tags.Update_Tags (Bean.Get_Id);
+   end Create;
 
    --  Save ticket action.
    overriding
@@ -176,7 +193,8 @@ package body Jason.Tickets.Beans is
    procedure Load (Bean    : in out Ticket_List_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
       use type ADO.Identifier;
-      use type Ada.Strings.Unbounded.Unbounded_String;
+      use Ada.Strings.Unbounded;
+      use Jason.Tickets.Models;
 
       Ctx         : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
       User        : constant ADO.Identifier := Ctx.Get_User_Identifier;
@@ -185,6 +203,7 @@ package body Jason.Tickets.Beans is
       Count_Query : ADO.Queries.Context;
       Tag_Id      : ADO.Identifier;
       First       : constant Natural  := (Bean.Page - 1) * Bean.Page_Size;
+      Filter      : Ada.Strings.Unbounded.Unbounded_String;
    begin
       AWA.Tags.Modules.Find_Tag_Id (Session, Ada.Strings.Unbounded.To_String (Bean.Tag), Tag_Id);
       if Tag_Id /= ADO.NO_IDENTIFIER then
@@ -212,10 +231,21 @@ package body Jason.Tickets.Beans is
          Query.Bind_Param (Name  => "order1",
                            Value => ADO.Parameters.Token '("ticket.ident DESC"));
       end if;
+      if Bean.Priority > 0 then
+         Ada.Strings.Unbounded.Append (Filter, "ticket.priority = ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Bean.Priority));
+         Ada.Strings.Unbounded.Append (Filter, " AND ");
+      end if;
+      if Bean.Status /= Jason.Tickets.Models.OPEN then
+         Ada.Strings.Unbounded.Append (Filter, "ticket.status = ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Bean.Status)));
+      else
+         Ada.Strings.Unbounded.Append (Filter, "ticket.status >= 0");
+      end if;
       Query.Bind_Param (Name => "ticket_filter",
-                        Value => ADO.Parameters.Token '("ticket.status >= 0"));
+                        Value => ADO.Parameters.Token (To_String (Filter)));
       Count_Query.Bind_Param (Name => "ticket_filter",
-                              Value => ADO.Parameters.Token '("ticket.status >= 0"));
+                              Value => ADO.Parameters.Token (To_String (Filter)));
       Query.Bind_Param (Name => "project_id", Value => Bean.Project_Id);
       Query.Bind_Param (Name => "first", Value => First);
       Query.Bind_Param (Name => "count", Value => Bean.Page_Size);
@@ -264,6 +294,7 @@ package body Jason.Tickets.Beans is
       Object.Page       := 1;
       Object.Priority   := -1;
       Object.Project_Id := ADO.NO_IDENTIFIER;
+      Object.Status     := Jason.Tickets.Models.OPEN;
       Object.Tickets_Bean := Object.Tickets'Access;
       return Object.all'Access;
    end Create_Ticket_List_Bean;
