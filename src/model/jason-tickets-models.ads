@@ -357,6 +357,9 @@ package Jason.Tickets.Models is
       --  the ticket status.
       Status : Jason.Tickets.Models.Status_Type;
 
+      --  the ticket type.
+      Ticket_Type : Jason.Tickets.Models.Ticket_Type;
+
       --  the ticket creator's name.
       Creator : Ada.Strings.Unbounded.Unbounded_String;
    end record;
@@ -718,7 +721,7 @@ private
 
    package File_1 is
       new ADO.Queries.Loaders.File (Path => "tickets-list.xml",
-                                    Sha1 => "7454796A928A422E3F15CB2BDFCC8928F0B2E623");
+                                    Sha1 => "A1EEE117F89DC5A760029875E84F3D601756AD80");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",
