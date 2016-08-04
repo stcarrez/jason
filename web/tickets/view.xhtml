@@ -27,27 +27,34 @@
                         <a class='awa-button' href="#{contextPath}/tickets/history/#{ticket.id}">#{projectMsg.project_page_history_label}</a>
                     </li>
                 </ul>
-                <h2>Ticket #{ticket.id} - #{ticket.summary}</h2>
+                <h2>#{u:translate(ticketMsg,'ticket_ptype_',ticket.ticket_type)} #{ticket.id} - #{ticket.summary}</h2>
             </div>
             <awa:tagList value='#{ticket.tags}' id='qtags' styleClass="awa-tag-list tagedit-list"
                          tagLink="#{contextPath}/tickets/tags/#{tagName}"
                          var="tagName"
                          tagClass="tagedit-listelement tagedit-listelement-old"/>
-            <dl>
-                <dt></dt>
+            <dl class="ticket-info">
+                <dt>Project</dt>
                 <dd>
-                    <span>Created on: #{ticket.create_date}</span>
-                    <span>Last updated on: #{ticket.update_date}</span>
+                    <a href="#{contextPath}/projects/view/#{ticket.project_id}">Project #{ticket.project_id}</a>
                 </dd>
+                <dt>Status:</dt>
                 <dd>
-                    Status: #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
+                    #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
+                </dd>
+                <dt>Created on</dt>
+                <dd>
+                    #{ticket.create_date}
+                </dd>
+                <dt>Last updated on</dt>
+                <dd>#{ticket.update_date}
                 </dd>
             </dl>
-            <div>
-                #{ticket.description}
-            </div>
-            <div>
-                <a href="#{contextPath}/projects/view/#{ticket.project_id}">Project #{ticket.project_id}</a>
+            <div class="ticket-info">
+                <h3>Description</h3>
+                <awa:wiki styleClass='wiki-text'
+                          value="#{ticket.description}"
+                          toc="false"/>
             </div>
         </div>
     </ui:define>

@@ -22,7 +22,7 @@
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
     <h:list var="ticket" value="#{ticketList.tickets}">
-        <div class='awa-list-item ui-list-item' id="p_#{ticket.id}">
+        <div class='awa-list-item ui-list-item' id="t_#{ticket.id}">
             <div class="awa-list-col ticket-list-ident">
                 #{ticket.ident}
             </div>
@@ -34,6 +34,9 @@
             </div>
             <div class='awa-list-col ticket-list-status'>
                 #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
+            </div>
+            <div class='awa-list-col ticket-list-type'>
+                #{u:translate(ticketMsg,'ticket_type_',ticket.ticket_type)}
             </div>
             <div class='awa-list-col ticket-list-create-date'>
                 <h:outputText value="#{ticket.create_date}"/>

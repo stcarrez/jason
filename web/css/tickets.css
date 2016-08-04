@@ -15,7 +15,7 @@
     background: url(../images/tickets/ticket-icon-26.png) no-repeat;
 }
 
-.ticket-list-ident, .ticket-list-priority, .ticket-list-status {
+.ticket-list-ident, .ticket-list-priority, .ticket-list-status, .ticket-list-type {
     width: 10%;
 }
 .ticket-list-summary {
@@ -50,4 +50,18 @@
 .ticket-prio-5 span {
     background-color: blue;
     color: white;
+}
+.ticket-info {
+    float: left;
+    width: 98%;
+    padding: 1%;
+}
+.ticket-info dt {
+    float: left;
+    clear: both;
+    width: 20%;
+}
+.ticket-info dd {
+    float: left;
+    width: 80%;
 }

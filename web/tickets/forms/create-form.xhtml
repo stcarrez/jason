@@ -23,6 +23,19 @@
                                  autoCompleteUrl='#{contextPath}/tickets/lists/tag-search.html'/>
                 </dd>
             </dl>
+            <div class="grid_4">
+                <dl class="awa-required#{util:hasMessage('type') ? ' awa-error' : ''}">
+                    <dt>
+                        <label for='type'>#{ticketMsg.ticket_type_label}</label>
+                    </dt>
+                    <dd>
+                        <w:chosen id="type" value="#{ticket.ticket_type}">
+                            <f:selectItems value="#{ticketTypeList}"/>
+                            <f:facet name="options">width: "60%",disable_search: true</f:facet>
+                        </w:chosen>
+                    </dd>
+                </dl>
+            </div>
             <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
                 <dt>
                     <label for='text'>#{ticketMsg.ticket_description_label}</label>

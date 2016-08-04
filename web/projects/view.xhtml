@@ -3,6 +3,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
                 xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:util="http://code.google.com/p/ada-asf/util"
                 xmlns:awa="http://code.google.com/p/ada-awa/jsf"
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{projectMsg.projects_title}" />
@@ -16,7 +17,6 @@
         <div id='awa-content'>
             <ui:include src="/projects/views/project-nav.xhtml">
                 <ui:param name="project_id" value="#{ticket.project_id}"/>
-                <ui:param name="sort" value="recent"/>
             </ui:include>
             <div class="project-title">
                 <ul class="awa-page-actions">
@@ -44,8 +44,25 @@
                     </li>
                 </ul>
             </div>
-            <ajax:include styleClass="asf-container project-ticket-list" async="true"
+            <ajax:include id="ticket-list" styleClass="asf-container project-ticket-list" async="true"
                           src="/tickets/list/#{project.id}"/>
+            <util:script>
+                $('#ticket-list').list({
+                    actionId: '#wiki-page-action',
+                    itemPrefix: 't_',
+                    deleteUrl: '#{contextPath}/wikis/forms/delete-page.html?id=',
+                    selectAction: function(list, node, event) {
+                        var target = event.target;
+                        if ($(node).hasClass('wiki-edit')) {
+                            var name = $(list.currentNode).attr('data-name');
+                            document.location = '#{contextPath}/wikis/edit/#{wikiList.wiki_id}/' + name;
+                        }
+                        if ($(target).hasClass('ticket-list-status')) {
+                            ASF.Update($('#ticket-list'), '#{contextPath}/tickets/list/#{project.id}');
+                        }
+                    }
+                });
+            </util:script>
         </div>
     </ui:define>
     <ui:define name="pageScript">
