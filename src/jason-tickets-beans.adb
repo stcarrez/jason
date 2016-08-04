@@ -24,8 +24,13 @@ with ADO.Parameters;
 with ADO.Sessions.Entities;
 with AWA.Tags.Modules;
 with AWA.Services.Contexts;
+with AWA.Helpers.Selectors;
 with Jason.Projects.Models;
 package body Jason.Tickets.Beans is
+
+   function Create_From_Status is
+     new AWA.Helpers.Selectors.Create_From_Enum (Jason.Tickets.Models.Status_Type,
+                                                 "ticket_status");
 
    --  ------------------------------
    --  Create ticket action.
@@ -37,6 +42,19 @@ package body Jason.Tickets.Beans is
       Bean.Module.Create (Bean, Bean.Project_Id);
       Bean.Tags.Update_Tags (Bean.Get_Id);
    end Create;
+
+   --  ------------------------------
+   --  Get a select item list which contains a list of ticket status.
+   --  ------------------------------
+   function Create_Status_List (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+                                return Util.Beans.Basic.Readonly_Bean_Access is
+      pragma Unreferenced (Module);
+      use AWA.Helpers;
+   begin
+      return Selectors.Create_Selector_Bean (Bundle  => "tickets",
+                                             Context => null,
+                                             Create  => Create_From_Status'Access).all'Access;
+   end Create_Status_List;
 
    --  Save ticket action.
    overriding
@@ -244,6 +262,7 @@ package body Jason.Tickets.Beans is
       Object.Page_Size  := 20;
       Object.Count      := 0;
       Object.Page       := 1;
+      Object.Priority   := -1;
       Object.Project_Id := ADO.NO_IDENTIFIER;
       Object.Tickets_Bean := Object.Tickets'Access;
       return Object.all'Access;
