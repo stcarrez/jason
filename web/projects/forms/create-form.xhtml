@@ -22,6 +22,15 @@
                                  autoCompleteUrl='#{contextPath}/projects/lists/tag-search.html'/>
                 </dd>
             </dl>
+            <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='text'>#{projectMsg.project_description_label}</label>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='description' rows='20' required='true'
+                                     value='#{project.description}'/>
+                </dd>
+            </dl>
             <ul class='awa-buttons'>
                 <li>
                     <h:commandButton id='save' value='#{projectMsg.project_create_button}'

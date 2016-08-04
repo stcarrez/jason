@@ -26,14 +26,29 @@
                                  autoCompleteUrl='#{contextPath}/tickets/lists/tag-search.html'/>
                 </dd>
             </dl>
-            <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
-                <dt>
-                    <label for='qtags'>Priority (<span id="p-value"></span>)</label>
-                </dt>
-                <dd id="slider">
+            <div class="grid_6">
+                <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
+                    <dt>
+                        <label for='qtags'>Priority (<span id="p-value"></span>)</label>
+                    </dt>
+                    <dd id="slider">
 
-                </dd>
-            </dl>
+                    </dd>
+                </dl>
+            </div>
+            <div class="grid_6">
+                <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
+                    <dt>
+                        <label for='status'>Status</label>
+                    </dt>
+                    <dd>
+                        <w:chosen id="status" value="#{ticket.status}">
+                            <f:selectItems value="#{ticketStatusList}"/>
+                            <f:facet name="options">width: "60%",disable_search: true</f:facet>
+                        </w:chosen>
+                    </dd>
+                </dl>
+            </div>
             <util:script>
                 function set_priority(val) {
                     var labels = ["Emergency", "Critical", "High", "Medium", "Low"];

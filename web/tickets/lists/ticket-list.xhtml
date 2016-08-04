@@ -29,11 +29,11 @@
             <div class='awa-list-col ticket-list-summary'>
                 <a href="#{contextPath}/tickets/view/#{ticket.id}">#{ticket.summary}</a>
             </div>
-            <div class='awa-list-col ticket-list-priority ticket-prio-#{ticket.priority}'>
+            <div class='awa-list-col ticket-list-priority ticket-prio-#{ticket.priority}' title="#{u:translate(ticketMsg,'ticket_priority_',ticket.priority)}">
                 <span>#{ticket.priority}</span>
             </div>
             <div class='awa-list-col ticket-list-status'>
-                #{ticket.status}
+                #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
             </div>
             <div class='awa-list-col ticket-list-create-date'>
                 <h:outputText value="#{ticket.create_date}"/>

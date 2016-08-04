@@ -7,21 +7,16 @@
         xmlns:h="http://java.sun.com/jsf/html">
     <dl>
         <dt></dt>
-        <dd></dd>
+        <dd><span>Created on: #{project.create_date}</span>
+            <span>Last updated on: #{project.update_date}</span>
+        </dd>
     </dl>
     <div class="project-">
-        Project description
-    </div>
-    <div class="">
-        Creation date: #{project.create_date}
-    </div>
-    <div class="">
-        Last update: #{project.update_date}
+        <awa:wiki styleClass='wiki-text'
+                  value="#{project.description}"
+                  toc="false"/>
     </div>
     <div class="">
         Status: #{project.status}
-    </div>
-    <div class="awa-button">
-        <a href="#{contextPath}/tickets/create/#{project.id}" title="Create">Create ticket</a>
     </div>
 </ui:composition>
