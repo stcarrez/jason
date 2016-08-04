@@ -26,6 +26,9 @@
         <property type='Jason.Tickets.Models.Status_Type' name="status">
             <comment>the ticket status.</comment>
         </property>
+        <property type='Jason.Tickets.Models.Ticket_Type' name="ticket_type">
+            <comment>the ticket type.</comment>
+        </property>
         <property type='String' name="creator">
             <comment>the ticket creator's name.</comment>
         </property>
@@ -42,6 +45,7 @@
       ticket.create_date,
       ticket.update_date,
       ticket.status,
+      ticket.ticket_type,
       user.name
     FROM jason_ticket AS ticket
     INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
@@ -70,6 +74,7 @@
       ticket.create_date,
       ticket.update_date,
       ticket.status,
+      ticket.ticket_type,
       user.name
     FROM jason_ticket AS ticket
     INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
