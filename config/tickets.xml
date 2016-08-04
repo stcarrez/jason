@@ -20,6 +20,13 @@
   </managed-bean>
 
   <managed-bean>
+    <description>A localized list of ticket types to be used for a f:selectItems</description>
+    <managed-bean-name>ticketTypeList</managed-bean-name>
+    <managed-bean-class>Jason.Tickets.Beans.Ticket_Type_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
     <description>List of tickets.</description>
     <managed-bean-name>ticketList</managed-bean-name>
 
