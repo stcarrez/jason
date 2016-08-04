@@ -508,7 +508,15 @@ package Jason.Tickets.Models is
 
       --  the number of tickets per page.
       Page_Size : Integer;
+
+      --  the list sort order.
       Sort : Ada.Strings.Unbounded.Unbounded_String;
+
+      --  the ticket status filter.
+      Status : Status_Type;
+
+      --  the ticket priority filter.
+      Priority : Integer;
    end record;
 
    --  This bean provides some methods that can be used in a Method_Expression.

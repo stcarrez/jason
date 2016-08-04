@@ -1439,6 +1439,10 @@ package body Jason.Tickets.Models is
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Page_Size));
       elsif Name = "sort" then
          return Util.Beans.Objects.To_Object (From.Sort);
+      elsif Name = "status" then
+         return Status_Type_Objects.To_Object (From.Status);
+      elsif Name = "priority" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1464,6 +1468,10 @@ package body Jason.Tickets.Models is
          Item.Page_Size := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "sort" then
          Item.Sort := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "status" then
+         Item.Status := Status_Type_Objects.To_Value (Value);
+      elsif Name = "priority" then
+         Item.Priority := Util.Beans.Objects.To_Integer (Value);
       end if;
    end Set_Value;
 
