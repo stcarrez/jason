@@ -105,4 +105,8 @@ package Jason.Tickets.Beans is
    function Create_Ticket_List_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
       return Util.Beans.Basic.Readonly_Bean_Access;
 
+   --  Get a select item list which contains a list of ticket status.
+   function Create_Status_List (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+                                return Util.Beans.Basic.Readonly_Bean_Access;
+
 end Jason.Tickets.Beans;
