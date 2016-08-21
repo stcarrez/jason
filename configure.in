@@ -8,12 +8,14 @@ JASON_MAJOR_VERSION=0
 JASON_MINOR_VERSION=1
 JASON_MICRO_VERSION=0
 JASON_VERSION=$JASON_MAJOR_VERSION.$JASON_MINOR_VERSION.$JASON_MICRO_VERSION
+
 # checking for local tools
 AC_PROG_CC
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_CHECK_PROGS(GNATMAKE, gnatmake, "")
+
 # Set the version number of GtkAda
 AC_SUBST(JASON_VERSION)
 AC_SUBST(JASON_MAJOR_VERSION)
@@ -23,6 +25,7 @@ EXEC_PREFIX="$prefix"
 AC_SUBST(EXEC_PREFIX)
 JASON_LIBDIR="lib"
 AC_SUBST(JASON_LIBDIR)
+
 ##########################################
 # Ada Util library
 ##########################################
@@ -33,6 +36,7 @@ AM_GNAT_FIND_PROJECT([ada-util],[Ada Utility Library],[util],
     UTIL_DIR=
   ])
 AC_SUBST(UTIL_DIR)
+
 ##########################################
 # Ada Expression Language library
 ##########################################
@@ -43,6 +47,7 @@ AM_GNAT_FIND_PROJECT([ada-el],[Ada Expression Language Library],[el],
     EL_DIR=
   ])
 AC_SUBST(EL_DIR)
+
 ##########################################
 # Ada Server Faces library
 ##########################################
@@ -53,6 +58,7 @@ AM_GNAT_FIND_PROJECT([ada-asf],[Ada Server Faces],[asf],
     ASF_DIR=
   ])
 AC_SUBST(ASF_DIR)
+
 ##########################################
 # Ada Security library
 ##########################################
@@ -63,6 +69,7 @@ AM_GNAT_FIND_PROJECT([ada-security],[Ada Security Library],[security],
     SECURITY_DIR=
   ])
 AC_SUBST(SECURITY_DIR)
+
 ##########################################
 # Ada Database Objects library
 ##########################################
@@ -73,6 +80,7 @@ AM_GNAT_FIND_PROJECT([ada-ado],[Ada Database Objects],[ado],
     ADO_DIR=
   ])
 AC_SUBST(ADO_DIR)
+
 ##########################################
 # Ada Web Application library
 ##########################################
@@ -83,6 +91,9 @@ AM_GNAT_FIND_PROJECT([ada-awa],[Ada Web Application],[awa],
     AWA_DIR=
   ])
 AC_SUBST(AWA_DIR)
+
+AM_UTIL_CHECK_INSTALL
+
 AC_OUTPUT(
 Makefile jason.gpr jason_server.gpr tests.gpr rules.mk
 )
