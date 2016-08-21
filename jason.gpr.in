@@ -12,13 +12,21 @@ with "@AWA_DIR@awa_storages";
 with "@AWA_DIR@awa_tags";
 with "@AWA_DIR@awa_wikis";
 
-project jason is
+library project jason is
 
-   Mains := ("jason-server.adb");
-   for Main use Mains;
+   Name    := "jason";
+   Version := "@JASON_VERSION@";
+   Library_Dir := "@JASON_LIBDIR@";
+   Library_Type : Config.Library_Type_Type := external ("JASON_LIBRARY_TYPE", "static");
+
    for Source_Dirs use ("src", "src/model");
    for Object_Dir use "./" & Config'Object_Dir & "/obj";
    for Exec_Dir use "./" & Config'Exec_Dir & "/bin";
+
+   for Library_Name use Name;
+   for Library_Dir use "lib/" & Name & "/" & Project'Library_Kind;
+   for Library_Kind use Library_Type;
+   for Library_Version use "lib" & Project'Library_Name & ".so." & Version;
 
    package Binder renames Config.Binder;
    package Builder renames Config.Builder;

@@ -3447,7 +3447,7 @@ $as_echo "no" >&6; }
   fi
 
 
-ac_config_files="$ac_config_files Makefile jason.gpr tests.gpr rules.mk"
+ac_config_files="$ac_config_files Makefile jason.gpr jason_server.gpr tests.gpr rules.mk"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -4157,6 +4157,7 @@ do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "jason.gpr") CONFIG_FILES="$CONFIG_FILES jason.gpr" ;;
+    "jason_server.gpr") CONFIG_FILES="$CONFIG_FILES jason_server.gpr" ;;
     "tests.gpr") CONFIG_FILES="$CONFIG_FILES tests.gpr" ;;
     "rules.mk") CONFIG_FILES="$CONFIG_FILES rules.mk" ;;
 

@@ -84,5 +84,5 @@ AM_GNAT_FIND_PROJECT([ada-awa],[Ada Web Application],[awa],
   ])
 AC_SUBST(AWA_DIR)
 AC_OUTPUT(
-Makefile jason.gpr tests.gpr rules.mk
+Makefile jason.gpr jason_server.gpr tests.gpr rules.mk
 )

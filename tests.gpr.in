@@ -13,6 +13,8 @@ with "@AWA_DIR@awa_mail";
 with "@AWA_DIR@awa_comments";
 with "@AWA_DIR@awa_blogs";
 with "@AWA_DIR@awa_storages";
+with "jason";
+with "jason_server";
 
 project Tests is
 
