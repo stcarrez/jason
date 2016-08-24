@@ -377,6 +377,44 @@ package Jason.Projects.Models is
    procedure Save (Bean : in out Project_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
+   --  --------------------
+   --    load the project list.
+   --  --------------------
+   type Project_List_Bean is abstract limited
+     new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
+
+      --  the current page number for the pagination.
+      Page : Integer;
+
+      --  the number of projects in a page.
+      Page_Size : Integer;
+
+      --  the number of projects.
+      Count : Integer;
+
+      --  the optional tag to filter the list of projects.
+      Tag : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
+
+   --  This bean provides some methods that can be used in a Method_Expression.
+   overriding
+   function Get_Method_Bindings (From : in Project_List_Bean)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access;
+
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in Project_List_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the bean attribute identified by the name.
+   overriding
+   procedure Set_Value (Item  : in out Project_List_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   procedure Load (Bean : in out Project_List_Bean;
+                  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
 
 private
    PROJECT_NAME : aliased constant String := "jason_project";
