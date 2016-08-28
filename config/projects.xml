@@ -13,6 +13,13 @@
   </managed-bean>
 
   <managed-bean>
+    <description>The list of projects</description>
+    <managed-bean-name>projectList</managed-bean-name>
+    <managed-bean-class>Jason.Projects.Beans.Project_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
     <description>The project tag search bean.</description>
     <managed-bean-name>projectTagSearch</managed-bean-name>
     <managed-bean-class>AWA.Tags.Beans.Tag_Search_Bean</managed-bean-class>
@@ -58,6 +65,9 @@
     <url-pattern>/projects/*.html</url-pattern>
     <url-pattern>/projects/view/#{project.id}</url-pattern>
     <url-pattern>/projects/edit/#{project.id}</url-pattern>
+    <url-pattern>/projects/list/#{projectList.sort}</url-pattern>
+    <url-pattern>/projects/tags</url-pattern>
+    <url-pattern>/projects/tags/#{projectList.tag}/#{projectList.sort}</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
@@ -65,6 +75,9 @@
     <url-pattern>/projects/*.html</url-pattern>
     <url-pattern>/projects/view/#{project.id}</url-pattern>
     <url-pattern>/projects/edit/#{project.id}</url-pattern>
+    <url-pattern>/projects/list/#{projectList.sort}</url-pattern>
+    <url-pattern>/projects/tags</url-pattern>
+    <url-pattern>/projects/tags/#{projectList.tag}/#{projectList.sort}</url-pattern>
   </filter-mapping>
 
   <url-policy>
@@ -80,6 +93,21 @@
   <url-mapping>
     <pattern>/projects/edit/#{project.id}</pattern>
     <view-id>/projects/edit.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/list/#{projectList.sort}</pattern>
+    <view-id>/projects/list.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/tags/#{projectList.tag}/#{projectList.sort}</pattern>
+    <view-id>/projects/tags.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/tags</pattern>
+    <view-id>/projects/tags.html</view-id>
   </url-mapping>
 
   <auth-permission>
