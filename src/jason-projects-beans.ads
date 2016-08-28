@@ -68,4 +68,40 @@ package Jason.Projects.Beans is
    function Create_Project_Bean (Module : in Jason.Projects.Modules.Project_Module_Access)
       return Util.Beans.Basic.Readonly_Bean_Access;
 
+   --  ------------------------------
+   --  Bean that collects the list of projects filtered by tag, priority and status.
+   --  ------------------------------
+   type Project_List_Bean is new Jason.Projects.Models.Project_List_Bean with record
+      Module        : Jason.Projects.Modules.Project_Module_Access := null;
+      Project       : Jason.Projects.Models.Project_Ref;
+
+      --  List of tickets.
+      Projects      : aliased Jason.Projects.Models.List_Info_List_Bean;
+      Projects_Bean : Jason.Projects.Models.List_Info_List_Bean_Access;
+
+      --  List of tags associated with the tickets.
+      Tags          : AWA.Tags.Beans.Entity_Tag_Map;
+   end record;
+   type Project_List_Bean_Access is access all Project_List_Bean'Class;
+
+   --  Get the value identified by the name.
+   overriding
+   function Get_Value (From : in Project_List_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the value identified by the name.
+   overriding
+   procedure Set_Value (From  : in out Project_List_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   --  Load list of tickets.
+   overriding
+   procedure Load (Bean    : in out Project_List_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Create the Project_List_Bean bean instance.
+   function Create_Project_List_Bean (Module : in Jason.Projects.Modules.Project_Module_Access)
+      return Util.Beans.Basic.Readonly_Bean_Access;
+
 end Jason.Projects.Beans;

@@ -48,6 +48,10 @@ package body Jason.Projects.Modules is
                          Name   => "Jason.Projects.Beans.Projects_Bean",
                          Handler => Jason.Projects.Beans.Create_Project_Bean'Access);
 
+      Register.Register (Plugin => Plugin,
+                         Name   => "Jason.Projects.Beans.Project_List_Bean",
+                         Handler => Jason.Projects.Beans.Create_Project_List_Bean'Access);
+
       AWA.Modules.Module (Plugin).Initialize (App, Props);
 
       --  Add here the creation of manager instances.
