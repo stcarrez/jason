@@ -17,6 +17,9 @@
         <property type='Date' name="create_date">
             <comment>the project creation date.</comment>
         </property>
+        <property type='Natural' name="ticket_count">
+            <comment>the number of tickets created on the project.</comment>
+        </property>
     </class>
     <query name='list'>
        <comment>Get the list of projects that the current user can update</comment>
@@ -25,17 +28,43 @@
       project.id,
       project.name,
       project.status,
+      project.create_date,
+      (SELECT COUNT(*) FROM jason_ticket AS ticket WHERE ticket.project_id = project.id)
+    FROM jason_project AS project
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    ORDER BY project.create_date DESC
+    LIMIT :count OFFSET :first
+       </sql>
+       <sql-count>
+    SELECT
+      count(project.id)
+    FROM jason_project AS project
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+       </sql-count>
+    </query>
+
+    <query name='list-tag-filter'>
+       <comment>Get the list of tickets that the current user can update</comment>
+       <sql>
+    SELECT
+      project.id,
+      project.name,
+      project.status,
       project.create_date
     FROM jason_project AS project
+    INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = project.id AND e.entity_type = :project_table AND e.tag_id = :tag
     INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table AND acl.user_id = :user_id
     ORDER BY project.create_date DESC
     LIMIT :first, :last
        </sql>
        <sql-count>
     SELECT
-      count(project.id)
-    FROM jason_project AS project
-    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table AND acl.user_id = :user_id
+      count(ticket.id)
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    WHERE ticket.project_id = :project_id AND :ticket_filter
        </sql-count>
     </query>
+
 </query-mapping>
