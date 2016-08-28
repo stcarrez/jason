@@ -27,6 +27,7 @@ DROP TABLE IF EXISTS `awa_post`;
 DROP TABLE IF EXISTS `awa_blog`;
 /* Copied from awa_counters-drop-mysql.sql*/
 /* File generated automatically by dynamo */
+DROP TABLE IF EXISTS `awa_visit`;
 DROP TABLE IF EXISTS `awa_counter_definition`;
 DROP TABLE IF EXISTS `awa_counter`;
 /* Copied from awa-tags-drop-mysql.sql*/
