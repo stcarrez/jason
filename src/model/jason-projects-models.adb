@@ -1024,6 +1024,8 @@ package body Jason.Projects.Models is
          return Jason.Projects.Models.Status_Type_Objects.To_Object (From.Status);
       elsif Name = "create_date" then
          return Util.Beans.Objects.Time.To_Object (From.Create_Date);
+      elsif Name = "ticket_count" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Ticket_Count));
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1045,6 +1047,8 @@ package body Jason.Projects.Models is
          Item.Status := Jason.Projects.Models.Status_Type_Objects.To_Value (Value);
       elsif Name = "create_date" then
          Item.Create_Date := Util.Beans.Objects.Time.To_Time (Value);
+      elsif Name = "ticket_count" then
+         Item.Ticket_Count := Util.Beans.Objects.To_Integer (Value);
       end if;
    end Set_Value;
 
@@ -1076,6 +1080,7 @@ package body Jason.Projects.Models is
          Into.Title := Stmt.Get_Unbounded_String (1);
          Into.Status := Jason.Projects.Models.Status_Type'Val (Stmt.Get_Integer (2));
          Into.Create_Date := Stmt.Get_Time (3);
+         Into.Ticket_Count := Stmt.Get_Natural (4);
       end Read;
    begin
       Stmt.Execute;

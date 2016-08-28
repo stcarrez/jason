@@ -316,6 +316,9 @@ package Jason.Projects.Models is
 
       --  the project creation date.
       Create_Date : Ada.Calendar.Time;
+
+      --  the number of tickets created on the project.
+      Ticket_Count : Natural;
    end record;
 
    --  Get the bean attribute identified by the name.
@@ -350,6 +353,8 @@ package Jason.Projects.Models is
                    Context : in out ADO.Queries.Context'Class);
 
    Query_List : constant ADO.Queries.Query_Definition_Access;
+
+   Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access;
 
 
    type Project_Bean is abstract new Jason.Projects.Models.Project_Ref
@@ -562,11 +567,17 @@ private
 
    package File_1 is
       new ADO.Queries.Loaders.File (Path => "projects-list.xml",
-                                    Sha1 => "DECC53935C30164D95B68D1379EC8D6860E377E4");
+                                    Sha1 => "9D99AA442AD57D2A1C22EED981AB261FBBF416A3");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",
                                      File => File_1.File'Access);
    Query_List : constant ADO.Queries.Query_Definition_Access
    := Def_Listinfo_List.Query'Access;
+
+   package Def_Listinfo_List_Tag_Filter is
+      new ADO.Queries.Loaders.Query (Name => "list-tag-filter",
+                                     File => File_1.File'Access);
+   Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access
+   := Def_Listinfo_List_Tag_Filter.Query'Access;
 end Jason.Projects.Models;
