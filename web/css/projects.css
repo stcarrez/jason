@@ -14,7 +14,7 @@
 .project-title {
     background: url(../images/projects/project-view-26.png) no-repeat;
 }
-.project-ticket-list {
+.project-ticket-list, .project-list {
     float: left;
     padding-left: 1%;
     padding-right: 1%;
@@ -30,4 +30,16 @@
 .project-tickets h3 {
     line-height: 1.1em;
     font-size: 1.1em;
+}
+.project-list-title {
+    width: 60%;
+}
+.project-list-status {
+    width: 10%;
+}
+.project-list-create-date {
+    width: 20%;
+}
+.project-list-ticket-count {
+    width: 10%;
 }

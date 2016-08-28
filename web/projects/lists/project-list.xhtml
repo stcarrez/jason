@@ -1,0 +1,59 @@
+<!-- List of projects
+  -  Copyright (C) 2016 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -
+  -  Licensed under the Apache License, Version 2.0 (the "License");
+  -  you may not use this file except in compliance with the License.
+  -  You may obtain a copy of the License at
+  -
+  -      http://www.apache.org/licenses/LICENSE-2.0
+  -
+  -  Unless required by applicable law or agreed to in writing, software
+  -  distributed under the License is distributed on an "AS IS" BASIS,
+  -  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  -  See the License for the specific language governing permissions and
+  -  limitations under the License.
+  -->
+<ui:composition
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:list var="prj" value="#{projectList.projects}">
+        <div class='awa-list-item ui-list-item' id="t_#{prj.id}">
+            <div class='awa-list-col project-list-title'>
+                <a href="#{contextPath}/projects/view/#{prj.id}">#{prj.title}</a>
+            </div>
+            <div class='awa-list-col project-list-status'>
+                <h:outputText value="#{prj.status}"/>
+            </div>
+            <div class='awa-list-col project-list-create-date'>
+                <h:outputText value="#{prj.create_date}"/>
+            </div>
+            <div class='awa-list-col project-list-ticket-count'>
+                <h:outputText value="#{prj.ticket_count}"/>
+            </div>
+        </div>
+    </h:list>
+    <ul class='blog-pagination'>
+        <li>
+            <h:panelGroup rendered="#{projectList.page gt 1}">
+                <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page - 1}#{pageParam}"
+                   title="#{ticketMsg.ticket_previous_page_title}">#{ticketMsg.ticket_previous_page}</a>
+            </h:panelGroup>
+        </li>
+        <li>
+            <h:outputFormat value="#{ticketMsg.ticket_list_page_number}">
+                <f:param value="#{projectList.page}"/>
+            </h:outputFormat>
+        </li>
+        <li>#{ticketList.page_count}
+            <h:panelGroup rendered="#{projectList.page lt projectList.page_count}">
+                <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page + 1}#{pageParam}"
+                   title="#{ticketMsg.ticket_next_page_title}">#{ticketMsg.ticket_next_page}</a>
+            </h:panelGroup>
+        </li>
+    </ul>
+</ui:composition>

@@ -3,31 +3,35 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:c="http://java.sun.com/jstl/core"
                 template="/WEB-INF/layouts/layout.xhtml">
-  <ui:param name="title" value="#{layoutMsg.homePageTitle}" />
-  <ui:param name="pageStyle" value="awa"/>
-  <!-- Main page body -->
-  <ui:define name="pageBody">
-     <div id='awa-content'>
-        <div class='awa-title'>
-           <img class='awa-ok' src='images/ok48.png' alt='Ok'/>
-           <div>
-              <h1>Ada Web Application Created</h1>
-              <h3>You have successfully created your Ada Web project.</h3>
-           </div>
+    <ui:param name="title" value="#{projectMsg.project_list_page_title}"/>
+    <ui:param name="pageStyle" value=""/>
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewParam id='page' value='#{projectList.page}' required="false"/>
+            <f:viewAction action='#{projectList.load}'/>
+        </f:metadata>
+        <div id='awa-content'>
+            <ui:include src="/projects/views/workspace-nav.xhtml">
+                <ui:param name="project_id" value="#{ticket.project_id}"/>
+            </ui:include>
+            <div class='project-list awa-list-header' id="project-list-header">
+                <div class="awa-list-item-header">
+                    <div class='awa-header-col project-list-title'>
+                        #{projectMsg.project_list_title_label}
+                    </div>
+                    <div class='awa-header-col project-list-status'>
+                        #{projectMsg.project_list_status_label}
+                    </div>
+                    <div class='awa-header-col project-list-create-date'>
+                        #{projectMsg.project_list_create_date_label}
+                    </div>
+                    <div class='awa-header-col project-list-ticket-count'>
+                        #{projectMsg.project_list_ticket_count_label}
+                    </div>
+                </div>
+            </div>
+            <ui:include src="lists/project-list.xhtml"/>
         </div>
-        <div class='awa-title'>
-        <dl>
-           <dt>Ada Web Server Running</dt>
-           <dd>Your Ada Web Server is running and is able to serve pages written
-               with the Ada Server Faces framework.
-           </dd>
-           <dt>This is a temporary page</dt>
-           <dd>
-               This is the default <b>index.xhtml</b> page.  You are encouraged to
-               modify this page and write your own primary page.
-           </dd>
-        </dl>
-        </div>
-     </div>
-  </ui:define>
+    </ui:define>
 </ui:composition>
