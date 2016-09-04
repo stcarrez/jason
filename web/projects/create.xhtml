@@ -9,6 +9,9 @@
     <!-- Main page body -->
     <ui:define name="pageBody">
         <div id='awa-content'>
+            <ui:include src="/projects/views/workspace-nav.xhtml">
+                <ui:param name="project_id" value="#{ticket.project_id}"/>
+            </ui:include>
             <ui:include src="forms/create-form.xhtml"/>
         </div>
     </ui:define>

@@ -4,10 +4,13 @@
         xmlns:util="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
 [
- { "action": "update", "id": "#result", "data": "<util:escape>
-     <h:panelGroup rendered="false">
-         <h3>User email is </h3>
-     </h:panelGroup>
-    </util:escape>" }
+ {
+    "action": "get",
+    "id": "#ticket-list",
+    "url": "#{contextPath}/tickets/list/#{ticket.project_id}"
+ } , {
+    "action": "get",
+    "url": "#{contextPath}/tickets/create/#{ticket.project_id}/#{ticket.ticket_type}"
+ }
 ]
 </f:view>

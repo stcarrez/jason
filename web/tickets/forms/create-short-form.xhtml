@@ -1,0 +1,38 @@
+<f:view contentType="text/html; charset=UTF-8"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+        xmlns:w="http://code.google.com/p/ada-asf/widget"
+        xmlns:u="http://code.google.com/p/ada-asf/util"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h3>Create a new #{u:translate(ticketMsg,'ticket_type_',ticket.ticket_type)}</h3>
+    <div class='awa-form ui-widget'>
+
+        <h:form id='create-form'>
+            <h:inputHidden id='project-id' value='#{ticket.project_id}' required='true'/>
+            <h:inputHidden id='ticket-type' value='#{ticket.ticket_type}' required='false'/>
+            <w:inputText styleClass="awa-required"
+                         id='summary' size='50' required='true' value='#{ticket.summary}'
+                         title='#{ticketMsg.ticket_summary_label}'/>
+            <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
+                <dt>
+                    <label for='text'>#{ticketMsg.ticket_description_label}</label>
+                </dt>
+                <dd>
+                    <h:inputTextarea id='description' rows='5' required='true'
+                                     value='#{ticket.description}'/>
+                </dd>
+            </dl>
+            <ul class='awa-buttons'>
+                <li>
+                    <h:commandButton id='save' value='#{ticketMsg.ticket_create_button}'
+                                     action="#{ticket.create}"
+                                     styleClass="ui-button ui-state-default ui-corner-all"/>
+                </li>
+                <li>
+                    <a href="#" class="asf-cancel">Cancel</a>
+                </li>
+            </ul>
+        </h:form>
+
+    </div>
+</f:view>

@@ -43,3 +43,13 @@
 .project-list-ticket-count {
     width: 10%;
 }
+.project-tickets .awa-page-actions {
+    float: left;
+}
+.asf-panel-box {
+    display: none;
+}
+.asf-panel-close, .asf-panel-content {
+    float: left;
+    width: 100%;
+}

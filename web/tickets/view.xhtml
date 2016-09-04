@@ -6,7 +6,7 @@
                 xmlns:awa="http://code.google.com/p/ada-awa/jsf"
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{ticketMsg.tickets_page_title}" />
-    <ui:param name="pageStyle" value="awax"/>
+    <ui:param name="pageStyle" value=""/>
 
     <!-- Main page body -->
     <ui:define name="pageBody">
@@ -27,7 +27,7 @@
                         <a class='awa-button' href="#{contextPath}/tickets/history/#{ticket.id}">#{projectMsg.project_page_history_label}</a>
                     </li>
                 </ul>
-                <h2>#{u:translate(ticketMsg,'ticket_ptype_',ticket.ticket_type)} #{ticket.id} - #{ticket.summary}</h2>
+                <h2>#{u:translate(ticketMsg,'ticket_ptype_',ticket.ticket_type)} #{ticket.ident} - #{ticket.summary}</h2>
             </div>
             <awa:tagList value='#{ticket.tags}' id='qtags' styleClass="awa-tag-list tagedit-list"
                          tagLink="#{contextPath}/tickets/tags/#{tagName}"
