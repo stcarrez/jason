@@ -22,21 +22,21 @@
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
     <h:list var="ticket" value="#{ticketList.tickets}">
-        <div class='awa-list-item ui-list-item' id="t_#{ticket.id}">
+        <div class='awa-list-item ui-list-item ticket-#{ticket.ticket_type}' id="t_#{ticket.id}">
             <div class="awa-list-col ticket-list-ident">
                 #{ticket.ident}
             </div>
-            <div class='awa-list-col ticket-list-summary'>
-                <a href="#{contextPath}/tickets/view/#{ticket.id}">#{ticket.summary}</a>
+            <div class='awa-list-col ticket-list-type'>
+                #{u:translate(ticketMsg,'ticket_type_',ticket.ticket_type)}
             </div>
             <div class='awa-list-col ticket-list-priority ticket-prio-#{ticket.priority}' title="#{u:translate(ticketMsg,'ticket_priority_',ticket.priority)}">
                 <span>#{ticket.priority}</span>
             </div>
+            <div class='awa-list-col ticket-list-summary'>
+                <a href="#{contextPath}/tickets/view/#{ticket.id}">#{ticket.summary}</a>
+            </div>
             <div class='awa-list-col ticket-list-status'>
                 #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
-            </div>
-            <div class='awa-list-col ticket-list-type'>
-                #{u:translate(ticketMsg,'ticket_type_',ticket.ticket_type)}
             </div>
             <div class='awa-list-col ticket-list-create-date'>
                 <h:outputText value="#{ticket.create_date}"/>
@@ -49,7 +49,7 @@
     <ul class='blog-pagination'>
         <li>
             <h:panelGroup rendered="#{ticketList.page gt 1}">
-                <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page - 1}#{pageParam}"
+                <a href="#{contextPath}/tickets/list/#{ticketList.project_id}?page=#{ticketList.page - 1}#{pageParam}"
                    title="#{ticketMsg.ticket_previous_page_title}">#{ticketMsg.ticket_previous_page}</a>
             </h:panelGroup>
         </li>
@@ -60,7 +60,7 @@
         </li>
         <li>#{ticketList.page_count}
             <h:panelGroup rendered="#{ticketList.page lt ticketList.page_count}">
-                <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page + 1}#{pageParam}"
+                <a href="#{contextPath}/tickets/list/#{ticketList.project_id}?page=#{ticketList.page + 1}#{pageParam}"
                    title="#{ticketMsg.ticket_next_page_title}">#{ticketMsg.ticket_next_page}</a>
             </h:panelGroup>
         </li>

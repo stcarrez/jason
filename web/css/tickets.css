@@ -14,8 +14,10 @@
 .ticket-title {
     background: url(../images/tickets/ticket-icon-26.png) no-repeat;
 }
-
-.ticket-list-ident, .ticket-list-priority, .ticket-list-status, .ticket-list-type {
+.ticket-list-ident, .ticket-list-priority {
+    width: 100px;
+}
+.ticket-list-status, .ticket-list-type {
     width: 10%;
 }
 .ticket-list-summary {
@@ -64,4 +66,18 @@
 .ticket-info dd {
     float: left;
     width: 80%;
+}
+.ticket-list-type {
+    padding-left: 28px;
+    width: 8%;
+    height: 28px;
+}
+.ticket-ISSUE .ticket-list-type, .ticket-icon-ISSUE {
+    background: url(../images/tickets/icon-ticket-issue-26.png) no-repeat;
+}
+.ticket-WORK .ticket-list-type, .ticket-icon-WORK {
+    background: url(../images/tickets/icon-task-26.png) no-repeat;
+}
+.ticket-INCIDENT .ticket-list-type, .ticket-icon-INCIDENT {
+    background: url(../images/tickets/icon-ticket-incident-26.png) no-repeat;
 }

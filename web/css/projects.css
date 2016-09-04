@@ -12,7 +12,12 @@
     font-size: 1.33em;
 }
 .project-title {
-    background: url(../images/projects/project-view-26.png) no-repeat;
+    background: url(../images/projects/icon-project-manager-26.png) no-repeat;
+}
+.project-description {
+    float: left;
+    padding: 1%;
+    width: 98%;
 }
 .project-ticket-list, .project-list {
     float: left;

@@ -11,12 +11,12 @@
             <span>Last updated on: #{project.update_date}</span>
         </dd>
     </dl>
-    <div class="project-">
+    <div class="">
+        Status: #{project.status}
+    </div>
+    <div class="project-description">
         <awa:wiki styleClass='wiki-text'
                   value="#{project.description}"
                   toc="false"/>
-    </div>
-    <div class="">
-        Status: #{project.status}
     </div>
 </ui:composition>

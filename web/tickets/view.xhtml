@@ -18,7 +18,7 @@
                 <ui:param name="project_id" value="#{ticket.project_id}"/>
                 <ui:param name="sort" value="recent"/>
             </ui:include>
-            <div class="ticket-title">
+            <div class="ticket-title ticket-icon-#{ticket.ticket_type}">
                 <ul class="awa-page-actions">
                         <li>
                             <a class='awa-button' href="#{contextPath}/tickets/edit/#{ticket.id}">#{projectMsg.project_page_edit_label}</a>
