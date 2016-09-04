@@ -134,6 +134,7 @@ package body Jason.Tickets.Modules is
                              Entity     => Entity);
 
       Ctx.Start;
+      Entity.Set_Update_Date (Ada.Calendar.Clock);
       Entity.Save (DB);
       Ctx.Commit;
    end Save;
