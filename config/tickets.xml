@@ -10,6 +10,16 @@
     <managed-bean-name>ticket</managed-bean-name>
     <managed-bean-class>Jason.Tickets.Beans.Ticket_Bean</managed-bean-class>
     <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>ticket_type</property-name>
+      <property-class>String</property-class>
+      <value>WORK</value>
+    </managed-property>
+    <managed-property>
+      <property-name>priority</property-name>
+      <property-class>Integer</property-class>
+      <value>3</value>
+    </managed-property>
   </managed-bean>
 
   <managed-bean>
@@ -87,6 +97,7 @@
     <url-pattern>/tickets/view/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/list/#{ticketList.project_id}</url-pattern>
     <url-pattern>/tickets/create/#{ticket.project_id}</url-pattern>
+    <url-pattern>/tickets/create/#{ticket.project_id}/#{ticket.ticket_type}</url-pattern>
   </filter-mapping>
 
   <filter-mapping>
@@ -95,7 +106,7 @@
     <url-pattern>/tickets/edit/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/view/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/list/#{ticketList.project_id}</url-pattern>
-    <url-pattern>/tickets/create/#{ticket.project_id}</url-pattern>
+    <url-pattern>/tickets/create/#{ticket.project_id}/#{ticket.ticket_type}</url-pattern>
   </filter-mapping>
 
   <url-policy>
@@ -125,6 +136,11 @@
   <url-mapping>
     <pattern>/tickets/create/#{ticket.project_id}</pattern>
     <view-id>/tickets/create.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/tickets/create/#{ticket.project_id}/#{ticket.ticket_type}</pattern>
+    <view-id>/tickets/forms/create-short-form.html</view-id>
   </url-mapping>
 
   <url-mapping>
@@ -168,6 +184,14 @@
             <from-outcome>success</from-outcome>
             <to-view-id>/tickets/view/#{ticket.ticket_id}</to-view-id>
             <redirect/>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/tickets/forms/create-short-form.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/tickets/forms/create-response.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 
