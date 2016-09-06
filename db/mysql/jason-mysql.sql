@@ -71,6 +71,8 @@ CREATE TABLE jason_ticket (
   `update_date` DATETIME NOT NULL,
   /* the ticket type. */
   `ticket_type` TINYINT NOT NULL,
+  /* the duration to resolve the ticket. */
+  `duration` INTEGER NOT NULL,
   /*  */
   `project_id` BIGINT NOT NULL,
   /*  */
