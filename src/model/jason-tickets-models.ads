@@ -153,6 +153,14 @@ package Jason.Tickets.Models is
    function Get_Ticket_Type (Object : in Ticket_Ref)
                  return Jason.Tickets.Models.Ticket_Type;
 
+   --  Set the duration to resolve the ticket.
+   procedure Set_Duration (Object : in out Ticket_Ref;
+                           Value  : in Integer);
+
+   --  Get the duration to resolve the ticket.
+   function Get_Duration (Object : in Ticket_Ref)
+                 return Integer;
+
    --
    procedure Set_Project (Object : in out Ticket_Ref;
                           Value  : in Jason.Projects.Models.Project_Ref'Class);
@@ -578,11 +586,12 @@ private
    COL_7_1_NAME : aliased constant String := "description";
    COL_8_1_NAME : aliased constant String := "update_date";
    COL_9_1_NAME : aliased constant String := "ticket_type";
-   COL_10_1_NAME : aliased constant String := "project_id";
-   COL_11_1_NAME : aliased constant String := "creator_id";
+   COL_10_1_NAME : aliased constant String := "duration";
+   COL_11_1_NAME : aliased constant String := "project_id";
+   COL_12_1_NAME : aliased constant String := "creator_id";
 
    TICKET_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 12,
+     (Count => 13,
       Table => TICKET_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -596,7 +605,8 @@ private
          9 => COL_8_1_NAME'Access,
          10 => COL_9_1_NAME'Access,
          11 => COL_10_1_NAME'Access,
-         12 => COL_11_1_NAME'Access
+         12 => COL_11_1_NAME'Access,
+         13 => COL_12_1_NAME'Access
 )
      );
    TICKET_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -618,6 +628,7 @@ private
        Description : Ada.Strings.Unbounded.Unbounded_String;
        Update_Date : Ada.Calendar.Time;
        Ticket_Type : Jason.Tickets.Models.Ticket_Type;
+       Duration : Integer;
        Project : Jason.Projects.Models.Project_Ref;
        Creator : AWA.Users.Models.User_Ref;
    end record;
