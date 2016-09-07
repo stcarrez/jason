@@ -21,10 +21,12 @@ with AWA.Modules.Beans;
 with AWA.Modules.Get;
 with AWA.Permissions;
 with AWA.Users.Models;
+with AWA.Comments.Models;
 with Util.Log.Loggers;
 with Jason.Tickets.Beans;
 with ADO.Sessions;
 with AWA.Services.Contexts;
+with ADO.Sessions.Entities;
 package body Jason.Tickets.Modules is
 
    Log : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("Jason.Tickets.Module");
@@ -122,19 +124,30 @@ package body Jason.Tickets.Modules is
    --  ------------------------------
    --  Save
    --  ------------------------------
-   procedure Save (Model  : in Ticket_Module;
-                   Entity : in out Jason.Tickets.Models.Ticket_Ref'Class) is
+   procedure Save (Model   : in Ticket_Module;
+                   Entity  : in out Jason.Tickets.Models.Ticket_Ref'Class;
+                   Comment : in String) is
       pragma Unreferenced (Model);
 
       Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
       DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      Cmt   : AWA.Comments.Models.Comment_Ref;
+      Now   : constant Ada.Calendar.Time := Ada.Calendar.Clock;
    begin
       --  Check that the user has the update ticket permission on the given ticket.
       AWA.Permissions.Check (Permission => ACL_Update_Tickets.Permission,
                              Entity     => Entity);
 
       Ctx.Start;
-      Entity.Set_Update_Date (Ada.Calendar.Clock);
+      Entity.Set_Update_Date (Now);
+      if Comment'Length > 0 then
+         Cmt.Set_Author (Ctx.Get_User);
+         Cmt.Set_Create_Date (Now);
+         Cmt.Set_Message (Comment);
+         Cmt.Set_Entity_Id (Entity.Get_Id);
+         Cmt.Set_Entity_Type (ADO.Sessions.Entities.Find_Entity_Type (DB, "ticket_type"));
+         Cmt.Save (DB);
+      end if;
       Entity.Save (DB);
       Ctx.Commit;
    end Save;

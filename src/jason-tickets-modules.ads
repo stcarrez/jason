@@ -59,8 +59,9 @@ package Jason.Tickets.Modules is
                      Project_Id : in ADO.Identifier);
 
    --  Save
-   procedure Save (Model  : in Ticket_Module;
-                   Entity : in out Jason.Tickets.Models.Ticket_Ref'Class);
+   procedure Save (Model   : in Ticket_Module;
+                   Entity  : in out Jason.Tickets.Models.Ticket_Ref'Class;
+                   Comment : in String);
 private
 
    type Ticket_Module is new AWA.Modules.Module with null record;
