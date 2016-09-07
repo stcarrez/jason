@@ -1383,11 +1383,23 @@ package body Jason.Tickets.Models is
      new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Bean,
                                                       Method => Op_Save,
                                                       Name   => "save");
+   procedure Op_Save_Status (Bean    : in out Ticket_Bean;
+                             Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Save_Status (Bean    : in out Ticket_Bean;
+                             Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Ticket_Bean'Class (Bean).Save_Status (Outcome);
+   end Op_Save_Status;
+   package Binding_Ticket_Bean_4 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Ticket_Bean,
+                                                      Method => Op_Save_Status,
+                                                      Name   => "save_status");
 
    Binding_Ticket_Bean_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
      := (1 => Binding_Ticket_Bean_1.Proxy'Access,
          2 => Binding_Ticket_Bean_2.Proxy'Access,
-         3 => Binding_Ticket_Bean_3.Proxy'Access
+         3 => Binding_Ticket_Bean_3.Proxy'Access,
+         4 => Binding_Ticket_Bean_4.Proxy'Access
      );
 
    --  ------------------------------

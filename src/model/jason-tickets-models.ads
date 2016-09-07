@@ -479,6 +479,9 @@ package Jason.Tickets.Models is
    Query_Info : constant ADO.Queries.Query_Definition_Access;
 
 
+   --  --------------------
+   --    save the ticket status, priority, ticket_type with the associated comment.
+   --  --------------------
    type Ticket_Bean is abstract new Jason.Tickets.Models.Ticket_Ref
      and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
 
@@ -510,6 +513,9 @@ package Jason.Tickets.Models is
 
    procedure Save (Bean : in out Ticket_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   procedure Save_Status (Bean : in out Ticket_Bean;
+                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
    type Ticket_List_Bean is abstract limited
      new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
