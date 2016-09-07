@@ -60,6 +60,11 @@ package Jason.Tickets.Beans is
    procedure Save (Bean    : in out Ticket_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Save ticket action.
+   overriding
+   procedure Save_Status (Bean    : in out Ticket_Bean;
+                          Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
    --  Load ticket action.
    overriding
    procedure Load (Bean    : in out Ticket_Bean;
