@@ -78,9 +78,17 @@ package body Jason.Tickets.Beans is
    procedure Save (Bean    : in out Ticket_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
    begin
-      Bean.Module.Save (Bean);
+      Bean.Module.Save (Bean, Ada.Strings.Unbounded.To_String (Bean.Comment));
       Bean.Tags.Update_Tags (Bean.Get_Id);
    end Save;
+
+   --  Save ticket action.
+   overriding
+   procedure Save_Status (Bean    : in out Ticket_Bean;
+                          Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Bean.Module.Save (Bean, Ada.Strings.Unbounded.To_String (Bean.Comment));
+   end Save_Status;
 
    --  Load ticket action.
    overriding
