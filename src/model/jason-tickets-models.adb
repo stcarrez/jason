@@ -1400,6 +1400,19 @@ package body Jason.Tickets.Models is
    begin
       return Binding_Ticket_Bean_Array'Access;
    end Get_Method_Bindings;
+   --  ------------------------------
+   --  Get the bean attribute identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in Ticket_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if Name = "comment" then
+         return Util.Beans.Objects.To_Object (From.Comment);
+      end if;
+      return Jason.Tickets.Models.Ticket_Ref (From).Get_Value (Name);
+   end Get_Value;
+
 
    --  ------------------------------
    --  Set the value identified by the name
@@ -1409,7 +1422,9 @@ package body Jason.Tickets.Models is
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object) is
    begin
-      if Name = "summary" then
+      if Name = "comment" then
+         Item.Comment := Util.Beans.Objects.To_Unbounded_String (Value);
+      elsif Name = "summary" then
          Item.Set_Summary (Util.Beans.Objects.To_String (Value));
       elsif Name = "ident" then
          Item.Set_Ident (Util.Beans.Objects.To_Integer (Value));

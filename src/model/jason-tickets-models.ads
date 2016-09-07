@@ -480,14 +480,21 @@ package Jason.Tickets.Models is
 
 
    type Ticket_Bean is abstract new Jason.Tickets.Models.Ticket_Ref
-     and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with null record;
+     and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with  record
 
+      --  the comment associated with the save operation.
+      Comment : Ada.Strings.Unbounded.Unbounded_String;
+   end record;
 
    --  This bean provides some methods that can be used in a Method_Expression.
    overriding
    function Get_Method_Bindings (From : in Ticket_Bean)
                                  return Util.Beans.Methods.Method_Binding_Array_Access;
 
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
 
    --  Set the bean attribute identified by the name.
    overriding
