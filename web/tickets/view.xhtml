@@ -50,16 +50,42 @@
                 <dd>#{ticket.update_date}
                 </dd>
             </dl>
+            <div id="ticket-info">
+                <ui:include src="views/ticket-info.xhtml"/>
+                <div class="ui-panel ui-widget ui-corner-all asf-panel-box">
+                    <div class="ui-panel-header ui-widget-header asf-panel-close">
+                        <span class="asf-panel-title"></span>
+                        <a href="#" class="ui-panel-icon ui-corner-all ui-state-default">
+                                            <span class="ui-icon ui-icon-closethick">
+                                            </span>
+                        </a>
+                    </div>
+                    <div class="ui-panel-content ui-widget-content asf-container asf-panel-content">
+
+                    </div>
+                </div>
+            </div>
+            <u:script>
+                $('#ticket-info').panel_box().on('click', '.ticket-info', function(event) {
+                    return $('#ticket-info').panel_box('open', '#{contextPath}/tickets/edit/#{ticket.id}/status');
+                });
+            </u:script>
             <div class="ticket-info">
                 <h3>Description</h3>
                 <awa:wiki styleClass='wiki-text'
                           value="#{ticket.description}"
                           toc="false"/>
             </div>
+            <div class="post-comments">
+                <ui:include src="/comments/lists/comment-list.xhtml">
+                    <ui:param name="commentList" value="#{ticketComments}"/>
+                </ui:include>
+            </div>
         </div>
     </ui:define>
     <ui:define name="pageScript">
         <script type="text/javascript" src="#{jquery.chosenPath}"></script>
+        <script type="text/javascript" src="#{contextPath}/js/projects.js"></script>
     </ui:define>
 
 </ui:composition>
