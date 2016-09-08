@@ -145,7 +145,7 @@ package body Jason.Tickets.Modules is
          Cmt.Set_Create_Date (Now);
          Cmt.Set_Message (Comment);
          Cmt.Set_Entity_Id (Entity.Get_Id);
-         Cmt.Set_Entity_Type (ADO.Sessions.Entities.Find_Entity_Type (DB, "ticket_type"));
+         Cmt.Set_Entity_Type (ADO.Sessions.Entities.Find_Entity_Type (DB, Jason.Tickets.Models.TICKET_TABLE));
          Cmt.Save (DB);
       end if;
       Entity.Save (DB);
