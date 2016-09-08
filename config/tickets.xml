@@ -90,6 +90,23 @@
     </managed-property>
   </managed-bean>
 
+  <managed-bean>
+    <description>A list of comments associated with a ticket.</description>
+    <managed-bean-name>ticketComments</managed-bean-name>
+    <managed-bean-class>AWA.Comments.Beans.Comment_List_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+    <managed-property>
+      <property-name>entity_type</property-name>
+      <property-class>String</property-class>
+      <value>jason_ticket</value>
+    </managed-property>
+    <managed-property>
+      <property-name>sort</property-name>
+      <property-class>String</property-class>
+      <value>newest</value>
+    </managed-property>
+  </managed-bean>
+
   <filter-mapping>
     <filter-name>service</filter-name>
     <url-pattern>/tickets/*.html</url-pattern>
@@ -199,6 +216,14 @@
         <navigation-case>
             <from-outcome>success</from-outcome>
             <to-view-id>/tickets/forms/create-response.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/tickets/forms/edit-status.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/tickets/forms/edit-status-response.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
 
