@@ -24,6 +24,7 @@ with ADO.Parameters;
 with ADO.Sessions.Entities;
 with AWA.Tags.Modules;
 with AWA.Services.Contexts;
+with AWA.Comments.Beans;
 with AWA.Helpers.Selectors;
 with Jason.Projects.Models;
 package body Jason.Tickets.Beans is
@@ -94,8 +95,15 @@ package body Jason.Tickets.Beans is
    overriding
    procedure Load (Bean    : in out Ticket_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      use type AWA.Comments.Beans.Comment_List_Bean_Access;
+
+      Comment_List : AWA.Comments.Beans.Comment_List_Bean_Access;
    begin
       Bean.Module.Load_Ticket (Bean, Bean.Project, Bean.Tags, Bean.Ticket_Id);
+      Comment_List := AWA.Comments.Beans.Get_Comment_List_Bean ("ticketComments");
+      if Comment_List /= null then
+         Comment_List.Load_Comments (Bean.Get_Id);
+      end if;
       Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("loaded");
    end Load;
 
