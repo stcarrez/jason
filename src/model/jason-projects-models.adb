@@ -249,6 +249,23 @@ package body Jason.Projects.Models is
       return Impl.Owner;
    end Get_Owner;
 
+
+   procedure Set_Wiki (Object : in out Project_Ref;
+                       Value  : in AWA.Wikis.Models.Wiki_Space_Ref'Class) is
+      Impl : Project_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_Object (Impl.all, 10, Impl.Wiki, Value);
+   end Set_Wiki;
+
+   function Get_Wiki (Object : in Project_Ref)
+                  return AWA.Wikis.Models.Wiki_Space_Ref'Class is
+      Impl : constant Project_Access
+         := Project_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Wiki;
+   end Get_Wiki;
+
    --  Copy of the object.
    procedure Copy (Object : in Project_Ref;
                    Into   : in out Project_Ref) is
@@ -271,6 +288,7 @@ package body Jason.Projects.Models is
             Copy.Update_Date := Impl.Update_Date;
             Copy.Description := Impl.Description;
             Copy.Owner := Impl.Owner;
+            Copy.Wiki := Impl.Wiki;
          end;
       end if;
       Into := Result;
@@ -440,6 +458,11 @@ package body Jason.Projects.Models is
                           Value => Object.Owner);
          Object.Clear_Modified (9);
       end if;
+      if Object.Is_Modified (10) then
+         Stmt.Save_Field (Name  => COL_9_1_NAME, --  wiki_id
+                          Value => Object.Wiki);
+         Object.Clear_Modified (10);
+      end if;
       if Stmt.Has_Save_Fields then
          Object.Version := Object.Version + 1;
          Stmt.Save_Field (Name  => "version",
@@ -488,6 +511,8 @@ package body Jason.Projects.Models is
                         Value => Object.Description);
       Query.Save_Field (Name  => COL_8_1_NAME, --  owner_id
                         Value => Object.Owner);
+      Query.Save_Field (Name  => COL_9_1_NAME, --  wiki_id
+                        Value => Object.Wiki);
       Query.Execute (Result);
       if Result /= 1 then
          raise ADO.Objects.INSERT_ERROR;
@@ -574,6 +599,9 @@ package body Jason.Projects.Models is
       Object.Description := Stmt.Get_Unbounded_String (7);
       if not Stmt.Is_Null (8) then
          Object.Owner.Set_Key_Value (Stmt.Get_Identifier (8), Session);
+      end if;
+      if not Stmt.Is_Null (9) then
+         Object.Wiki.Set_Key_Value (Stmt.Get_Identifier (9), Session);
       end if;
       Object.Version := Stmt.Get_Integer (1);
       ADO.Objects.Set_Created (Object);
