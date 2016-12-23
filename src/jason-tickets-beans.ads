@@ -25,13 +25,15 @@ with AWA.Tags.Beans;
 with Jason.Tickets.Modules;
 with Jason.Tickets.Models;
 with Jason.Projects.Models;
+with Jason.Projects.Beans;
 package Jason.Tickets.Beans is
 
    type Ticket_Bean is new Jason.Tickets.Models.Ticket_Bean with record
       Module     : Jason.Tickets.Modules.Ticket_Module_Access := null;
       Project_Id : ADO.Identifier := ADO.NO_IDENTIFIER;
       Ticket_Id  : ADO.Identifier := ADO.NO_IDENTIFIER;
-      Project    : Jason.Projects.Models.Project_Ref;
+      --  Project    : Jason.Projects.Models.Project_Ref;
+      Project       : Jason.Projects.Beans.Project_Bean_Access;
 
       --  List of tags associated with the wiki page.
       Tags          : aliased AWA.Tags.Beans.Tag_List_Bean;
@@ -79,7 +81,8 @@ package Jason.Tickets.Beans is
    --  ------------------------------
    type Ticket_List_Bean is new Jason.Tickets.Models.Ticket_List_Bean with record
       Module        : Jason.Tickets.Modules.Ticket_Module_Access := null;
-      Project       : Jason.Projects.Models.Project_Ref;
+      --  Project       : Jason.Projects.Models.Project_Ref;
+      Project       : Jason.Projects.Beans.Project_Bean_Access;
 
       --  List of tickets.
       Tickets       : aliased Jason.Tickets.Models.List_Info_List_Bean;
