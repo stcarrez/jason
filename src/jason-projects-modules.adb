@@ -22,6 +22,7 @@ with AWA.Permissions.Services;
 with Util.Log.Loggers;
 with Jason.Projects.Beans;
 with ADO.Sessions;
+with ADO.SQL;
 with AWA.Services.Contexts;
 package body Jason.Projects.Modules is
 
@@ -51,6 +52,9 @@ package body Jason.Projects.Modules is
       Register.Register (Plugin => Plugin,
                          Name   => "Jason.Projects.Beans.Project_List_Bean",
                          Handler => Jason.Projects.Beans.Create_Project_List_Bean'Access);
+
+      --  Get the wiki module.
+      Plugin.Wiki := AWA.Wikis.Modules.Get_Wiki_Module;
 
       AWA.Modules.Module (Plugin).Initialize (App, Props);
 
@@ -115,21 +119,62 @@ package body Jason.Projects.Modules is
    end Save;
 
    --  ------------------------------
+   --  Create the project wiki space.
+   --  ------------------------------
+   procedure Create_Wiki (Model  : in Project_Module;
+                          Entity : in out Jason.Projects.Models.Project_Ref'Class;
+                          Wiki   : in out AWA.Wikis.Models.Wiki_Space_Ref'Class) is
+      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+   begin
+      Log.Info ("Creating project wiki space {0}", ADO.Identifier'Image (Entity.Get_Id));
+
+      --  Check that the user has the update permission on the given project.
+      AWA.Permissions.Check (Permission => ACL_Update_Projects.Permission,
+                             Entity     => Entity);
+
+      Ctx.Start;
+      Model.Wiki.Create_Wiki_Space (Wiki);
+      Entity.Set_Wiki (Wiki);
+      Entity.Set_Update_Date (Ada.Calendar.Clock);
+      Entity.Save (DB);
+      Ctx.Commit;
+   end Create_Wiki;
+
+   --  ------------------------------
    --  Load the project information.
    --  ------------------------------
    procedure Load_Project (Model   : in Project_Module;
                            Project : in out Jason.Projects.Models.Project_Ref'Class;
+                           Wiki    : in out AWA.Wikis.Models.Wiki_Space_Ref'Class;
                            Tags    : in out AWA.Tags.Beans.Tag_List_Bean;
-                           Id      : in ADO.Identifier) is
+                           Id      : in ADO.Identifier;
+                           Wiki_Id : in ADO.Identifier) is
+      use type ADO.Identifier;
+
       DB    : ADO.Sessions.Session := Model.Get_Session;
       Found : Boolean;
+      Query : ADO.SQL.Query;
    begin
       --  Check that the user has the view page permission on the given wiki page.
       --  AWA.Permissions.Check (Permission => ACL_View_Wiki_Page.Permission,
       --                       Entity     => Id);
 
-      Project.Load (DB, Id, Found);
-      Tags.Load_Tags (DB, Id);
+      if Id /= ADO.NO_IDENTIFIER then
+         Project.Load (DB, Id, Found);
+         if Found and then not Project.Get_Wiki.Is_Null then
+            Wiki.Load (DB, Project.Get_Wiki.Get_Id, Found);
+         end if;
+         Tags.Load_Tags (DB, Id);
+      else
+         Query.Bind_Param (1, Wiki_Id);
+         Query.Set_Filter ("o.wiki_id = ?");
+         Project.Find (DB, Query, Found);
+         if Found then
+            Wiki.Load (DB, Wiki_Id);
+            Tags.Load_Tags (DB, Project.Get_Id);
+         end if;
+      end if;
    end Load_Project;
 
 end Jason.Projects.Modules;
