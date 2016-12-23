@@ -616,12 +616,13 @@ package body Jason.Tickets.Models is
    overriding
    function Get_Value (From : in Ticket_Ref;
                        Name : in String) return Util.Beans.Objects.Object is
-      Obj  : constant ADO.Objects.Object_Record_Access := From.Get_Load_Object;
+      Obj  : ADO.Objects.Object_Record_Access;
       Impl : access Ticket_Impl;
    begin
-      if Obj = null then
+      if From.Is_Null then
          return Util.Beans.Objects.Null_Object;
       end if;
+      Obj := From.Get_Load_Object;
       Impl := Ticket_Impl (Obj.all)'Access;
       if Name = "id" then
          return ADO.Objects.To_Object (Impl.Get_Key);
@@ -1056,12 +1057,13 @@ package body Jason.Tickets.Models is
    overriding
    function Get_Value (From : in Attribute_Ref;
                        Name : in String) return Util.Beans.Objects.Object is
-      Obj  : constant ADO.Objects.Object_Record_Access := From.Get_Load_Object;
+      Obj  : ADO.Objects.Object_Record_Access;
       Impl : access Attribute_Impl;
    begin
-      if Obj = null then
+      if From.Is_Null then
          return Util.Beans.Objects.Null_Object;
       end if;
+      Obj := From.Get_Load_Object;
       Impl := Attribute_Impl (Obj.all)'Access;
       if Name = "id" then
          return ADO.Objects.To_Object (Impl.Get_Key);

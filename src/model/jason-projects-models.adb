@@ -536,12 +536,13 @@ package body Jason.Projects.Models is
    overriding
    function Get_Value (From : in Project_Ref;
                        Name : in String) return Util.Beans.Objects.Object is
-      Obj  : constant ADO.Objects.Object_Record_Access := From.Get_Load_Object;
+      Obj  : ADO.Objects.Object_Record_Access;
       Impl : access Project_Impl;
    begin
-      if Obj = null then
+      if From.Is_Null then
          return Util.Beans.Objects.Null_Object;
       end if;
+      Obj := From.Get_Load_Object;
       Impl := Project_Impl (Obj.all)'Access;
       if Name = "id" then
          return ADO.Objects.To_Object (Impl.Get_Key);
@@ -980,12 +981,13 @@ package body Jason.Projects.Models is
    overriding
    function Get_Value (From : in Attribute_Definition_Ref;
                        Name : in String) return Util.Beans.Objects.Object is
-      Obj  : constant ADO.Objects.Object_Record_Access := From.Get_Load_Object;
+      Obj  : ADO.Objects.Object_Record_Access;
       Impl : access Attribute_Definition_Impl;
    begin
-      if Obj = null then
+      if From.Is_Null then
          return Util.Beans.Objects.Null_Object;
       end if;
+      Obj := From.Get_Load_Object;
       Impl := Attribute_Definition_Impl (Obj.all)'Access;
       if Name = "id" then
          return ADO.Objects.To_Object (Impl.Get_Key);
@@ -1155,11 +1157,35 @@ package body Jason.Projects.Models is
      new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
                                                       Method => Op_Save,
                                                       Name   => "save");
+   procedure Op_Create_Wiki (Bean    : in out Project_Bean;
+                             Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Create_Wiki (Bean    : in out Project_Bean;
+                             Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Project_Bean'Class (Bean).Create_Wiki (Outcome);
+   end Op_Create_Wiki;
+   package Binding_Project_Bean_4 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
+                                                      Method => Op_Create_Wiki,
+                                                      Name   => "create_wiki");
+   procedure Op_Load_Wiki (Bean    : in out Project_Bean;
+                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Load_Wiki (Bean    : in out Project_Bean;
+                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Project_Bean'Class (Bean).Load_Wiki (Outcome);
+   end Op_Load_Wiki;
+   package Binding_Project_Bean_5 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
+                                                      Method => Op_Load_Wiki,
+                                                      Name   => "load_wiki");
 
    Binding_Project_Bean_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
      := (1 => Binding_Project_Bean_1.Proxy'Access,
          2 => Binding_Project_Bean_2.Proxy'Access,
-         3 => Binding_Project_Bean_3.Proxy'Access
+         3 => Binding_Project_Bean_3.Proxy'Access,
+         4 => Binding_Project_Bean_4.Proxy'Access,
+         5 => Binding_Project_Bean_5.Proxy'Access
      );
 
    --  ------------------------------

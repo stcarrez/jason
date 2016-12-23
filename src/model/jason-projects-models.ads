@@ -369,6 +369,9 @@ package Jason.Projects.Models is
    Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access;
 
 
+   --  --------------------
+   --    create the wiki space associated with the project.
+   --  --------------------
    type Project_Bean is abstract new Jason.Projects.Models.Project_Ref
      and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with null record;
 
@@ -393,6 +396,12 @@ package Jason.Projects.Models is
 
    procedure Save (Bean : in out Project_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   procedure Create_Wiki (Bean : in out Project_Bean;
+                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   procedure Load_Wiki (Bean : in out Project_Bean;
+                       Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
    --  --------------------
    --    load the project list.
