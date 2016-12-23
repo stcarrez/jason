@@ -84,7 +84,9 @@ package body Jason.Tickets.Modules is
       Found : Boolean;
    begin
       Ticket.Load (DB, Id, Found);
-      Project := Ticket.Get_Project;
+--      Jason.Projects.Models.Project_Ref (Project) := ;
+--      Ticket.Get_Project.Copy (Projects.Models.Project_Ref (Project));
+      Project.Load (DB, Ticket.Get_Project.Get_Id, Found);
       Tags.Load_Tags (DB, Id);
    end Load_Ticket;
 
