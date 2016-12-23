@@ -14,6 +14,7 @@
             <f:viewAction action='#{ticket.load}'/>
         </f:metadata>
         <div id='awa-content'>
+            <ui:include src="/projects/views/project-header.xhtml"/>
             <ui:include src="/tickets/views/ticket-nav.xhtml">
                 <ui:param name="project_id" value="#{ticket.project_id}"/>
                 <ui:param name="sort" value="recent"/>

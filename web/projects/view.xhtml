@@ -15,9 +15,9 @@
             <f:viewAction action='#{project.load}'/>
         </f:metadata>
         <div id='awa-content'>
-            <ui:include src="/projects/views/workspace-nav.xhtml">
+            <!--  <ui:include src="/projects/views/workspace-nav.xhtml">
                 <ui:param name="project_id" value="#{ticket.project_id}"/>
-            </ui:include>
+            </ui:include>  -->
             <div class="project-title">
                 <ul class="awa-page-actions">
                     <li>
@@ -33,6 +33,13 @@
                          tagLink="#{contextPath}/projects/tags/#{tagName}"
                          var="tagName"
                          tagClass="tagedit-listelement tagedit-listelement-old"/>
+            <ui:include src="/projects/views/project-actions.xhtml">
+                <ui:param name="project_id" value="#{project.id}"/>
+            </ui:include>
+            <ui:include src="/projects/views/project-nav.xhtml">
+                <ui:param name="project_id" value="#{project.id}"/>
+                <ui:param name="wikiSpaceId" value="#{project.wiki_id}"/>
+            </ui:include>
             <ui:include src="views/project-info.xhtml"/>
             <div class="project-tickets">
                 <h3>#{projectMsg.project_view_tickets_title}</h3>
