@@ -99,7 +99,7 @@ package body Jason.Tickets.Beans is
 
       Comment_List : AWA.Comments.Beans.Comment_List_Bean_Access;
    begin
-      Bean.Module.Load_Ticket (Bean, Bean.Project, Bean.Tags, Bean.Ticket_Id);
+      Bean.Module.Load_Ticket (Bean, Bean.Project.all, Bean.Tags, Bean.Ticket_Id);
       Comment_List := AWA.Comments.Beans.Get_Comment_List_Bean ("ticketComments");
       if Comment_List /= null then
          Comment_List.Load_Comments (Bean.Get_Id);
@@ -147,7 +147,7 @@ package body Jason.Tickets.Beans is
          From.Ticket_Id := ADO.Utils.To_Identifier (Value);
       elsif Name = "id" and not Util.Beans.Objects.Is_Empty (Value) then
          From.Ticket_Id := ADO.Utils.To_Identifier (Value);
-         From.Module.Load_Ticket (From, From.Project, From.Tags, From.Ticket_Id);
+         From.Module.Load_Ticket (From, From.Project.all, From.Tags, From.Ticket_Id);
       else
          Jason.Tickets.Models.Ticket_Bean (From).Set_Value (Name, Value);
       end if;
@@ -164,6 +164,7 @@ package body Jason.Tickets.Beans is
       Object.Tags_Bean := Object.Tags'Access;
       Object.Tags.Set_Entity_Type (Jason.Tickets.Models.TICKET_TABLE);
       Object.Tags.Set_Permission ("ticket-update");
+      Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
       return Object.all'Access;
    end Create_Ticket_Bean;
 
@@ -312,6 +313,7 @@ package body Jason.Tickets.Beans is
       Object.Project_Id := ADO.NO_IDENTIFIER;
       Object.Status     := Jason.Tickets.Models.OPEN;
       Object.Tickets_Bean := Object.Tickets'Access;
+      Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
       return Object.all'Access;
    end Create_Ticket_List_Bean;
 
