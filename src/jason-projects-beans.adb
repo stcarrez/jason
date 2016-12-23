@@ -17,6 +17,7 @@
 -----------------------------------------------------------------------
 with AWA.Services.Contexts;
 with AWA.Tags.Modules;
+with AWA.Wikis.Modules;
 with ADO.Sessions;
 with ADO.Sessions.Entities;
 with ADO.Queries;
@@ -61,9 +62,34 @@ package body Jason.Projects.Beans is
          Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("failed");
          return;
       end if;
-      Bean.Module.Load_Project (Bean, Bean.Tags, Bean.Id);
+      Bean.Module.Load_Project (Bean, Bean.Wiki_Space, Bean.Tags, Bean.Id, ADO.NO_IDENTIFIER);
       Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("loaded");
    end Load;
+
+   --  ------------------------------
+   --  Create the wiki space.
+   --  ------------------------------
+   overriding
+   procedure Create_Wiki (Bean    : in out Project_Bean;
+                          Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Bean.Module.Create_Wiki (Bean, Bean.Wiki_Space);
+   end Create_Wiki;
+
+   --  Load the project if it is associated with the current wiki space.
+   overriding
+   procedure Load_Wiki (Bean    : in out Project_Bean;
+                        Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      use type ADO.Identifier;
+      Wiki : AWA.Wikis.Beans.Wiki_Space_Bean_Access
+        := AWA.Wikis.Beans.Get_Wiki_Space_Bean ("adminWikiSpace");
+   begin
+      if not Wiki.Is_Null then
+         Bean.Module.Load_Project (Bean, Bean.Wiki_Space, Bean.Tags, ADO.NO_IDENTIFIER,
+                                   Wiki.Get_Id);
+      end if;
+      Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("loaded");
+   end Load_Wiki;
 
    --  ------------------------------
    --  Get the value identified by the name.
@@ -76,6 +102,12 @@ package body Jason.Projects.Beans is
          return Util.Beans.Objects.To_Object (From.Count);
       elsif Name = "tags" then
          return Util.Beans.Objects.To_Object (From.Tags_Bean, Util.Beans.Objects.STATIC);
+      elsif NAme ="has_wiki" then
+         return Util.Beans.Objects.To_Object (not From.Wiki_Space.Is_Null);
+      elsif Name = "wiki" then
+         return From.Wiki_Space.Get_Value ("name");
+      elsif NAme ="wiki_id" then
+         return From.Wiki_Space.Get_Value ("id");
       else
          return Jason.Projects.Models.Project_Bean (From).Get_Value (Name);
       end if;
@@ -91,7 +123,9 @@ package body Jason.Projects.Beans is
    begin
       if Name = "id" and not Util.Beans.Objects.Is_Empty (Value) then
          From.Id := ADO.Utils.To_Identifier (Value);
-         From.Module.Load_Project (From, From.Tags, From.Id);
+         From.Module.Load_Project (From, From.Wiki_Space, From.Tags, From.Id, ADO.NO_IDENTIFIER);
+      elsif Name = "wiki" then
+         From.Wiki_Space.Set_Value ("name", Value);
       else
          Jason.Projects.Models.Project_Bean (From).Set_Value (Name, Value);
       end if;
@@ -108,6 +142,7 @@ package body Jason.Projects.Beans is
       Object.Tags_Bean := Object.Tags'Access;
       Object.Tags.Set_Entity_Type (Jason.Projects.Models.PROJECT_TABLE);
       Object.Tags.Set_Permission ("project-update");
+      Object.Wiki_Space.Module := AWA.Wikis.Modules.Get_Wiki_Module;
       return Object.all'Access;
    end Create_Project_Bean;
 
