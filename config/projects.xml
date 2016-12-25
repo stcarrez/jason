@@ -64,6 +64,8 @@
     <filter-name>service</filter-name>
     <url-pattern>/projects/*.html</url-pattern>
     <url-pattern>/projects/view/#{project.id}</url-pattern>
+    <url-pattern>/projects/create-wiki/#{project.id}</url-pattern>
+    <url-pattern>/projects/tickets/#{project.id}</url-pattern>
     <url-pattern>/projects/edit/#{project.id}</url-pattern>
     <url-pattern>/projects/list/#{projectList.sort}</url-pattern>
     <url-pattern>/projects/tags</url-pattern>
@@ -74,6 +76,8 @@
     <filter-name>auth-filter</filter-name>
     <url-pattern>/projects/*.html</url-pattern>
     <url-pattern>/projects/view/#{project.id}</url-pattern>
+    <url-pattern>/projects/create-wiki/#{project.id}</url-pattern>
+    <url-pattern>/projects/tickets/#{project.id}</url-pattern>
     <url-pattern>/projects/edit/#{project.id}</url-pattern>
     <url-pattern>/projects/list/#{projectList.sort}</url-pattern>
     <url-pattern>/projects/tags</url-pattern>
@@ -88,6 +92,16 @@
   <url-mapping>
     <pattern>/projects/view/#{project.id}</pattern>
     <view-id>/projects/view.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/create-wiki/#{project.id}</pattern>
+    <view-id>/projects/create-wiki.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/tickets/#{project.id}</pattern>
+    <view-id>/projects/tickets.html</view-id>
   </url-mapping>
 
   <url-mapping>
@@ -139,6 +153,15 @@
         <navigation-case>
             <from-outcome>success</from-outcome>
             <to-view-id>/projects/view/#{project.id}</to-view-id>
+            <redirect/>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/projects/create-wiki.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/wikis/list/#{project.wiki_id}/recent/grid</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
