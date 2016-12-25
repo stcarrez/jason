@@ -70,7 +70,7 @@ package body Jason.Tickets.Beans is
    procedure Create (Bean    : in out Ticket_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
    begin
-      Bean.Module.Create (Bean, Bean.Project_Id);
+      Bean.Module.Create (Bean, Bean.Project.Get_Id);
       Bean.Tags.Update_Tags (Bean.Get_Id);
    end Create;
 
@@ -118,7 +118,7 @@ package body Jason.Tickets.Beans is
          if From.Project.Is_Inserted then
             return ADO.Utils.To_Object (From.Project.Get_Id);
          else
-            return ADO.Utils.To_Object (From.Project_Id);
+            return ADO.Utils.To_Object (From.Project.Get_Id);
          end if;
       elsif Name = "ticket_id" or Name = "id" then
          if From.Is_Inserted or From.Is_Loaded then
@@ -142,7 +142,7 @@ package body Jason.Tickets.Beans is
                         Value : in Util.Beans.Objects.Object) is
    begin
       if Name = "project_id" and not Util.Beans.Objects.Is_Empty (Value) then
-         From.Project_Id := ADO.Utils.To_Identifier (Value);
+         From.Project.Set_Id (ADO.Utils.To_Identifier (Value));
       elsif Name = "ticket_id" and not Util.Beans.Objects.Is_Empty (Value) then
          From.Ticket_Id := ADO.Utils.To_Identifier (Value);
       elsif Name = "id" and not Util.Beans.Objects.Is_Empty (Value) then

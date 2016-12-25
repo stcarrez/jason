@@ -30,7 +30,7 @@ package Jason.Tickets.Beans is
 
    type Ticket_Bean is new Jason.Tickets.Models.Ticket_Bean with record
       Module     : Jason.Tickets.Modules.Ticket_Module_Access := null;
-      Project_Id : ADO.Identifier := ADO.NO_IDENTIFIER;
+      --  Project_Id : ADO.Identifier := ADO.NO_IDENTIFIER;
       Ticket_Id  : ADO.Identifier := ADO.NO_IDENTIFIER;
       --  Project    : Jason.Projects.Models.Project_Ref;
       Project       : Jason.Projects.Beans.Project_Bean_Access;
