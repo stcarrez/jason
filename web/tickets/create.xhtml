@@ -4,14 +4,15 @@
                 xmlns:c="http://java.sun.com/jstl/core"
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{ticketMsg.tickets_title}" />
-    <ui:param name="pageStyle" value=""/>
+    <ui:param name="pageStyle" value="page-tickets"/>
 
     <!-- Main page body -->
     <ui:define name="pageBody">
         <f:metadata>
-            <f:viewParam id='id' value='#{ticket.id}'/>
+            <f:viewParam id='id' value='#{ticket.id}'/>-+
         </f:metadata>
         <div id='awa-content'>
+            <ui:include src="/projects/views/project-header.xhtml"/>
             <ui:include src="forms/create-form.xhtml"/>
         </div>
     </ui:define>
