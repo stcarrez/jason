@@ -179,6 +179,259 @@ INSERT INTO entity_type (name) VALUES ("awa_access_key");
 INSERT INTO entity_type (name) VALUES ("awa_email");
 INSERT INTO entity_type (name) VALUES ("awa_session");
 INSERT INTO entity_type (name) VALUES ("awa_user");
+/* Copied from awa-workspaces-sqlite.sql*/
+/* File generated automatically by dynamo */
+/* The workspace controls the features available in the application
+for a set of users: the workspace members.  A user could create
+several workspaces and be part of several workspaces that other
+users have created. */
+CREATE TABLE awa_workspace (
+  /* the workspace identifier */
+  `id` BIGINT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /*  */
+  `create_date` DATETIME NOT NULL,
+  /*  */
+  `owner_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+/*  */
+CREATE TABLE awa_workspace_feature (
+  /*  */
+  `id` BIGINT NOT NULL,
+  /*  */
+  `limit` INTEGER NOT NULL,
+  /*  */
+  `workspace_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+/* The workspace member indicates the users who
+are part of the workspace. */
+CREATE TABLE awa_workspace_member (
+  /*  */
+  `id` BIGINT NOT NULL,
+  /*  */
+  `member_id` BIGINT NOT NULL,
+  /*  */
+  `workspace_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_workspace");
+INSERT INTO entity_type (name) VALUES ("awa_workspace_feature");
+INSERT INTO entity_type (name) VALUES ("awa_workspace_member");
+/* Copied from awa-comments-sqlite.sql*/
+/* File generated automatically by dynamo */
+/* The Comment table records a user comment associated with a database entity.
+The comment can be associated with any other database record. */
+CREATE TABLE awa_comment (
+  /* the comment publication date */
+  `create_date` DATETIME NOT NULL,
+  /* the comment message. */
+  `message` TEXT NOT NULL,
+  /* the entity identifier to which this comment is associated */
+  `entity_id` BIGINT NOT NULL,
+  /* the comment identifier */
+  `id` BIGINT NOT NULL,
+  /* the optimistic lock version. */
+  `version` INTEGER NOT NULL,
+  /* the entity type that identifies the table to which the comment is associated. */
+  `entity_type` INTEGER NOT NULL,
+  /* the comment status to decide whether the comment is visible (published) or not. */
+  `status` integer NOT NULL,
+  /* the comment format type. */
+  `format` integer NOT NULL,
+  /*  */
+  `author_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_comment");
+/* Copied from awa-storages-sqlite.sql*/
+/* File generated automatically by dynamo */
+/* The uri member holds the URI if the storage type is URL.
+
+When storage is FILE, the local file path is built by using
+the workspace identifier and the storage identifier. */
+CREATE TABLE awa_storage (
+  /* the storage type which defines where the content is stored */
+  `storage` TINYINT NOT NULL,
+  /* the storage creation date */
+  `create_date` DATETIME NOT NULL,
+  /* the file name */
+  `name` VARCHAR(255) NOT NULL,
+  /* the file size */
+  `file_size` INTEGER NOT NULL,
+  /* the mime type */
+  `mime_type` VARCHAR(255) NOT NULL,
+  /* the storage URI */
+  `uri` VARCHAR(255) NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* the storage identifier */
+  `id` BIGINT NOT NULL,
+  /* whether the document is public or not. */
+  `is_public` TINYINT NOT NULL,
+  /*  */
+  `original_id` BIGINT ,
+  /*  */
+  `store_data_id` BIGINT ,
+  /*  */
+  `owner_id` BIGINT NOT NULL,
+  /*  */
+  `workspace_id` BIGINT NOT NULL,
+  /*  */
+  `folder_id` BIGINT ,
+  PRIMARY KEY (`id`)
+);
+/* The storage data is created only if the storage type
+is set to DATABASE.  It holds the file content in the blob. */
+CREATE TABLE awa_storage_data (
+  /* the storage data identifier */
+  `id` BIGINT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* the storage content */
+  `data` LONGBLOB NOT NULL,
+  PRIMARY KEY (`id`)
+);
+/*  */
+CREATE TABLE awa_storage_folder (
+  /* the storage folder identifier */
+  `id` BIGINT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* the folder creation date */
+  `create_date` DATETIME NOT NULL,
+  /*  */
+  `name` VARCHAR(255) NOT NULL,
+  /*  */
+  `workspace_id` BIGINT NOT NULL,
+  /*  */
+  `owner_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+/* The local store record is created when a copy of the data is needed on the local file system.
+The creation date refers to the date when the data was copied to the local file system.
+The expiration date indicates a date after which the local file can be removed
+from the local file system. */
+CREATE TABLE awa_store_local (
+  /* the local store identifier */
+  `id` BIGINT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /*  */
+  `store_version` INTEGER NOT NULL,
+  /* the shared flag which indicates whether this local store can be shared by several clients. */
+  `shared` TINYINT NOT NULL,
+  /* the local store path */
+  `path` VARCHAR(255) NOT NULL,
+  /* the local store expiration date */
+  `expire_date` DATE NOT NULL,
+  /* the creation date */
+  `create_date` DATETIME NOT NULL,
+  /*  */
+  `storage_id` BIGINT ,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_storage");
+INSERT INTO entity_type (name) VALUES ("awa_storage_data");
+INSERT INTO entity_type (name) VALUES ("awa_storage_folder");
+INSERT INTO entity_type (name) VALUES ("awa_store_local");
+/* Copied from awa-tags-sqlite.sql*/
+/* File generated automatically by dynamo */
+/* The tag definition. */
+CREATE TABLE awa_tag (
+  /* the tag identifier */
+  `id` BIGINT NOT NULL,
+  /* the tag name */
+  `name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+/*  */
+CREATE TABLE awa_tagged_entity (
+  /* the tag entity identifier */
+  `id` BIGINT NOT NULL,
+  /* Title: Tag model
+Date: 2013-02-23the database entity to which the tag is associated */
+  `for_entity_id` BIGINT NOT NULL,
+  /* the entity type */
+  `entity_type` INTEGER NOT NULL,
+  /*  */
+  `tag_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_tag");
+INSERT INTO entity_type (name) VALUES ("awa_tagged_entity");
+/* Copied from awa-jobs-sqlite.sql*/
+/* File generated automatically by dynamo */
+/* The job is associated with a dispatching queue. */
+CREATE TABLE awa_job (
+  /* the job identifier */
+  `id` BIGINT NOT NULL,
+  /* the job status */
+  `status` TINYINT NOT NULL,
+  /* the job name */
+  `name` VARCHAR(255) NOT NULL,
+  /* the job start date */
+  `start_date` DATETIME ,
+  /* the job creation date */
+  `create_date` DATETIME NOT NULL,
+  /* the job finish date */
+  `finish_date` DATETIME ,
+  /* the job progress indicator */
+  `progress` INTEGER NOT NULL,
+  /* the job parameters */
+  `parameters` TEXT NOT NULL,
+  /* the job result */
+  `results` TEXT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* the job priority */
+  `priority` INTEGER NOT NULL,
+  /*  */
+  `user_id` BIGINT ,
+  /*  */
+  `event_id` BIGINT ,
+  /*  */
+  `session_id` BIGINT ,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_job");
+/* Copied from awa-images-sqlite.sql*/
+/* File generated automatically by dynamo */
+/* - The workspace contains one or several folders.
+- Each image folder contains a set of images that have been uploaded by the user.
+- An image can be visible if a user has an ACL permission to read the associated folder.
+- An image marked as 'public=True' can be visible by anybody
+ */
+CREATE TABLE awa_image (
+  /* the image identifier */
+  `id` BIGINT NOT NULL,
+  /* the image width */
+  `width` INTEGER NOT NULL,
+  /* the image height */
+  `height` INTEGER NOT NULL,
+  /* the thumbnail width */
+  `thumb_width` INTEGER NOT NULL,
+  /* the thumbnail height */
+  `thumb_height` INTEGER NOT NULL,
+  /*  */
+  `path` VARCHAR(255) NOT NULL,
+  /*  */
+  `public` TINYINT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /*  */
+  `thumbnail_id` BIGINT ,
+  /*  */
+  `folder_id` BIGINT NOT NULL,
+  /*  */
+  `owner_id` BIGINT NOT NULL,
+  /*  */
+  `storage_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_image");
 /* Copied from awa_counters-sqlite.sql*/
 /* File generated automatically by dynamo */
 /*  */
@@ -222,6 +475,84 @@ CREATE TABLE awa_visit (
 INSERT INTO entity_type (name) VALUES ("awa_counter");
 INSERT INTO entity_type (name) VALUES ("awa_counter_definition");
 INSERT INTO entity_type (name) VALUES ("awa_visit");
+/* Copied from awa-wikis-sqlite.sql*/
+/* File generated automatically by dynamo */
+/*  */
+CREATE TABLE awa_wiki_content (
+  /* the wiki page content identifier */
+  `id` BIGINT NOT NULL,
+  /* the wiki content creation date */
+  `create_date` DATETIME NOT NULL,
+  /* the wiki text content */
+  `content` TEXT NOT NULL,
+  /* the format type used used by the wiki content */
+  `format` TINYINT NOT NULL,
+  /* the content comment string */
+  `save_comment` VARCHAR(255) NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* the wiki page version */
+  `page_version` INTEGER NOT NULL,
+  /* the wiki page that this Wiki_Content belongs to */
+  `page_id` BIGINT NOT NULL,
+  /* the page version author */
+  `author_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+/* The wiki page represents a page with its versions.
+It refers to the last version which is currently visible.
+It has an optional preview image which defines
+the thumbnail preview of the last/current wiki content. */
+CREATE TABLE awa_wiki_page (
+  /* the wiki page identifier */
+  `id` BIGINT NOT NULL,
+  /* the wiki page name */
+  `name` VARCHAR(255) NOT NULL,
+  /* the last page version number */
+  `last_version` INTEGER NOT NULL,
+  /* whether the wiki page is public */
+  `is_public` TINYINT NOT NULL,
+  /* the page title */
+  `title` VARCHAR(255) NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* a read counter which indicates how many times the page was read. */
+  `read_count` INTEGER NOT NULL,
+  /* the wiki page preview. */
+  `preview_id` BIGINT ,
+  /* the wiki space that this page belongs to */
+  `wiki_id` BIGINT NOT NULL,
+  /* the current content (or last version) */
+  `content_id` BIGINT ,
+  PRIMARY KEY (`id`)
+);
+/* Permission is granted to display a wiki page if there is
+an ACL entry between the wiki space and the user. */
+CREATE TABLE awa_wiki_space (
+  /* the wiki space identifier */
+  `id` BIGINT NOT NULL,
+  /* the wiki name */
+  `name` VARCHAR(255) NOT NULL,
+  /* whether the wiki is public */
+  `is_public` TINYINT NOT NULL,
+  /*  */
+  `version` INTEGER NOT NULL,
+  /* the wiki creation date. */
+  `create_date` DATETIME NOT NULL,
+  /* the left panel side wiki text for every page. */
+  `left_side` TEXT NOT NULL,
+  /* the right panel wiki text for every page.
+ */
+  `right_side` TEXT NOT NULL,
+  /* the default wiki page format. */
+  `format` TINYINT NOT NULL,
+  /*  */
+  `workspace_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO entity_type (name) VALUES ("awa_wiki_content");
+INSERT INTO entity_type (name) VALUES ("awa_wiki_page");
+INSERT INTO entity_type (name) VALUES ("awa_wiki_space");
 /* Copied from jason-sqlite.sql*/
 /* File generated automatically by dynamo */
 /*  */
@@ -238,7 +569,8 @@ CREATE TABLE jason_attribute_definition (
   `project_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
-/*  */
+/* The project describes the base information for the project management.
+ */
 CREATE TABLE jason_project (
   /* the project identifier */
   `id` BIGINT NOT NULL,
@@ -258,6 +590,8 @@ CREATE TABLE jason_project (
   `description` text NOT NULL,
   /* the project owner. */
   `owner_id` BIGINT NOT NULL,
+  /*  */
+  `wiki_id` BIGINT ,
   PRIMARY KEY (`id`)
 );
 /*  */
@@ -298,6 +632,8 @@ CREATE TABLE jason_ticket (
   `ticket_type` TINYINT NOT NULL,
   /* the duration to resolve the ticket. */
   `duration` INTEGER NOT NULL,
+  /* the progress percentation (0 .. 100). */
+  `progress` INTEGER NOT NULL,
   /*  */
   `project_id` BIGINT NOT NULL,
   /*  */
