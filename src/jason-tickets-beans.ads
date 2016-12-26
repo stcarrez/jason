@@ -17,10 +17,11 @@
 -----------------------------------------------------------------------
 
 with Ada.Strings.Unbounded;
+with Ada.Containers.Vectors;
+with Ada.Containers.Ordered_Maps;
 with ADO;
 with Util.Beans.Basic;
 with Util.Beans.Objects;
-with Util.Beans.Methods;
 with AWA.Tags.Beans;
 with Jason.Tickets.Modules;
 with Jason.Tickets.Models;
@@ -120,5 +121,81 @@ package Jason.Tickets.Beans is
    --  Get a select item list which contains a list of ticket types.
    function Create_Type_List (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
                                 return Util.Beans.Basic.Readonly_Bean_Access;
+
+   use type Jason.Tickets.Models.Ticket_Type;
+
+   type Ticket_Stat_Bean is new Models.Stat_Bean with record
+      Low    : aliased Models.Stat_Bean;
+      High   : aliased Models.Stat_Bean;
+      Medium : aliased Models.Stat_Bean;
+      Closed : aliased Models.Stat_Bean;
+   end record;
+
+   package Ticket_Stat_Vectors is
+     new Ada.Containers.Vectors (Index_Type   => Positive,
+                                 Element_Type => Ticket_Stat_Bean);
+
+   package Ticket_Stat_Map is
+     new Ada.Containers.Ordered_Maps (Key_Type     => Models.Ticket_Type,
+                                      Element_Type => Ticket_Stat_Bean,
+                                      "<"          => Models."<",
+                                      "="          => "=");
+
+   type Ticket_Raw_Stat_Bean is new Ticket_Stat_Bean with record
+      Low_Bean    : Util.Beans.Objects.Object;
+      High_Bean   : Util.Beans.Objects.Object;
+      Medium_Bean : Util.Beans.Objects.Object;
+      Closed_Bean : Util.Beans.Objects.Object;
+   end record;
+
+   --  Get the value identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Raw_Stat_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   type Ticket_Report_Bean is new Jason.Tickets.Models.Report_Bean
+     and Util.Beans.Basic.List_Bean with record
+      Module      : Jason.Tickets.Modules.Ticket_Module_Access := null;
+      Project     : Jason.Projects.Beans.Project_Bean_Access;
+      Row         : Util.Beans.Objects.Object;
+      Current     : Ticket_Stat_Vectors.Cursor;
+      Current_Pos : Natural := 0;
+      Element     : aliased Ticket_Raw_Stat_Bean;
+      List        : Ticket_Stat_Map.Map;
+      Report      : Ticket_Stat_Vectors.Vector;
+   end record;
+   type Ticket_Report_Bean_Access is access all Ticket_Report_Bean'Class;
+
+   --  Get the value identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Report_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the value identified by the name.
+   overriding
+   procedure Set_Value (From  : in out Ticket_Report_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   --  Get the number of elements in the list.
+   function Get_Count (From : Ticket_Report_Bean) return Natural;
+
+   --  Set the current row index.  Valid row indexes start at 1.
+   overriding
+   procedure Set_Row_Index (From  : in out Ticket_Report_Bean;
+                            Index : in Natural);
+
+   --  Get the element at the current row index.
+   overriding
+   function Get_Row (From  : in Ticket_Report_Bean) return Util.Beans.Objects.Object;
+
+   --  Load the information for the tickets.
+   overriding
+   procedure Load (Bean    : in out Ticket_Report_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Create the Tickets_Report_Bean bean instance.
+   function Create_Ticket_Report_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+                                     return Util.Beans.Basic.Readonly_Bean_Access;
 
 end Jason.Tickets.Beans;
