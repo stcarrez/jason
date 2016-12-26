@@ -119,6 +119,7 @@
     <url-pattern>/tickets/*.html</url-pattern>
     <url-pattern>/tickets/edit/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/edit/#{ticket.ticket_id}/status</url-pattern>
+    <url-pattern>/tickets/edit/#{ticket.ticket_id}/progress</url-pattern>
     <url-pattern>/tickets/view/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/list/#{ticketList.project_id}</url-pattern>
     <url-pattern>/tickets/create/#{ticket.project_id}</url-pattern>
@@ -130,6 +131,7 @@
     <url-pattern>/tickets/*.html</url-pattern>
     <url-pattern>/tickets/edit/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/edit/#{ticket.ticket_id}/status</url-pattern>
+    <url-pattern>/tickets/edit/#{ticket.ticket_id}/progress</url-pattern>
     <url-pattern>/tickets/view/#{ticket.ticket_id}</url-pattern>
     <url-pattern>/tickets/list/#{ticketList.project_id}</url-pattern>
     <url-pattern>/tickets/create/#{ticket.project_id}/#{ticket.ticket_type}</url-pattern>
@@ -157,6 +159,11 @@
   <url-mapping>
     <pattern>/tickets/edit/#{ticket.ticket_id}/status</pattern>
     <view-id>/tickets/forms/edit-status.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/tickets/edit/#{ticket.ticket_id}/progress</pattern>
+    <view-id>/tickets/forms/edit-progress.html</view-id>
   </url-mapping>
 
   <url-mapping>
