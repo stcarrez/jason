@@ -35,14 +35,6 @@
                          var="tagName"
                          tagClass="tagedit-listelement tagedit-listelement-old"/>
             <dl class="ticket-info">
-                <dt>Project</dt>
-                <dd>
-                    <a href="#{contextPath}/projects/view/#{ticket.project_id}">Project #{ticket.project_id}</a>
-                </dd>
-                <dt>Status:</dt>
-                <dd>
-                    #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
-                </dd>
                 <dt>Created on</dt>
                 <dd>
                     #{ticket.create_date}

@@ -13,11 +13,9 @@
     <ui:define name="pageBody">
         <f:metadata>
             <f:viewAction action='#{project.load}'/>
+            <f:viewAction action="#{ticketReport.load}"/>
         </f:metadata>
         <div id='awa-content'>
-            <!--  <ui:include src="/projects/views/workspace-nav.xhtml">
-                <ui:param name="project_id" value="#{ticket.project_id}"/>
-            </ui:include>  -->
             <ui:include src="/projects/views/project-header.xhtml"/>
             <div class="project-title-info">
                 <ul class="awa-page-actions">
@@ -38,9 +36,6 @@
             </ui:include>
 
             <ui:include src="views/project-info.xhtml"/>
-            <div class="project-tickets">
-                <h3>#{projectMsg.project_view_tickets_title}</h3>
-            </div>
         </div>
     </ui:define>
     <ui:define name="pageScript">

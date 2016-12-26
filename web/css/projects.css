@@ -94,3 +94,21 @@
 .project-create-wiki-desc {
     padding: 1.0em;
 }
+.project-sum-list {
+    float: left;
+    width: 100%;
+}
+.project-sum-type {
+    float: left;
+    width: 100%;
+    clear: both;
+}
+.project-sum-col {
+    width: 15%;
+    height: 1em;
+}
+.project-title-col {
+    width: 25%;
+    display: block;
+    height: 1em;
+}

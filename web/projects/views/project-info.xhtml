@@ -2,6 +2,7 @@
         xmlns:awa="http://code.google.com/p/ada-awa/jsf"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
         xmlns:c="http://java.sun.com/jstl/core"
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
@@ -11,7 +12,7 @@
             <span>Last updated on: #{project.update_date}</span>
         </dd>
     </dl>
-    <div class="">
+    <div class="project-description">
         Status: #{project.status}
         Wiki: #{project.wiki}
     </div>
@@ -19,5 +20,49 @@
         <awa:wiki styleClass='wiki-text'
                   value="#{project.description}"
                   toc="false"/>
+    </div>
+    <div class="grid_6">
+
+    <div claass="project-sum-list">
+        <div class="awa-list-header">
+            <div class="awa-header-col project-title-col"></div>
+            <div class="awa-header-col project-sum-col">High</div>
+            <div class="awa-header-col project-sum-col">Medium</div>
+            <div class="awa-header-col project-sum-col">Low</div>
+            <div class="awa-header-col project-sum-col">Closed</div>
+        </div>
+        <h:list var="stat" value="#{ticketReport}">
+            <div class="awa-list-item ui-list-item project-sum-type">
+                <div class="awa-list-col project-title-col">
+                    #{u:translate(ticketMsg,'ticket_type_',stat.kind)}
+                </div>
+                <div class="awa-list-col project-sum-col">
+                    <h:panelGroup rendered="#{stat.high.count ne 0}">
+                        <a href="">#{stat.high.count}</a>
+                    </h:panelGroup>
+                </div>
+                <div class="awa-list-col project-sum-col">
+                    <h:panelGroup rendered="#{stat.medium.count ne 0}">
+                        <a href="">#{stat.medium.count}</a>
+                    </h:panelGroup>
+                </div>
+                <div class="awa-list-col project-sum-col">
+                    <h:panelGroup rendered="#{stat.low.count ne 0}">
+                        <a href="">#{stat.low.count}</a>
+                    </h:panelGroup>
+                </div>
+                <div class="awa-list-col project-sum-col">
+                    <h:panelGroup rendered="#{stat.closed.count ne 0}">
+                        <a href="">#{stat.closed.count}</a>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </h:list>
+     </div>
+    </div>
+    <div class="grid_6">
+        <h3>Tickets</h3>
+        <ajax:include id="ticket-list" styleClass="asf-container project-ticket-list" async="true"
+                      src="/tickets/list/#{project.id}"/>
     </div>
 </ui:composition>
