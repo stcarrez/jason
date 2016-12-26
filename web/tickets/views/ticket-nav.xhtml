@@ -1,0 +1,46 @@
+<!-- Ticket navigation menu
+  -  Copyright (C) 2016 Stephane Carrez
+  -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
+  -
+  -  Licensed under the Apache License, Version 2.0 (the "License");
+  -  you may not use this file except in compliance with the License.
+  -  You may obtain a copy of the License at
+  -
+  -      http://www.apache.org/licenses/LICENSE-2.0
+  -
+  -  Unless required by applicable law or agreed to in writing, software
+  -  distributed under the License is distributed on an "AS IS" BASIS,
+  -  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  -  See the License for the specific language governing permissions and
+  -  limitations under the License.
+  -->
+<ul class='awa-nav'
+    xmlns:auth="http://code.google.com/p/ada-awa/auth"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:u="http://code.google.com/p/ada-asf/util"
+    xmlns:w="http://code.google.com/p/ada-asf/widget"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+        <li class="awa-nav-left">
+            <a href="#{contextPath}/tickets/create/#{project_id}" class="awa-nav-icon"
+               title="#{projectMsg.project_create_ticket_title}">
+                <img src="#{contextPath}/images/wikis/wiki-create.png" alt="#{projectMsg.project_create_ticket_title}"/>
+                <span>#{projectMsg.project_create_ticket_label}</span>
+            </a>
+        </li>
+        <li class="awa-nav-left">
+            <a href="#{contextPath}/projects/list/recent#{page_link}" class="awa-nav-icon"
+               title="#{projectMsg.project_list_tickets_title}">
+                <img src="#{contextPath}/images/wikis/wiki-document.png" alt="#{projectMsg.project_list_tickets_title}"/>
+                <span>#{projectMsg.project_list_tickets_title}</span>
+            </a>
+        </li>
+        <li class="awa-nav-left">
+            <a href="#{contextPath}/projects/tags" class="awa-nav-icon"
+               title="#{projectMsg.wiki_admin_list_tags_title}">
+                <img src="#{contextPath}/images/wikis/wiki-cloud.png" alt="#{wikiMsg.wiki_admin_list_comments_label}"/>
+                <span>#{projectMsg.wiki_admin_list_tags_label}</span>
+            </a>
+        </li>
+    <ui:insert name="page-nav"/>
+</ul>

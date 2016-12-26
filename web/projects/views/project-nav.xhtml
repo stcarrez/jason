@@ -21,26 +21,18 @@
     xmlns:w="http://code.google.com/p/ada-asf/widget"
     xmlns:ui="http://java.sun.com/jsf/facelets">
         <li class="awa-nav-left">
-            <a href="#{contextPath}/projects/create.html" class="awa-nav-icon"
-               title="#{projectMsg.project_create_ticket_title}">
-                <img src="#{contextPath}/images/projects/icon-create-project-manager-64.png" alt="#{projectMsg.project_create_ticket_title}"/>
-                <span>#{projectMsg.project_create_ticket_label}</span>
-            </a>
-        </li>
-        <li class="awa-nav-left">
             <a href="#{contextPath}/projects/list/recent#{page_link}" class="awa-nav-icon"
                title="#{projectMsg.project_list_tickets_title}">
-                <img src="#{contextPath}/images/projects/icon-project-manager-64.png" alt="#{projectMsg.project_list_tickets_title}"/>
-                <span>#{projectMsg.project_list_tickets_title}</span>
+                <span>Tickets</span>
             </a>
         </li>
-        <li class="awa-nav-left">
-            <a href="#{contextPath}/projects/tags" class="awa-nav-icon"
-               title="#{projectMsg.wiki_admin_list_tags_title}">
-                <img src="#{contextPath}/images/wikis/wiki-cloud.png" alt="#{wikiMsg.wiki_admin_list_comments_label}"/>
-                <span>#{projectMsg.wiki_admin_list_tags_label}</span>
-            </a>
-        </li>
+    <li class="awa-nav-left">
+        <a href="#{contextPath}/wikis/list/#{wikiSpaceId}/recent#{page_link}" class="awa-nav-icon"
+           title="#{wikiMsg.wiki_admin_list_pages_title}">
+            <span>#{wikiMsg.wiki_admin_list_pages_label}</span>
+        </a>
+    </li>
+
     <ui:insert name="page-nav"/>
     <h:panelGroup rendered="#{not empty sort}">
         <li class="wiki-nav-right" id="wiki-nav-sort">

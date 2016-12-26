@@ -36,6 +36,7 @@
 
     <query name='list'>
        <comment>Get the list of tickets that the current user can update</comment>
+       <entity-type name="project_type">jason_project</entity-type>
        <sql>
     SELECT
       ticket.id,

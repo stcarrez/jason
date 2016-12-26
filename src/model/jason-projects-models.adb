@@ -233,12 +233,29 @@ package body Jason.Projects.Models is
    end Get_Description;
 
 
+   procedure Set_Wiki (Object : in out Project_Ref;
+                       Value  : in AWA.Wikis.Models.Wiki_Space_Ref'Class) is
+      Impl : Project_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_Object (Impl.all, 9, Impl.Wiki, Value);
+   end Set_Wiki;
+
+   function Get_Wiki (Object : in Project_Ref)
+                  return AWA.Wikis.Models.Wiki_Space_Ref'Class is
+      Impl : constant Project_Access
+         := Project_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Wiki;
+   end Get_Wiki;
+
+
    procedure Set_Owner (Object : in out Project_Ref;
                         Value  : in AWA.Users.Models.User_Ref'Class) is
       Impl : Project_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 9, Impl.Owner, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 10, Impl.Owner, Value);
    end Set_Owner;
 
    function Get_Owner (Object : in Project_Ref)
@@ -270,6 +287,7 @@ package body Jason.Projects.Models is
             Copy.Last_Ticket := Impl.Last_Ticket;
             Copy.Update_Date := Impl.Update_Date;
             Copy.Description := Impl.Description;
+            Copy.Wiki := Impl.Wiki;
             Copy.Owner := Impl.Owner;
          end;
       end if;
@@ -436,9 +454,14 @@ package body Jason.Projects.Models is
          Object.Clear_Modified (8);
       end if;
       if Object.Is_Modified (9) then
-         Stmt.Save_Field (Name  => COL_8_1_NAME, --  owner_id
-                          Value => Object.Owner);
+         Stmt.Save_Field (Name  => COL_8_1_NAME, --  wiki_id
+                          Value => Object.Wiki);
          Object.Clear_Modified (9);
+      end if;
+      if Object.Is_Modified (10) then
+         Stmt.Save_Field (Name  => COL_9_1_NAME, --  owner_id
+                          Value => Object.Owner);
+         Object.Clear_Modified (10);
       end if;
       if Stmt.Has_Save_Fields then
          Object.Version := Object.Version + 1;
@@ -486,7 +509,9 @@ package body Jason.Projects.Models is
                         Value => Object.Update_Date);
       Query.Save_Field (Name  => COL_7_1_NAME, --  description
                         Value => Object.Description);
-      Query.Save_Field (Name  => COL_8_1_NAME, --  owner_id
+      Query.Save_Field (Name  => COL_8_1_NAME, --  wiki_id
+                        Value => Object.Wiki);
+      Query.Save_Field (Name  => COL_9_1_NAME, --  owner_id
                         Value => Object.Owner);
       Query.Execute (Result);
       if Result /= 1 then
@@ -511,12 +536,13 @@ package body Jason.Projects.Models is
    overriding
    function Get_Value (From : in Project_Ref;
                        Name : in String) return Util.Beans.Objects.Object is
-      Obj  : constant ADO.Objects.Object_Record_Access := From.Get_Load_Object;
+      Obj  : ADO.Objects.Object_Record_Access;
       Impl : access Project_Impl;
    begin
-      if Obj = null then
+      if From.Is_Null then
          return Util.Beans.Objects.Null_Object;
       end if;
+      Obj := From.Get_Load_Object;
       Impl := Project_Impl (Obj.all)'Access;
       if Name = "id" then
          return ADO.Objects.To_Object (Impl.Get_Key);
@@ -573,7 +599,10 @@ package body Jason.Projects.Models is
       Object.Update_Date := Stmt.Get_Time (6);
       Object.Description := Stmt.Get_Unbounded_String (7);
       if not Stmt.Is_Null (8) then
-         Object.Owner.Set_Key_Value (Stmt.Get_Identifier (8), Session);
+         Object.Wiki.Set_Key_Value (Stmt.Get_Identifier (8), Session);
+      end if;
+      if not Stmt.Is_Null (9) then
+         Object.Owner.Set_Key_Value (Stmt.Get_Identifier (9), Session);
       end if;
       Object.Version := Stmt.Get_Integer (1);
       ADO.Objects.Set_Created (Object);
@@ -952,12 +981,13 @@ package body Jason.Projects.Models is
    overriding
    function Get_Value (From : in Attribute_Definition_Ref;
                        Name : in String) return Util.Beans.Objects.Object is
-      Obj  : constant ADO.Objects.Object_Record_Access := From.Get_Load_Object;
+      Obj  : ADO.Objects.Object_Record_Access;
       Impl : access Attribute_Definition_Impl;
    begin
-      if Obj = null then
+      if From.Is_Null then
          return Util.Beans.Objects.Null_Object;
       end if;
+      Obj := From.Get_Load_Object;
       Impl := Attribute_Definition_Impl (Obj.all)'Access;
       if Name = "id" then
          return ADO.Objects.To_Object (Impl.Get_Key);
@@ -1127,11 +1157,35 @@ package body Jason.Projects.Models is
      new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
                                                       Method => Op_Save,
                                                       Name   => "save");
+   procedure Op_Create_Wiki (Bean    : in out Project_Bean;
+                             Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Create_Wiki (Bean    : in out Project_Bean;
+                             Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Project_Bean'Class (Bean).Create_Wiki (Outcome);
+   end Op_Create_Wiki;
+   package Binding_Project_Bean_4 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
+                                                      Method => Op_Create_Wiki,
+                                                      Name   => "create_wiki");
+   procedure Op_Load_Wiki (Bean    : in out Project_Bean;
+                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Load_Wiki (Bean    : in out Project_Bean;
+                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Project_Bean'Class (Bean).Load_Wiki (Outcome);
+   end Op_Load_Wiki;
+   package Binding_Project_Bean_5 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Project_Bean,
+                                                      Method => Op_Load_Wiki,
+                                                      Name   => "load_wiki");
 
    Binding_Project_Bean_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
      := (1 => Binding_Project_Bean_1.Proxy'Access,
          2 => Binding_Project_Bean_2.Proxy'Access,
-         3 => Binding_Project_Bean_3.Proxy'Access
+         3 => Binding_Project_Bean_3.Proxy'Access,
+         4 => Binding_Project_Bean_4.Proxy'Access,
+         5 => Binding_Project_Bean_5.Proxy'Access
      );
 
    --  ------------------------------

@@ -18,7 +18,9 @@
 
 with Ada.Strings.Unbounded;
 with ADO;
+with ASF.Helpers.Beans;
 with AWA.Tags.Beans;
+with AWA.Wikis.Beans;
 
 with Util.Beans.Basic;
 with Util.Beans.Objects;
@@ -35,6 +37,8 @@ package Jason.Projects.Beans is
       Tags          : aliased AWA.Tags.Beans.Tag_List_Bean;
       Tags_Bean     : Util.Beans.Basic.Readonly_Bean_Access;
 
+      --  The wiki space.
+      Wiki_Space    : AWA.Wikis.Beans.Wiki_Space_Bean;
    end record;
    type Project_Bean_Access is access all Project_Bean'Class;
 
@@ -57,16 +61,30 @@ package Jason.Projects.Beans is
    --  Save project action.
    overriding
    procedure Save (Bean    : in out Project_Bean;
-                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
 
    --  Load project information.
    overriding
    procedure Load (Bean    : in out Project_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
 
+   --  Create the wiki space.
+   overriding
+   procedure Create_Wiki (Bean    : in out Project_Bean;
+                          Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
+   --  Load the project if it is associated with the current wiki space.
+   overriding
+   procedure Load_Wiki (Bean    : in out Project_Bean;
+                        Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+
    --  Create the Projects_Bean bean instance.
    function Create_Project_Bean (Module : in Jason.Projects.Modules.Project_Module_Access)
       return Util.Beans.Basic.Readonly_Bean_Access;
+
+   function Get_Project_Bean is
+     new ASF.Helpers.Beans.Get_Bean (Element_Type   => Project_Bean,
+                                     Element_Access => Project_Bean_Access);
 
    --  ------------------------------
    --  Bean that collects the list of projects filtered by tag, priority and status.

@@ -57,6 +57,9 @@ package body Jason.Tickets.Modules is
       Register.Register (Plugin => Plugin,
                          Name   => "Jason.Tickets.Beans.Ticket_Type_List_Bean",
                          Handler => Jason.Tickets.Beans.Create_Type_List'Access);
+      Register.Register (Plugin => Plugin,
+                         Name   => "Jason.Tickets.Beans.Ticket_Report_Bean",
+                         Handler => Jason.Tickets.Beans.Create_Ticket_Report_Bean'Access);
 
       AWA.Modules.Module (Plugin).Initialize (App, Props);
 
@@ -84,7 +87,9 @@ package body Jason.Tickets.Modules is
       Found : Boolean;
    begin
       Ticket.Load (DB, Id, Found);
-      Project := Ticket.Get_Project;
+--      Jason.Projects.Models.Project_Ref (Project) := ;
+--      Ticket.Get_Project.Copy (Projects.Models.Project_Ref (Project));
+      Project.Load (DB, Ticket.Get_Project.Get_Id, Found);
       Tags.Load_Tags (DB, Id);
    end Load_Ticket;
 

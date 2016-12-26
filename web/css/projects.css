@@ -1,9 +1,14 @@
+.project-header {
+    float: left;
+    clear: both;
+    width: 100%;
+    margin-bottom: 1em;
+    border-bottom: 2px solid #47C;
+}
 .project-title {
     float: left;
     clear: both;
     width: 95%;
-    margin-top: 15px;
-    border-bottom: 2px solid #47C;
     padding-bottom: 2px;
     padding-left: 48px;
 }
@@ -57,4 +62,53 @@
 .asf-panel-close, .asf-panel-content {
     float: left;
     width: 100%;
+}
+.project-header-tab {
+    list-style-type: none;
+    float: left;
+    background: #eee;
+    width: 98%;
+    padding-left: 1%;
+    padding-right: 1%;
+    padding-top: 0.5em;
+}
+.project-header-tab li {
+    float: left;
+}
+.project-header-tab span {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+.project-header-tab a {
+    text-decoration: none;
+}
+.page-summary .project-header-tab .project-tab-summary,
+.page-tickets .project-header-tab .project-tab-tickets,
+.page-wiki .project-header-tab .project-tab-wiki {
+    background: white;
+}
+.project-create-wiki-title {
+    padding: 2.0em;
+    text-align: center;
+}
+.project-create-wiki-desc {
+    padding: 1.0em;
+}
+.project-sum-list {
+    float: left;
+    width: 100%;
+}
+.project-sum-type {
+    float: left;
+    width: 100%;
+    clear: both;
+}
+.project-sum-col {
+    width: 15%;
+    height: 1em;
+}
+.project-title-col {
+    width: 25%;
+    display: block;
+    height: 1em;
 }

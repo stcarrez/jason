@@ -13,7 +13,8 @@ CREATE TABLE jason_attribute_definition (
   `project_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
-/*  */
+/* The project describes the base information for the project management.
+ */
 CREATE TABLE jason_project (
   /* the project identifier */
   `id` BIGINT NOT NULL,
@@ -31,6 +32,8 @@ CREATE TABLE jason_project (
   `update_date` DATETIME NOT NULL,
   /* the project description. */
   `description` text NOT NULL,
+  /*  */
+  `wiki_id` BIGINT ,
   /* the project owner. */
   `owner_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
@@ -43,10 +46,10 @@ CREATE TABLE jason_attribute (
   `value` VARCHAR(255) BINARY NOT NULL,
   /*  */
   `version` INTEGER NOT NULL,
-  /*  */
-  `ticket_id` BIGINT NOT NULL,
   /* the attribute definition. */
   `definition_id` BIGINT NOT NULL,
+  /*  */
+  `ticket_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
 /*  */
@@ -73,6 +76,8 @@ CREATE TABLE jason_ticket (
   `ticket_type` TINYINT NOT NULL,
   /* the duration to resolve the ticket. */
   `duration` INTEGER NOT NULL,
+  /* the progress percentation (0 .. 100). */
+  `progress` INTEGER NOT NULL,
   /*  */
   `project_id` BIGINT NOT NULL,
   /*  */

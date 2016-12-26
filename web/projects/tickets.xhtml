@@ -1,0 +1,83 @@
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ajax="http://code.google.com/p/ada-asf/ajax"
+                xmlns:c="http://java.sun.com/jstl/core"
+                xmlns:util="http://code.google.com/p/ada-asf/util"
+                xmlns:awa="http://code.google.com/p/ada-awa/jsf"
+                template="/WEB-INF/layouts/layout.xhtml">
+    <ui:param name="title" value="#{projectMsg.projects_title}" />
+    <ui:param name="pageStyle" value="page-tickets"/>
+
+    <!-- Main page body -->
+    <ui:define name="pageBody">
+        <f:metadata>
+            <f:viewAction action='#{project.load}'/>
+        </f:metadata>
+        <div id='awa-content'>
+            <ui:include src="/projects/views/project-header.xhtml"/>
+            <awa:tagList value='#{project.tags}' id='qtags' styleClass="awa-tag-list tagedit-list"
+                         tagLink="#{contextPath}/projects/tags/#{tagName}"
+                         var="tagName"
+                         tagClass="tagedit-listelement tagedit-listelement-old"/>
+            <ui:include src="/projects/views/project-actions.xhtml">
+                <ui:param name="project_id" value="#{project.id}"/>
+            </ui:include>
+            <div id='button-list' class="asf-panel project-tickets">
+                <ul class="awa-page-actions">
+                    <li>
+                        <a href="#{contextPath}/tickets/create/#{project.id}" class="awa-button" title="Create">Create
+                            ticket</a>
+                    </li>
+                    <li>
+                        <a href="#{contextPath}/tickets/create/#{project.id}/work"
+                           onclick="return $('#button-list').panel_box('open', '#{contextPath}/tickets/create/#{project.id}/work');"
+                           class="awa-button" title="Create">New task</a>
+                    </li>
+                    <li>
+                        <a href="#{contextPath}/tickets/create/#{project.id}/issue"
+                           onclick="return $('#button-list').panel_box('open', '#{contextPath}/tickets/create/#{project.id}/issue');"
+                           class="awa-button" title="Create">New issue</a>
+                    </li>
+                </ul>
+                <div class="ui-panel ui-widget ui-corner-all asf-panel-box">
+                    <div class="ui-panel-header ui-widget-header asf-panel-close">
+                        <span class="asf-panel-title"></span>
+                          <a href="#" class="ui-panel-icon ui-corner-all ui-state-default">
+                            <span class="ui-icon ui-icon-closethick">
+                            </span>
+                          </a>
+                    </div>
+                    <div class="ui-panel-content ui-widget-content asf-container asf-panel-content">
+
+                    </div>
+                </div>
+            </div>
+            <util:script>$('#button-list').panel_box();</util:script>
+            <ajax:include id="ticket-list" styleClass="asf-container project-ticket-list" async="true"
+                          src="/tickets/list/#{project.id}"/>
+            <util:script>
+                $('#ticket-list').list({
+                    actionId: '#wiki-page-action',
+                    itemPrefix: 't_',
+                    deleteUrl: '#{contextPath}/wikis/forms/delete-page.html?id=',
+                    selectAction: function(list, node, event) {
+                        var target = event.target;
+                        if ($(node).hasClass('wiki-edit')) {
+                            var name = $(list.currentNode).attr('data-name');
+                            document.location = '#{contextPath}/wikis/edit/#{wikiList.wiki_id}/' + name;
+                        }
+                        if ($(target).hasClass('ticket-list-status')) {
+                            ASF.Update($('#ticket-list'), '#{contextPath}/tickets/list/#{project.id}');
+                        }
+                    }
+                });
+            </util:script>
+        </div>
+    </ui:define>
+    <ui:define name="pageScript">
+        <script type="text/javascript" src="#{jquery.chosenPath}"></script>
+        <script type="text/javascript" src="#{contextPath}/js/projects.js"></script>
+    </ui:define>
+
+</ui:composition>

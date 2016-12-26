@@ -35,6 +35,7 @@ with Util.Beans.Objects;
 with Util.Beans.Objects.Enums;
 with Util.Beans.Basic.Lists;
 with AWA.Users.Models;
+with AWA.Wikis.Models;
 with Util.Beans.Methods;
 pragma Warnings (On);
 package Jason.Projects.Models is
@@ -50,6 +51,9 @@ package Jason.Projects.Models is
 
    type Attribute_Definition_Ref is new ADO.Objects.Object_Ref with null record;
 
+   --  --------------------
+   --  The project describes the base information for the project management.
+   --  --------------------
    --  Create an object key for Project.
    function Project_Key (Id : in ADO.Identifier) return ADO.Objects.Object_Key;
    --  Create an object key for Project from a string.
@@ -125,6 +129,14 @@ package Jason.Projects.Models is
                  return Ada.Strings.Unbounded.Unbounded_String;
    function Get_Description (Object : in Project_Ref)
                  return String;
+
+   --
+   procedure Set_Wiki (Object : in out Project_Ref;
+                       Value  : in AWA.Wikis.Models.Wiki_Space_Ref'Class);
+
+   --
+   function Get_Wiki (Object : in Project_Ref)
+                 return AWA.Wikis.Models.Wiki_Space_Ref'Class;
 
    --  Set the project owner.
    procedure Set_Owner (Object : in out Project_Ref;
@@ -357,6 +369,9 @@ package Jason.Projects.Models is
    Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access;
 
 
+   --  --------------------
+   --    create the wiki space associated with the project.
+   --  --------------------
    type Project_Bean is abstract new Jason.Projects.Models.Project_Ref
      and Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with null record;
 
@@ -381,6 +396,12 @@ package Jason.Projects.Models is
 
    procedure Save (Bean : in out Project_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   procedure Create_Wiki (Bean : in out Project_Bean;
+                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
+
+   procedure Load_Wiki (Bean : in out Project_Bean;
+                       Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
    --  --------------------
    --    load the project list.
@@ -431,10 +452,11 @@ private
    COL_5_1_NAME : aliased constant String := "last_ticket";
    COL_6_1_NAME : aliased constant String := "update_date";
    COL_7_1_NAME : aliased constant String := "description";
-   COL_8_1_NAME : aliased constant String := "owner_id";
+   COL_8_1_NAME : aliased constant String := "wiki_id";
+   COL_9_1_NAME : aliased constant String := "owner_id";
 
    PROJECT_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 9,
+     (Count => 10,
       Table => PROJECT_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -445,7 +467,8 @@ private
          6 => COL_5_1_NAME'Access,
          7 => COL_6_1_NAME'Access,
          8 => COL_7_1_NAME'Access,
-         9 => COL_8_1_NAME'Access
+         9 => COL_8_1_NAME'Access,
+         10 => COL_9_1_NAME'Access
 )
      );
    PROJECT_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -465,6 +488,7 @@ private
        Last_Ticket : Integer;
        Update_Date : Ada.Calendar.Time;
        Description : Ada.Strings.Unbounded.Unbounded_String;
+       Wiki : AWA.Wikis.Models.Wiki_Space_Ref;
        Owner : AWA.Users.Models.User_Ref;
    end record;
 

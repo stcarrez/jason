@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query-mapping package='Jason.Tickets.Models'>
+    <description>
+    </description>
+    <query name='stats'>
+       <comment>Some statistics about tickets associated to a project</comment>
+       <sql>
+    SELECT
+       ticket.status,
+       ticket.ticket_type,
+       ticket.priority,
+       COUNT(ticket.id),
+       SUM(ticket.duration),
+       SUM(ROUND(ticket.duration * ticket.progress / 100)),
+       SUM(ROUND((ticket.duration * (100 - ticket.progress)) / 100))
+    FROM jason_ticket AS ticket
+    INNER JOIN awa_acl AS acl ON acl.entity_id = :project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    WHERE ticket.project_id = :project_id
+    GROUP BY ticket.status, ticket.ticket_type, ticket.priority
+       </sql>
+    </query>
+</query-mapping>

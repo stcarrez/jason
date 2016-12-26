@@ -1,0 +1,29 @@
+<div class="project-header" xmlns:h="http://java.sun.com/jsf/html">
+    <div class="project-title">
+        <h2>#{project.name}</h2>
+    </div>
+    <ul class="project-header-tab">
+        <li class="project-tab-summary">
+            <a href="#{contextPath}/projects/view/#{project.id}">
+                <span>Summary</span>
+            </a>
+        </li>
+        <li class="project-tab-tickets">
+            <a href="#{contextPath}/projects/tickets/#{project.id}">
+                <span>Tickets</span>
+            </a>
+        </li>
+        <li class="project-tab-wiki">
+            <h:panelGroup rendered="#{empty project.wiki_id}">
+                <a href="#{contextPath}/projects/create-wiki/#{project.id}">
+                    <span>Wiki</span>
+                </a>
+            </h:panelGroup>
+            <h:panelGroup rendered="#{not empty project.wiki_id}">
+                <a href="#{contextPath}/wikis/list/#{project.wiki_id}/recent">
+                    <span>Wiki</span>
+                </a>
+            </h:panelGroup>
+        </li>
+    </ul>
+</div>
