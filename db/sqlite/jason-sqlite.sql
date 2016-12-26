@@ -32,10 +32,10 @@ CREATE TABLE jason_project (
   `update_date` DATETIME NOT NULL,
   /* the project description. */
   `description` text NOT NULL,
-  /* the project owner. */
-  `owner_id` BIGINT NOT NULL,
   /*  */
   `wiki_id` BIGINT ,
+  /* the project owner. */
+  `owner_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
 /*  */
@@ -46,10 +46,10 @@ CREATE TABLE jason_attribute (
   `value` VARCHAR(255) NOT NULL,
   /*  */
   `version` INTEGER NOT NULL,
-  /*  */
-  `ticket_id` BIGINT NOT NULL,
   /* the attribute definition. */
   `definition_id` BIGINT NOT NULL,
+  /*  */
+  `ticket_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
 /*  */
