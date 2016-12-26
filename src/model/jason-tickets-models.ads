@@ -161,6 +161,14 @@ package Jason.Tickets.Models is
    function Get_Duration (Object : in Ticket_Ref)
                  return Integer;
 
+   --  Set the progress percentation (0 .. 100).
+   procedure Set_Progress (Object : in out Ticket_Ref;
+                           Value  : in Integer);
+
+   --  Get the progress percentation (0 .. 100).
+   function Get_Progress (Object : in Ticket_Ref)
+                 return Integer;
+
    --
    procedure Set_Project (Object : in out Ticket_Ref;
                           Value  : in Jason.Projects.Models.Project_Ref'Class);
@@ -337,6 +345,9 @@ package Jason.Tickets.Models is
    procedure List (Object  : in out Attribute_Vector;
                    Session : in out ADO.Sessions.Session'Class;
                    Query   : in ADO.SQL.Query'Class);
+
+
+   Query_Info : constant ADO.Queries.Query_Definition_Access;
 
    --  --------------------
    --    The list of tickets.
@@ -586,6 +597,39 @@ package Jason.Tickets.Models is
    procedure Load (Bean : in out Ticket_Info_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
+   type Ticket_Stat_Bean is limited
+     new Util.Beans.Basic.Bean with  record
+
+      --  the ticket status type.
+      Status : Status_Type;
+
+      --  the ticket type.
+      Ticket_Type : Ticket_Type;
+
+      --  the ticket priority.
+      Priority : Integer;
+
+      --  the number of tickets.
+      Count : Integer;
+
+      --  the sum of duration for the tickets.
+      Duration : Integer;
+
+      --  remain duration.
+      Remain : Integer;
+   end record;
+
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Stat_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the bean attribute identified by the name.
+   overriding
+   procedure Set_Value (Item  : in out Ticket_Stat_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
 
 private
    TICKET_NAME : aliased constant String := "jason_ticket";
@@ -600,11 +644,12 @@ private
    COL_8_1_NAME : aliased constant String := "update_date";
    COL_9_1_NAME : aliased constant String := "ticket_type";
    COL_10_1_NAME : aliased constant String := "duration";
-   COL_11_1_NAME : aliased constant String := "project_id";
-   COL_12_1_NAME : aliased constant String := "creator_id";
+   COL_11_1_NAME : aliased constant String := "progress";
+   COL_12_1_NAME : aliased constant String := "project_id";
+   COL_13_1_NAME : aliased constant String := "creator_id";
 
    TICKET_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 13,
+     (Count => 14,
       Table => TICKET_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
@@ -619,7 +664,8 @@ private
          10 => COL_9_1_NAME'Access,
          11 => COL_10_1_NAME'Access,
          12 => COL_11_1_NAME'Access,
-         13 => COL_12_1_NAME'Access
+         13 => COL_12_1_NAME'Access,
+         14 => COL_13_1_NAME'Access
 )
      );
    TICKET_TABLE : constant ADO.Schemas.Class_Mapping_Access
@@ -642,6 +688,7 @@ private
        Update_Date : Ada.Calendar.Time;
        Ticket_Type : Jason.Tickets.Models.Ticket_Type;
        Duration : Integer;
+       Progress : Integer;
        Project : Jason.Projects.Models.Project_Ref;
        Creator : AWA.Users.Models.User_Ref;
    end record;
@@ -744,28 +791,38 @@ private
                         Impl   : out Attribute_Access);
 
    package File_1 is
+      new ADO.Queries.Loaders.File (Path => "tickets-stat.xml",
+                                    Sha1 => "9B2B599473F75F92CB5AB5045675E4CCEF926543");
+
+   package Def_Info is
+      new ADO.Queries.Loaders.Query (Name => "info",
+                                     File => File_1.File'Access);
+   Query_Info : constant ADO.Queries.Query_Definition_Access
+   := Def_Info.Query'Access;
+
+   package File_2 is
       new ADO.Queries.Loaders.File (Path => "tickets-list.xml",
                                     Sha1 => "A1EEE117F89DC5A760029875E84F3D601756AD80");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",
-                                     File => File_1.File'Access);
+                                     File => File_2.File'Access);
    Query_List : constant ADO.Queries.Query_Definition_Access
    := Def_Listinfo_List.Query'Access;
 
    package Def_Listinfo_List_Tag_Filter is
       new ADO.Queries.Loaders.Query (Name => "list-tag-filter",
-                                     File => File_1.File'Access);
+                                     File => File_2.File'Access);
    Query_List_Tag_Filter : constant ADO.Queries.Query_Definition_Access
    := Def_Listinfo_List_Tag_Filter.Query'Access;
 
-   package File_2 is
+   package File_3 is
       new ADO.Queries.Loaders.File (Path => "ticket-info.xml",
                                     Sha1 => "D5C042D77C9A68858F200A871CDDD130F6E8262D");
 
    package Def_Ticketinfo_Info is
       new ADO.Queries.Loaders.Query (Name => "info",
-                                     File => File_2.File'Access);
+                                     File => File_3.File'Access);
    Query_Info : constant ADO.Queries.Query_Definition_Access
    := Def_Ticketinfo_Info.Query'Access;
 end Jason.Tickets.Models;

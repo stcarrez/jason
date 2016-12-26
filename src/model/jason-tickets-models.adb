@@ -73,6 +73,7 @@ package body Jason.Tickets.Models is
       Impl.Update_Date := ADO.DEFAULT_TIME;
       Impl.Ticket_Type := Jason.Tickets.Models.Ticket_Type'First;
       Impl.Duration := 0;
+      Impl.Progress := 0;
       ADO.Objects.Set_Object (Object, Impl.all'Access);
    end Allocate;
 
@@ -289,12 +290,29 @@ package body Jason.Tickets.Models is
    end Get_Duration;
 
 
+   procedure Set_Progress (Object : in out Ticket_Ref;
+                           Value  : in Integer) is
+      Impl : Ticket_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_Integer (Impl.all, 12, Impl.Progress, Value);
+   end Set_Progress;
+
+   function Get_Progress (Object : in Ticket_Ref)
+                  return Integer is
+      Impl : constant Ticket_Access
+         := Ticket_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Progress;
+   end Get_Progress;
+
+
    procedure Set_Project (Object : in out Ticket_Ref;
                           Value  : in Jason.Projects.Models.Project_Ref'Class) is
       Impl : Ticket_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 12, Impl.Project, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 13, Impl.Project, Value);
    end Set_Project;
 
    function Get_Project (Object : in Ticket_Ref)
@@ -311,7 +329,7 @@ package body Jason.Tickets.Models is
       Impl : Ticket_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 13, Impl.Creator, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 14, Impl.Creator, Value);
    end Set_Creator;
 
    function Get_Creator (Object : in Ticket_Ref)
@@ -346,6 +364,7 @@ package body Jason.Tickets.Models is
             Copy.Update_Date := Impl.Update_Date;
             Copy.Ticket_Type := Impl.Ticket_Type;
             Copy.Duration := Impl.Duration;
+            Copy.Progress := Impl.Progress;
             Copy.Project := Impl.Project;
             Copy.Creator := Impl.Creator;
          end;
@@ -528,14 +547,19 @@ package body Jason.Tickets.Models is
          Object.Clear_Modified (11);
       end if;
       if Object.Is_Modified (12) then
-         Stmt.Save_Field (Name  => COL_11_1_NAME, --  project_id
-                          Value => Object.Project);
+         Stmt.Save_Field (Name  => COL_11_1_NAME, --  progress
+                          Value => Object.Progress);
          Object.Clear_Modified (12);
       end if;
       if Object.Is_Modified (13) then
-         Stmt.Save_Field (Name  => COL_12_1_NAME, --  creator_id
-                          Value => Object.Creator);
+         Stmt.Save_Field (Name  => COL_12_1_NAME, --  project_id
+                          Value => Object.Project);
          Object.Clear_Modified (13);
+      end if;
+      if Object.Is_Modified (14) then
+         Stmt.Save_Field (Name  => COL_13_1_NAME, --  creator_id
+                          Value => Object.Creator);
+         Object.Clear_Modified (14);
       end if;
       if Stmt.Has_Save_Fields then
          Object.Version := Object.Version + 1;
@@ -589,9 +613,11 @@ package body Jason.Tickets.Models is
                         Value => Integer (Ticket_Type'Pos (Object.Ticket_Type)));
       Query.Save_Field (Name  => COL_10_1_NAME, --  duration
                         Value => Object.Duration);
-      Query.Save_Field (Name  => COL_11_1_NAME, --  project_id
+      Query.Save_Field (Name  => COL_11_1_NAME, --  progress
+                        Value => Object.Progress);
+      Query.Save_Field (Name  => COL_12_1_NAME, --  project_id
                         Value => Object.Project);
-      Query.Save_Field (Name  => COL_12_1_NAME, --  creator_id
+      Query.Save_Field (Name  => COL_13_1_NAME, --  creator_id
                         Value => Object.Creator);
       Query.Execute (Result);
       if Result /= 1 then
@@ -644,6 +670,8 @@ package body Jason.Tickets.Models is
          return Jason.Tickets.Models.Ticket_Type_Objects.To_Object (Impl.Ticket_Type);
       elsif Name = "duration" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (Impl.Duration));
+      elsif Name = "progress" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (Impl.Progress));
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -687,11 +715,12 @@ package body Jason.Tickets.Models is
       Object.Update_Date := Stmt.Get_Time (8);
       Object.Ticket_Type := Ticket_Type'Val (Stmt.Get_Integer (9));
       Object.Duration := Stmt.Get_Integer (10);
-      if not Stmt.Is_Null (11) then
-         Object.Project.Set_Key_Value (Stmt.Get_Identifier (11), Session);
-      end if;
+      Object.Progress := Stmt.Get_Integer (11);
       if not Stmt.Is_Null (12) then
-         Object.Creator.Set_Key_Value (Stmt.Get_Identifier (12), Session);
+         Object.Project.Set_Key_Value (Stmt.Get_Identifier (12), Session);
+      end if;
+      if not Stmt.Is_Null (13) then
+         Object.Creator.Set_Key_Value (Stmt.Get_Identifier (13), Session);
       end if;
       Object.Version := Stmt.Get_Integer (1);
       ADO.Objects.Set_Created (Object);
@@ -1456,6 +1485,8 @@ package body Jason.Tickets.Models is
          Item.Set_Ticket_Type (Ticket_Type_Objects.To_Value (Value));
       elsif Name = "duration" then
          Item.Set_Duration (Util.Beans.Objects.To_Integer (Value));
+      elsif Name = "progress" then
+         Item.Set_Progress (Util.Beans.Objects.To_Integer (Value));
       end if;
    end Set_Value;
 
@@ -1590,6 +1621,55 @@ package body Jason.Tickets.Models is
    begin
       if Name = "ticket_id" then
          Item.Ticket_Id := ADO.Identifier (Util.Beans.Objects.To_Long_Long_Integer (Value));
+      end if;
+   end Set_Value;
+
+
+
+   --  ------------------------------
+   --  Get the bean attribute identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in Ticket_Stat_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if Name = "status" then
+         return Status_Type_Objects.To_Object (From.Status);
+      elsif Name = "ticket_type" then
+         return Ticket_Type_Objects.To_Object (From.Ticket_Type);
+      elsif Name = "priority" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
+      elsif Name = "count" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Count));
+      elsif Name = "duration" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Duration));
+      elsif Name = "remain" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Remain));
+      end if;
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+
+
+   --  ------------------------------
+   --  Set the value identified by the name
+   --  ------------------------------
+   overriding
+   procedure Set_Value (Item  : in out Ticket_Stat_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      if Name = "status" then
+         Item.Status := Status_Type_Objects.To_Value (Value);
+      elsif Name = "ticket_type" then
+         Item.Ticket_Type := Ticket_Type_Objects.To_Value (Value);
+      elsif Name = "priority" then
+         Item.Priority := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "count" then
+         Item.Count := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "duration" then
+         Item.Duration := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "remain" then
+         Item.Remain := Util.Beans.Objects.To_Integer (Value);
       end if;
    end Set_Value;
 
