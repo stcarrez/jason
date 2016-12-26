@@ -57,6 +57,9 @@ package body Jason.Tickets.Modules is
       Register.Register (Plugin => Plugin,
                          Name   => "Jason.Tickets.Beans.Ticket_Type_List_Bean",
                          Handler => Jason.Tickets.Beans.Create_Type_List'Access);
+      Register.Register (Plugin => Plugin,
+                         Name   => "Jason.Tickets.Beans.Ticket_Report_Bean",
+                         Handler => Jason.Tickets.Beans.Create_Ticket_Report_Bean'Access);
 
       AWA.Modules.Module (Plugin).Initialize (App, Props);
 
