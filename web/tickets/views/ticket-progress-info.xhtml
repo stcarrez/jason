@@ -14,20 +14,17 @@
   -  See the License for the specific language governing permissions and
   -  limitations under the License.
   -->
-<dl class='ticket-info'
+<dl class='ticket-progress-info'
     xmlns:auth="http://code.google.com/p/ada-awa/auth"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:u="http://code.google.com/p/ada-asf/util"
     xmlns:w="http://code.google.com/p/ada-asf/widget"
     xmlns:ui="http://java.sun.com/jsf/facelets">
-    <dt>Type</dt>
-    <dd>#{u:translate(ticketMsg,'ticket_type_',ticket.ticket_type)}</dd>
+    <dt>Progress</dt>
+    <dd>#{ticket.progress}</dd>
 
-    <dt>Status</dt>
-    <dd>#{u:translate(ticketMsg,'ticket_status_',ticket.status)}</dd>
-
-    <dt>Priority</dt>
-    <dd>#{ticket.priority}</dd>
+    <dt>Duration</dt>
+    <dd>#{ticket.duration}</dd>
 
 </dl>

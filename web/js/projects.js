@@ -41,10 +41,10 @@ var Jason = {};
                 var t = event.target;
 
                 if ($(t).hasClass("ui-icon-closethick") || $(t).hasClass("asf-cancel")) {
-                    self.element.children('ul').show(self.options.delay);
+                    self.element.children('dl').show(self.options.delay);
                     self.element.children('div').hide(self.options.delay);
                 } else if ($(t).hasClass("ui-icon-minusthick")) {
-                    self.element.children('ul').show(self.options.delay);
+                    self.element.children('dl').show(self.options.delay);
                     self.element.children('div').hide(self.options.delay);
                 }
                 return false;
@@ -59,8 +59,8 @@ var Jason = {};
                     self.element.find('.ui-panel-header .asf-panel-title').html(title.html());
                     title.remove();
                 }
-                self.element.children('ul').hide(self.options.delay);
-                self.element.children('div').show(self.options.delay);
+                self.element.children('dl').hide(self.options.delay);
+                self.element.children('.asf-panel-box').show(self.options.delay);
             });
             return false;
         }
