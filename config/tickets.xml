@@ -30,6 +30,13 @@
   </managed-bean>
 
   <managed-bean>
+    <description>The project ticket report</description>
+    <managed-bean-name>ticketReport</managed-bean-name>
+    <managed-bean-class>Jason.Tickets.Beans.Ticket_Report_Bean</managed-bean-class>
+    <managed-bean-scope>request</managed-bean-scope>
+  </managed-bean>
+
+  <managed-bean>
     <description>A localized list of ticket types to be used for a f:selectItems</description>
     <managed-bean-name>ticketTypeList</managed-bean-name>
     <managed-bean-class>Jason.Tickets.Beans.Ticket_Type_List_Bean</managed-bean-class>
