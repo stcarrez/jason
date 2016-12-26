@@ -21,8 +21,10 @@ with ADO.Queries;
 with ADO.Sessions;
 with ADO.Datasets;
 with ADO.Parameters;
+with ADO.Statements;
 with ADO.Sessions.Entities;
 with AWA.Tags.Modules;
+with AWA.Users.Models;
 with AWA.Services.Contexts;
 with AWA.Comments.Beans;
 with AWA.Helpers.Selectors;
@@ -316,5 +318,211 @@ package body Jason.Tickets.Beans is
       Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
       return Object.all'Access;
    end Create_Ticket_List_Bean;
+
+   --  Get the value identified by the name.
+   overriding
+   function Get_Value (From : in Ticket_Raw_Stat_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if Name = "low" then
+         return From.Low_Bean;
+      elsif Name = "medium" then
+         return From.Medium_Bean;
+      elsif Name = "high" then
+         return From.High_Bean;
+      elsif Name = "closed" then
+         return From.Closed_Bean;
+      else
+         return Jason.Tickets.Models.Stat_Bean (From).Get_Value (Name);
+      end if;
+   end Get_Value;
+
+   --  ------------------------------
+   --  Get the value identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in Ticket_Report_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      if name = "count" then
+         return Util.Beans.Objects.To_Object (Natural (From.Report.Length));
+      end if;
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+
+   --  ------------------------------
+   --  Set the value identified by the name.
+   --  ------------------------------
+   overriding
+   procedure Set_Value (From  : in out Ticket_Report_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      null;
+   end Set_Value;
+
+   --  ------------------------------
+   --  Get the number of elements in the list.
+   --  ------------------------------
+   function Get_Count (From : Ticket_Report_Bean) return Natural is
+   begin
+      return Natural (From.Report.Length);
+   end Get_Count;
+
+   --  ------------------------------
+   --  Set the current row index.  Valid row indexes start at 1.
+   --  ------------------------------
+   overriding
+   procedure Set_Row_Index (From  : in out Ticket_Report_Bean;
+                            Index : in Natural) is
+   begin
+      if Index = 1 then
+         From.Current     := From.Report.First;
+         From.Current_Pos := Index;
+      elsif Index = Natural (From.Report.Length) then
+         From.Current     := From.Report.Last;
+         From.Current_Pos := Index;
+      else
+         while Index > From.Current_Pos and Ticket_Stat_Vectors.Has_Element (From.Current) loop
+            Ticket_Stat_Vectors.Next (From.Current);
+            From.Current_Pos := From.Current_Pos + 1;
+         end loop;
+      end if;
+      Ticket_Stat_Bean (From.Element) := Ticket_Stat_Vectors.Element (From.Report, From.Current_Pos);
+   end Set_Row_Index;
+
+   --  ------------------------------
+   --  Get the element at the current row index.
+   --  ------------------------------
+   overriding
+   function Get_Row (From  : in Ticket_Report_Bean) return Util.Beans.Objects.Object is
+   begin
+      return From.Row;
+   end Get_Row;
+
+   --  Load the information for the tickets.
+   overriding
+   procedure Load (Bean    : in out Ticket_Report_Bean;
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      package ASC renames AWA.Services.Contexts;
+      use AWA.Services;
+      use type ADO.Identifier;
+
+      Session : ADO.Sessions.Session := Bean.Module.Get_Session;
+      Query   : ADO.Queries.Context;
+
+      Empty      : constant Jason.Tickets.Models.Stat_Bean := (Kind => Models.WORK,
+                                                               others => 0);
+      Ctx        : constant ASC.Service_Context_Access := ASC.Current;
+      User       : constant AWA.Users.Models.User_Ref := Ctx.Get_User;
+      Found      : Boolean;
+   begin
+      Query.Set_Query (Jason.Tickets.Models.Query_Stats);
+      Query.Bind_Param ("project_id", Bean.Project.Get_Id);
+      Query.Bind_Param ("user_id", User.Get_Id);
+      ADO.Sessions.Entities.Bind_Param (Params  => Query,
+                                        Name    => "project_table",
+                                        Table   => Jason.Projects.Models.PROJECT_TABLE,
+                                        Session => Session);
+      declare
+         Stmt   : ADO.Statements.Query_Statement := Session.Create_Statement (Query);
+      begin
+         Stmt.Execute;
+         while Stmt.Has_Elements loop
+            declare
+               use Models;
+
+               Status   : constant Models.Status_Type := Status_Type'Val (Stmt.Get_Integer (0));
+               Kind     : constant Models.Ticket_Type := Ticket_Type'Val (Stmt.Get_Integer (1));
+               Priority : constant Natural := Stmt.Get_Integer (2);
+               Count    : constant Natural := Stmt.Get_Integer (3);
+               Time     : constant Natural := Stmt.Get_Integer (4);
+               Done     : constant Natural := Stmt.Get_Integer (5);
+               Remain   : constant Natural := Stmt.Get_Integer (6);
+
+               procedure Update (Key  : in Models.Ticket_Type;
+                                 Item : in out Ticket_Stat_Bean);
+
+               procedure Update (Key  : in Models.Ticket_Type;
+                                 Item : in out Ticket_Stat_Bean) is
+                  pragma Unreferenced (Key);
+               begin
+                  if Status = Models.CLOSED or Status = Models.REJECTED then
+                     Item.Closed.Count := Item.Closed.Count + Count;
+                     Item.Closed.Time  := Item.Closed.Time + Time;
+                     Item.Closed.Done  := Item.Closed.Done + Done;
+                     Item.Closed.Remain := Item.Closed.Remain + Remain;
+                  elsif Priority <= 1 then
+                     Item.High.Count := Item.High.Count + Count;
+                     Item.High.Time := Item.High.Time + Time;
+                     Item.High.Done := Item.High.Done + Done;
+                     Item.High.Remain := Item.High.Remain + Remain;
+                  elsif Priority >= 5 then
+                     Item.Low.Count := Item.Low.Count + Count;
+                     Item.Low.Time := Item.Low.Time + Time;
+                     Item.Low.Done := Item.Low.Done + Done;
+                     Item.Low.Remain := Item.Low.Remain + Remain;
+                  else
+                     Item.Medium.Count := Item.Medium.Count + Count;
+                     Item.Medium.Time := Item.Medium.Time + Time;
+                     Item.Medium.Done := Item.Medium.Done + Done;
+                     Item.Medium.Remain := Item.Medium.Remain + Remain;
+                  end if;
+               end Update;
+
+               Pos  : constant Ticket_Stat_Map.Cursor := Bean.List.Find (Kind);
+            begin
+               if Ticket_Stat_Map.Has_Element (Pos) then
+                  Bean.List.Update_Element (Pos, Update'Access);
+               else
+                  declare
+                     T : Ticket_Stat_Bean;
+                  begin
+                     T.Kind     := Kind;
+                     T.Count    := 0;
+                     T.Time     := 0;
+                     T.Remain   := 0;
+                     T.High := Empty;
+                     T.Low  := Empty;
+                     T.Medium := Empty;
+                     T.Closed := Empty;
+                     Update (Kind, T);
+                     Bean.List.Insert (Kind, T);
+                  end;
+               end if;
+            end;
+            Stmt.Next;
+         end loop;
+      end;
+      declare
+         Iter : Ticket_Stat_Map.Cursor := Bean.List.First;
+      begin
+         while Ticket_Stat_Map.Has_Element (Iter) loop
+            Bean.Report.Append (Ticket_Stat_Map.Element (Iter));
+            Ticket_Stat_Map.Next (Iter);
+         end loop;
+         --  Sort_Tasks.Sort (Into.Tasks);
+      end;
+   end Load;
+
+   --  Create the Tickets_Report_Bean bean instance.
+   function Create_Ticket_Report_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
+                                     return Util.Beans.Basic.Readonly_Bean_Access is
+      Object  : constant Ticket_Report_Bean_Access := new Ticket_Report_Bean;
+   begin
+      Object.Module     := Module;
+      Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
+      Object.Row := Util.Beans.Objects.To_Object (Object.Element'Unchecked_Access,
+                                                  Util.Beans.Objects.STATIC);
+      Object.Element.Low_Bean := Util.Beans.Objects.To_Object (Object.Element.Low'Unchecked_Access,
+                                                               Util.Beans.Objects.STATIC);
+      Object.Element.High_Bean := Util.Beans.Objects.To_Object (Object.Element.High'Unchecked_Access,
+                                                                Util.Beans.Objects.STATIC);
+      Object.Element.Medium_Bean := Util.Beans.Objects.To_Object (Object.Element.Medium'Unchecked_Access,
+                                                                  Util.Beans.Objects.STATIC);
+      Object.Element.Closed_Bean := Util.Beans.Objects.To_Object (Object.Element.Closed'Unchecked_Access,
+                                                                  Util.Beans.Objects.STATIC);
+      return Object.all'Access;
+   end Create_Ticket_Report_Bean;
 
 end Jason.Tickets.Beans;
