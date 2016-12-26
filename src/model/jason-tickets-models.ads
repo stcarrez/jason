@@ -273,14 +273,6 @@ package Jason.Tickets.Models is
    function Get_Version (Object : in Attribute_Ref)
                  return Integer;
 
-   --
-   procedure Set_Ticket (Object : in out Attribute_Ref;
-                         Value  : in Jason.Tickets.Models.Ticket_Ref'Class);
-
-   --
-   function Get_Ticket (Object : in Attribute_Ref)
-                 return Jason.Tickets.Models.Ticket_Ref'Class;
-
    --  Set the attribute definition.
    procedure Set_Definition (Object : in out Attribute_Ref;
                              Value  : in Jason.Projects.Models.Attribute_Definition_Ref'Class);
@@ -288,6 +280,14 @@ package Jason.Tickets.Models is
    --  Get the attribute definition.
    function Get_Definition (Object : in Attribute_Ref)
                  return Jason.Projects.Models.Attribute_Definition_Ref'Class;
+
+   --
+   procedure Set_Ticket (Object : in out Attribute_Ref;
+                         Value  : in Jason.Tickets.Models.Ticket_Ref'Class);
+
+   --
+   function Get_Ticket (Object : in Attribute_Ref)
+                 return Jason.Tickets.Models.Ticket_Ref'Class;
 
    --  Load the entity identified by 'Id'.
    --  Raises the NOT_FOUND exception if it does not exist.
@@ -347,7 +347,7 @@ package Jason.Tickets.Models is
                    Query   : in ADO.SQL.Query'Class);
 
 
-   Query_Info : constant ADO.Queries.Query_Definition_Access;
+   Query_Stats : constant ADO.Queries.Query_Definition_Access;
 
    --  --------------------
    --    The list of tickets.
@@ -597,14 +597,11 @@ package Jason.Tickets.Models is
    procedure Load (Bean : in out Ticket_Info_Bean;
                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
-   type Ticket_Stat_Bean is limited
+   type Stat_Bean is
      new Util.Beans.Basic.Bean with  record
 
-      --  the ticket status type.
-      Status : Status_Type;
-
       --  the ticket type.
-      Ticket_Type : Ticket_Type;
+      Kind : Ticket_Type;
 
       --  the ticket priority.
       Priority : Integer;
@@ -613,22 +610,46 @@ package Jason.Tickets.Models is
       Count : Integer;
 
       --  the sum of duration for the tickets.
-      Duration : Integer;
+      Time : Integer;
 
       --  remain duration.
       Remain : Integer;
+      Done : Integer;
    end record;
 
    --  Get the bean attribute identified by the name.
    overriding
-   function Get_Value (From : in Ticket_Stat_Bean;
+   function Get_Value (From : in Stat_Bean;
                        Name : in String) return Util.Beans.Objects.Object;
 
    --  Set the bean attribute identified by the name.
    overriding
-   procedure Set_Value (Item  : in out Ticket_Stat_Bean;
+   procedure Set_Value (Item  : in out Stat_Bean;
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object);
+
+   type Report_Bean is abstract
+     new Util.Beans.Basic.Bean and Util.Beans.Methods.Method_Bean with null record;
+
+
+   --  This bean provides some methods that can be used in a Method_Expression.
+   overriding
+   function Get_Method_Bindings (From : in Report_Bean)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access;
+
+   --  Get the bean attribute identified by the name.
+   overriding
+   function Get_Value (From : in Report_Bean;
+                       Name : in String) return Util.Beans.Objects.Object;
+
+   --  Set the bean attribute identified by the name.
+   overriding
+   procedure Set_Value (Item  : in out Report_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object);
+
+   procedure Load (Bean : in out Report_Bean;
+                  Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is abstract;
 
 
 private
@@ -728,8 +749,8 @@ private
    COL_0_2_NAME : aliased constant String := "id";
    COL_1_2_NAME : aliased constant String := "value";
    COL_2_2_NAME : aliased constant String := "version";
-   COL_3_2_NAME : aliased constant String := "ticket_id";
-   COL_4_2_NAME : aliased constant String := "definition_id";
+   COL_3_2_NAME : aliased constant String := "definition_id";
+   COL_4_2_NAME : aliased constant String := "ticket_id";
 
    ATTRIBUTE_DEF : aliased constant ADO.Schemas.Class_Mapping :=
      (Count => 5,
@@ -754,8 +775,8 @@ private
    with record
        Value : Ada.Strings.Unbounded.Unbounded_String;
        Version : Integer;
-       Ticket : Jason.Tickets.Models.Ticket_Ref;
        Definition : Jason.Projects.Models.Attribute_Definition_Ref;
+       Ticket : Jason.Tickets.Models.Ticket_Ref;
    end record;
 
    type Attribute_Access is access all Attribute_Impl;
@@ -794,11 +815,11 @@ private
       new ADO.Queries.Loaders.File (Path => "tickets-stat.xml",
                                     Sha1 => "9B2B599473F75F92CB5AB5045675E4CCEF926543");
 
-   package Def_Info is
-      new ADO.Queries.Loaders.Query (Name => "info",
+   package Def_Stats is
+      new ADO.Queries.Loaders.Query (Name => "stats",
                                      File => File_1.File'Access);
-   Query_Info : constant ADO.Queries.Query_Definition_Access
-   := Def_Info.Query'Access;
+   Query_Stats : constant ADO.Queries.Query_Definition_Access
+   := Def_Stats.Query'Access;
 
    package File_2 is
       new ADO.Queries.Loaders.File (Path => "tickets-list.xml",

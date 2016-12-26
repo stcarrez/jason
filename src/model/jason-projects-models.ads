@@ -130,14 +130,6 @@ package Jason.Projects.Models is
    function Get_Description (Object : in Project_Ref)
                  return String;
 
-   --  Set the project owner.
-   procedure Set_Owner (Object : in out Project_Ref;
-                        Value  : in AWA.Users.Models.User_Ref'Class);
-
-   --  Get the project owner.
-   function Get_Owner (Object : in Project_Ref)
-                 return AWA.Users.Models.User_Ref'Class;
-
    --
    procedure Set_Wiki (Object : in out Project_Ref;
                        Value  : in AWA.Wikis.Models.Wiki_Space_Ref'Class);
@@ -145,6 +137,14 @@ package Jason.Projects.Models is
    --
    function Get_Wiki (Object : in Project_Ref)
                  return AWA.Wikis.Models.Wiki_Space_Ref'Class;
+
+   --  Set the project owner.
+   procedure Set_Owner (Object : in out Project_Ref;
+                        Value  : in AWA.Users.Models.User_Ref'Class);
+
+   --  Get the project owner.
+   function Get_Owner (Object : in Project_Ref)
+                 return AWA.Users.Models.User_Ref'Class;
 
    --  Load the entity identified by 'Id'.
    --  Raises the NOT_FOUND exception if it does not exist.
@@ -452,8 +452,8 @@ private
    COL_5_1_NAME : aliased constant String := "last_ticket";
    COL_6_1_NAME : aliased constant String := "update_date";
    COL_7_1_NAME : aliased constant String := "description";
-   COL_8_1_NAME : aliased constant String := "owner_id";
-   COL_9_1_NAME : aliased constant String := "wiki_id";
+   COL_8_1_NAME : aliased constant String := "wiki_id";
+   COL_9_1_NAME : aliased constant String := "owner_id";
 
    PROJECT_DEF : aliased constant ADO.Schemas.Class_Mapping :=
      (Count => 10,
@@ -488,8 +488,8 @@ private
        Last_Ticket : Integer;
        Update_Date : Ada.Calendar.Time;
        Description : Ada.Strings.Unbounded.Unbounded_String;
-       Owner : AWA.Users.Models.User_Ref;
        Wiki : AWA.Wikis.Models.Wiki_Space_Ref;
+       Owner : AWA.Users.Models.User_Ref;
    end record;
 
    type Project_Access is access all Project_Impl;

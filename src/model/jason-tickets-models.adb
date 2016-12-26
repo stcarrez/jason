@@ -823,29 +823,12 @@ package body Jason.Tickets.Models is
    end Get_Version;
 
 
-   procedure Set_Ticket (Object : in out Attribute_Ref;
-                         Value  : in Jason.Tickets.Models.Ticket_Ref'Class) is
-      Impl : Attribute_Access;
-   begin
-      Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 4, Impl.Ticket, Value);
-   end Set_Ticket;
-
-   function Get_Ticket (Object : in Attribute_Ref)
-                  return Jason.Tickets.Models.Ticket_Ref'Class is
-      Impl : constant Attribute_Access
-         := Attribute_Impl (Object.Get_Load_Object.all)'Access;
-   begin
-      return Impl.Ticket;
-   end Get_Ticket;
-
-
    procedure Set_Definition (Object : in out Attribute_Ref;
                              Value  : in Jason.Projects.Models.Attribute_Definition_Ref'Class) is
       Impl : Attribute_Access;
    begin
       Set_Field (Object, Impl);
-      ADO.Objects.Set_Field_Object (Impl.all, 5, Impl.Definition, Value);
+      ADO.Objects.Set_Field_Object (Impl.all, 4, Impl.Definition, Value);
    end Set_Definition;
 
    function Get_Definition (Object : in Attribute_Ref)
@@ -855,6 +838,23 @@ package body Jason.Tickets.Models is
    begin
       return Impl.Definition;
    end Get_Definition;
+
+
+   procedure Set_Ticket (Object : in out Attribute_Ref;
+                         Value  : in Jason.Tickets.Models.Ticket_Ref'Class) is
+      Impl : Attribute_Access;
+   begin
+      Set_Field (Object, Impl);
+      ADO.Objects.Set_Field_Object (Impl.all, 5, Impl.Ticket, Value);
+   end Set_Ticket;
+
+   function Get_Ticket (Object : in Attribute_Ref)
+                  return Jason.Tickets.Models.Ticket_Ref'Class is
+      Impl : constant Attribute_Access
+         := Attribute_Impl (Object.Get_Load_Object.all)'Access;
+   begin
+      return Impl.Ticket;
+   end Get_Ticket;
 
    --  Copy of the object.
    procedure Copy (Object : in Attribute_Ref;
@@ -872,8 +872,8 @@ package body Jason.Tickets.Models is
             Copy.Copy (Impl.all);
             Copy.Value := Impl.Value;
             Copy.Version := Impl.Version;
-            Copy.Ticket := Impl.Ticket;
             Copy.Definition := Impl.Definition;
+            Copy.Ticket := Impl.Ticket;
          end;
       end if;
       Into := Result;
@@ -1014,13 +1014,13 @@ package body Jason.Tickets.Models is
          Object.Clear_Modified (2);
       end if;
       if Object.Is_Modified (4) then
-         Stmt.Save_Field (Name  => COL_3_2_NAME, --  ticket_id
-                          Value => Object.Ticket);
+         Stmt.Save_Field (Name  => COL_3_2_NAME, --  definition_id
+                          Value => Object.Definition);
          Object.Clear_Modified (4);
       end if;
       if Object.Is_Modified (5) then
-         Stmt.Save_Field (Name  => COL_4_2_NAME, --  definition_id
-                          Value => Object.Definition);
+         Stmt.Save_Field (Name  => COL_4_2_NAME, --  ticket_id
+                          Value => Object.Ticket);
          Object.Clear_Modified (5);
       end if;
       if Stmt.Has_Save_Fields then
@@ -1059,10 +1059,10 @@ package body Jason.Tickets.Models is
                         Value => Object.Value);
       Query.Save_Field (Name  => COL_2_2_NAME, --  version
                         Value => Object.Version);
-      Query.Save_Field (Name  => COL_3_2_NAME, --  ticket_id
-                        Value => Object.Ticket);
-      Query.Save_Field (Name  => COL_4_2_NAME, --  definition_id
+      Query.Save_Field (Name  => COL_3_2_NAME, --  definition_id
                         Value => Object.Definition);
+      Query.Save_Field (Name  => COL_4_2_NAME, --  ticket_id
+                        Value => Object.Ticket);
       Query.Execute (Result);
       if Result /= 1 then
          raise ADO.Objects.INSERT_ERROR;
@@ -1134,10 +1134,10 @@ package body Jason.Tickets.Models is
       Object.Set_Key_Value (Stmt.Get_Identifier (0));
       Object.Value := Stmt.Get_Unbounded_String (1);
       if not Stmt.Is_Null (3) then
-         Object.Ticket.Set_Key_Value (Stmt.Get_Identifier (3), Session);
+         Object.Definition.Set_Key_Value (Stmt.Get_Identifier (3), Session);
       end if;
       if not Stmt.Is_Null (4) then
-         Object.Definition.Set_Key_Value (Stmt.Get_Identifier (4), Session);
+         Object.Ticket.Set_Key_Value (Stmt.Get_Identifier (4), Session);
       end if;
       Object.Version := Stmt.Get_Integer (2);
       ADO.Objects.Set_Created (Object);
@@ -1630,21 +1630,21 @@ package body Jason.Tickets.Models is
    --  Get the bean attribute identified by the name.
    --  ------------------------------
    overriding
-   function Get_Value (From : in Ticket_Stat_Bean;
+   function Get_Value (From : in Stat_Bean;
                        Name : in String) return Util.Beans.Objects.Object is
    begin
-      if Name = "status" then
-         return Status_Type_Objects.To_Object (From.Status);
-      elsif Name = "ticket_type" then
-         return Ticket_Type_Objects.To_Object (From.Ticket_Type);
+      if Name = "kind" then
+         return Ticket_Type_Objects.To_Object (From.Kind);
       elsif Name = "priority" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
       elsif Name = "count" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Count));
-      elsif Name = "duration" then
-         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Duration));
+      elsif Name = "time" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Time));
       elsif Name = "remain" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Remain));
+      elsif Name = "done" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Done));
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1654,23 +1654,71 @@ package body Jason.Tickets.Models is
    --  Set the value identified by the name
    --  ------------------------------
    overriding
-   procedure Set_Value (Item  : in out Ticket_Stat_Bean;
+   procedure Set_Value (Item  : in out Stat_Bean;
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object) is
    begin
-      if Name = "status" then
-         Item.Status := Status_Type_Objects.To_Value (Value);
-      elsif Name = "ticket_type" then
-         Item.Ticket_Type := Ticket_Type_Objects.To_Value (Value);
+      if Name = "kind" then
+         Item.Kind := Ticket_Type_Objects.To_Value (Value);
       elsif Name = "priority" then
          Item.Priority := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "count" then
          Item.Count := Util.Beans.Objects.To_Integer (Value);
-      elsif Name = "duration" then
-         Item.Duration := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "time" then
+         Item.Time := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "remain" then
          Item.Remain := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "done" then
+         Item.Done := Util.Beans.Objects.To_Integer (Value);
       end if;
+   end Set_Value;
+
+   procedure Op_Load (Bean    : in out Report_Bean;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String);
+   procedure Op_Load (Bean    : in out Report_Bean;
+                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+   begin
+      Report_Bean'Class (Bean).Load (Outcome);
+   end Op_Load;
+   package Binding_Report_Bean_1 is
+     new ASF.Events.Faces.Actions.Action_Method.Bind (Bean   => Report_Bean,
+                                                      Method => Op_Load,
+                                                      Name   => "load");
+
+   Binding_Report_Bean_Array : aliased constant Util.Beans.Methods.Method_Binding_Array
+     := (1 => Binding_Report_Bean_1.Proxy'Access
+     );
+
+   --  ------------------------------
+   --  This bean provides some methods that can be used in a Method_Expression.
+   --  ------------------------------
+   overriding
+   function Get_Method_Bindings (From : in Report_Bean)
+                                 return Util.Beans.Methods.Method_Binding_Array_Access is
+      pragma Unreferenced (From);
+   begin
+      return Binding_Report_Bean_Array'Access;
+   end Get_Method_Bindings;
+   --  ------------------------------
+   --  Get the bean attribute identified by the name.
+   --  ------------------------------
+   overriding
+   function Get_Value (From : in Report_Bean;
+                       Name : in String) return Util.Beans.Objects.Object is
+   begin
+      return Util.Beans.Objects.Null_Object;
+   end Get_Value;
+
+
+   --  ------------------------------
+   --  Set the value identified by the name
+   --  ------------------------------
+   overriding
+   procedure Set_Value (Item  : in out Report_Bean;
+                        Name  : in String;
+                        Value : in Util.Beans.Objects.Object) is
+   begin
+      null;
    end Set_Value;
 
 
