@@ -15,25 +15,17 @@
         <h:inputHidden id='progress' value='#{ticket.progress}' required='false'/>
         <div class='container_12'>
             <div class="grid_4">
-                <dl class="awa-required#{util:hasMessage('type') ? ' awa-error' : ''}">
-                    <dt>
-                        <label for='type'>#{ticketMsg.ticket_type_label}</label>
-                    </dt>
-                    <dd>
-                        <w:chosen id="type" value="#{ticket.ticket_type}">
-                            <f:selectItems value="#{ticketTypeList}"/>
-                            <f:facet name="options">width: "60%",disable_search: true</f:facet>
-                        </w:chosen>
-                    </dd>
-                </dl>
+                <w:inputText styleClass="awa-required"
+                             id='duration' size='10' required='true' value='#{ticket.duration}'
+                             title='#{ticketMsg.ticket_duration_label}'/>
             </div>
             <div class="grid_4">
                 <dl class="awa-required#{util:hasMessage('status') ? ' awa-error' : ''}">
                     <dt>
-                        <label for='status'>#{ticketMsg.ticket_status_label}</label>
+                        <label for='status2'>#{ticketMsg.ticket_status_label}</label>
                     </dt>
                     <dd>
-                        <w:chosen id="status" value="#{ticket.status}">
+                        <w:chosen id="status2" value="#{ticket.status}">
                             <f:selectItems value="#{ticketStatusList}"/>
                             <f:facet name="options">width: "60%",disable_search: true</f:facet>
                         </w:chosen>
@@ -43,7 +35,7 @@
             <div class="grid_4">
                 <dl class="awa-required#{util:hasMessage('progress') ? ' awa-error' : ''}">
                     <dt>
-                        <label for='progress'>Progress (<span id="prog-value"></span>)</label>
+                        <label for='progress'>Progress (<span id="prog-value">#{ticket.progress}</span>)</label>
                     </dt>
                     <dd id="progress-slider">
 
@@ -67,7 +59,7 @@
             </util:script>
             <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
                 <dt>
-                    <label for='text'>Reason</label>
+                    <label for='text'>Update reason</label>
                 </dt>
                 <dd>
                     <h:inputTextarea id='comment' rows='5' required='true'
