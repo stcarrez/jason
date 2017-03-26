@@ -1539,6 +1539,8 @@ package body Jason.Tickets.Models is
          return Status_Type_Objects.To_Object (From.Status);
       elsif Name = "priority" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
+      elsif Name = "ticket_type" then
+         return Ticket_Type_Objects.To_Object (From.Ticket_Type);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1568,6 +1570,8 @@ package body Jason.Tickets.Models is
          Item.Status := Status_Type_Objects.To_Value (Value);
       elsif Name = "priority" then
          Item.Priority := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "ticket_type" then
+         Item.Ticket_Type := Ticket_Type_Objects.To_Value (Value);
       end if;
    end Set_Value;
 
