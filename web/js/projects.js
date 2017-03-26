@@ -86,9 +86,9 @@ var Jason = {};
             var url = this.options.url + "?kind=" + this.options.kind;
             url += "&priority=" + this.options.priority;
             url += "&status=" + this.options.status;
-            $('#ticket-type').val(this.options.kind).trigger("liszt:updated");
-            $('#ticket-priority').val(this.options.priority).trigger("liszt:updated");
-            $('#ticket-status').val(this.options.status).trigger("liszt:updated");
+            $('#ticket-type').val(this.options.kind).trigger("chosen:updated");
+            $('#ticket-priority').val(this.options.priority).trigger("chosen:updated");
+            $('#ticket-status').val(this.options.status).trigger("chosen:updated");
             ASF.Update(this.element, url);
         },
         setPriority: function(prio) {

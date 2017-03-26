@@ -10,6 +10,8 @@
     <li class="awa-nav-left" id="ticket-nav-sort">
         <w:chosen id="ticket-status" value="#{sort}">
             <f:selectItem itemValue="all" itemLabel="All"/>
+            <f:selectItem itemValue="pending" itemLabel="Pending"/>
+            <f:selectItem itemValue="done" itemLabel="Done"/>
             <f:selectItems value="#{ticketStatusList}"/>
             <f:facet name="options">width: "60%",disable_search: true</f:facet>
             <f:facet name="events">.bind("change", function() {

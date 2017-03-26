@@ -6,7 +6,12 @@
 [
  {
     "action": "redirect",
-    "url": "#{contextPath}/tickets/view/#{ticket.id}"
+    <h:panelGroup rendered="#{ticket.status != 'CLOSED'}">
+        "url": "#{contextPath}/tickets/view/#{ticket.id}"
+    </h:panelGroup>
+    <h:panelGroup rendered="#{ticket.status eq 'CLOSED'}">
+        "url": "#{contextPath}/projects/tickets/#{ticket.project_id}"
+    </h:panelGroup>
  }
 ]
 </f:view>
