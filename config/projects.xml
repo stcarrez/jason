@@ -66,6 +66,7 @@
     <url-pattern>/projects/view/#{project.id}</url-pattern>
     <url-pattern>/projects/create-wiki/#{project.id}</url-pattern>
     <url-pattern>/projects/tickets/#{project.id}</url-pattern>
+    <url-pattern>/projects/tickets/#{project.id}/#{ticketList.status}/#{ticketList.ticket_kind}/#{ticketList.priority}</url-pattern>
     <url-pattern>/projects/edit/#{project.id}</url-pattern>
     <url-pattern>/projects/list/#{projectList.sort}</url-pattern>
     <url-pattern>/projects/tags</url-pattern>
@@ -78,6 +79,7 @@
     <url-pattern>/projects/view/#{project.id}</url-pattern>
     <url-pattern>/projects/create-wiki/#{project.id}</url-pattern>
     <url-pattern>/projects/tickets/#{project.id}</url-pattern>
+    <url-pattern>/projects/tickets/#{project.id}/#{ticketList.status}/#{ticketList.ticket_kind}/#{ticketList.priority}</url-pattern>
     <url-pattern>/projects/edit/#{project.id}</url-pattern>
     <url-pattern>/projects/list/#{projectList.sort}</url-pattern>
     <url-pattern>/projects/tags</url-pattern>
@@ -101,6 +103,11 @@
 
   <url-mapping>
     <pattern>/projects/tickets/#{project.id}</pattern>
+    <view-id>/projects/tickets.html</view-id>
+  </url-mapping>
+
+  <url-mapping>
+    <pattern>/projects/tickets/#{project.id}/#{ticketList.status}/#{ticketList.ticket_kind}/#{ticketList.priority}</pattern>
     <view-id>/projects/tickets.html</view-id>
   </url-mapping>
 
