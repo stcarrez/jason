@@ -54,26 +54,16 @@
                     </div>
                 </div>
             </div>
-            <util:script>$('#button-list').panel_box();</util:script>
-            <ajax:include id="ticket-list" styleClass="asf-container project-ticket-list" async="true"
-                          src="/tickets/list/#{project.id}"/>
+            <ui:include src="/tickets/views/ticket-filter.xhtml"/>
+            <div id="ticket-list" class="asf-container project-ticket-list"/>
             <util:script>
-                $('#ticket-list').list({
-                    actionId: '#wiki-page-action',
+                $('#button-list').panel_box();
+                $('#ticket-list').ticket_list({
                     itemPrefix: 't_',
-                    deleteUrl: '#{contextPath}/wikis/forms/delete-page.html?id=',
-                    selectAction: function(list, node, event) {
-                        var target = event.target;
-                        if ($(node).hasClass('wiki-edit')) {
-                            var name = $(list.currentNode).attr('data-name');
-                            document.location = '#{contextPath}/wikis/edit/#{wikiList.wiki_id}/' + name;
-                        }
-                        if ($(target).hasClass('ticket-list-status')) {
-                            ASF.Update($('#ticket-list'), '#{contextPath}/tickets/list/#{project.id}');
-                        }
-                    }
+                    project: #{project.id},
+                    url: "#{contextPath}/tickets/list/#{project.id}"
                 });
-            </util:script>
+             </util:script>
         </div>
     </ui:define>
     <ui:define name="pageScript">

@@ -30,6 +30,8 @@
             <div class="awa-header-col project-sum-col">Medium</div>
             <div class="awa-header-col project-sum-col">Low</div>
             <div class="awa-header-col project-sum-col">Closed</div>
+            <div class="awa-header-col project-sum-col">Remain</div>
+            <div class="awa-header-col project-sum-col">Done</div>
         </div>
         <h:list var="stat" value="#{ticketReport}">
             <div class="awa-list-item ui-list-item project-sum-type">
@@ -38,23 +40,29 @@
                 </div>
                 <div class="awa-list-col project-sum-col">
                     <h:panelGroup rendered="#{stat.high.count ne 0}">
-                        <a href="">#{stat.high.count}</a>
+                        <a href="#{contextPath}/projects/tickets/#{project.id}/pending/#{stat.kind}/high">#{stat.high.count}</a>
                     </h:panelGroup>
                 </div>
                 <div class="awa-list-col project-sum-col">
                     <h:panelGroup rendered="#{stat.medium.count ne 0}">
-                        <a href="">#{stat.medium.count}</a>
+                        <a href="#{contextPath}/projects/tickets/#{project.id}/pending/#{stat.kind}/medium">#{stat.medium.count}</a>
                     </h:panelGroup>
                 </div>
                 <div class="awa-list-col project-sum-col">
                     <h:panelGroup rendered="#{stat.low.count ne 0}">
-                        <a href="">#{stat.low.count}</a>
+                        <a href="#{contextPath}/projects/tickets/#{project.id}/pending/#{stat.kind}/low">#{stat.low.count}</a>
                     </h:panelGroup>
                 </div>
                 <div class="awa-list-col project-sum-col">
                     <h:panelGroup rendered="#{stat.closed.count ne 0}">
-                        <a href="">#{stat.closed.count}</a>
+                        <a href="#{contextPath}/projects/tickets/#{project.id}/done/#{stat.kind}">#{stat.closed.count}</a>
                     </h:panelGroup>
+                </div>
+                <div class="awa-list-col project-sum-col project-remain">
+                    #{stat.high.remain + stat.medium.remain + stat.low.remain + stat.closed.remain}
+                </div>
+                <div class="awa-list-col project-sum-col project-done">
+                    #{stat.high.done + stat.medium.done + stat.low.done + stat.closed.done}
                 </div>
             </div>
         </h:list>

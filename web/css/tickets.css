@@ -81,3 +81,10 @@
 .ticket-INCIDENT .ticket-list-type, .ticket-icon-INCIDENT {
     background: url(../images/tickets/icon-ticket-incident-26.png) no-repeat;
 }
+.ticket-nav-filter {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+#ticket-nav-sort, #ticket-nav-priority, #ticket-nav-type {
+    width: 20%;
+}

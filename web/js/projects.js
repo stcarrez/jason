@@ -65,5 +65,35 @@ var Jason = {};
             return false;
         }
     });
+    $.widget("ui.ticket_list", $.ui.list, {
+        options: {
+            priority: "all",
+            kind: "all"
+        },
+        _create: function() {
+            var self = this;
+
+            $.ui.list.prototype._create.apply(this, arguments);
+            if (self.options.selectAction === null) {
+                self.options.selectAction = function(node, event) {
+                    return self.selectAction(node, event);
+                }
+            }
+            this.refresh();
+        },
+        refresh: function() {
+            var url = this.options.url + "?kind=" + this.options.kind + "&priority=";
+            url += this.options.priority;
+            ASF.Update(this.element, url);
+        },
+        setPriority: function(prio) {
+            this.options.priority = prio;
+            this.refresh();
+        },
+        setTicketType: function(kind) {
+            this.options.kind = kind;
+            this.refresh();
+        }
+     });
 
 })( jQuery );

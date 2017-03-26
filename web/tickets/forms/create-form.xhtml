@@ -2,6 +2,7 @@
      xmlns:f="http://java.sun.com/jsf/core"
      xmlns:awa="http://code.google.com/p/ada-awa/jsf"
      xmlns:w="http://code.google.com/p/ada-asf/widget"
+     xmlns:util="http://code.google.com/p/ada-asf/util"
      xmlns:h="http://java.sun.com/jsf/html">
 
     <h2>Create a new ticket</h2>
@@ -52,5 +53,8 @@
             </ul>
         </div>
     </h:form>
-
+    <util:script>
+        $('#description').trumbowyg({ btns: ['formatting', '|', 'link', '|', 'image',
+          'btnGrp-justify', '|', 'btnGrp-semantic', '|', 'btnGrp-lists']});
+    </util:script>
 </div>
