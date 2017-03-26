@@ -193,6 +193,14 @@ package body Jason.Tickets.Beans is
       elsif Name = "tickets" then
          return Util.Beans.Objects.To_Object (Value   => From.Tickets_Bean,
                                               Storage => Util.Beans.Objects.STATIC);
+      elsif Name = "status" then
+         return Util.Beans.Objects.To_Object (From.Status_Filter);
+      elsif Name = "priority" then
+         if From.Priority_Filter = "" then
+            return Util.Beans.Objects.To_Object (String '("all"));
+         else
+            return Util.Beans.Objects.To_Object (From.Priority_Filter);
+         end if;
       else
          return Jason.Tickets.Models.Ticket_List_Bean (From).Get_Value (Name);
       end if;
@@ -225,6 +233,7 @@ package body Jason.Tickets.Beans is
                         Value : in Util.Beans.Objects.Object) is
    begin
       if Name = "priority" then
+         From.Priority_Filter := Util.Beans.Objects.To_Unbounded_String (Value);
          From.Priority := To_Priority (Value);
       elsif Name = "ticket_kind" then
          if Util.Beans.Objects.To_String (Value) /= "all" and not Util.Beans.Objects.Is_Empty (Value) then
@@ -289,12 +298,12 @@ package body Jason.Tickets.Beans is
                            Value => ADO.Parameters.Token '("ticket.ident DESC"));
       end if;
       if Bean.Priority /= 0 then
-         if Bean.Priority < 0 then
-            Ada.Strings.Unbounded.Append (Filter, "ticket.priority < ");
-            Ada.Strings.Unbounded.Append (Filter, Natural'Image (-Bean.Priority));
-         else
+         if Bean.Priority > 0 then
             Ada.Strings.Unbounded.Append (Filter, "ticket.priority = ");
             Ada.Strings.Unbounded.Append (Filter, Natural'Image (Bean.Priority));
+         else
+            Ada.Strings.Unbounded.Append (Filter, "ticket.priority <= ");
+            Ada.Strings.Unbounded.Append (Filter, Natural'Image (-Bean.Priority));
          end if;
          Ada.Strings.Unbounded.Append (Filter, " AND ");
       end if;
@@ -373,6 +382,7 @@ package body Jason.Tickets.Beans is
       Object.Priority   := 0;
       Object.Project_Id := ADO.NO_IDENTIFIER;
       Object.Status     := Jason.Tickets.Models.OPEN;
+      Object.Status_Filter := Ada.Strings.Unbounded.To_Unbounded_String ("pending");
       Object.Tickets_Bean := Object.Tickets'Access;
       Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
       return Object.all'Access;
@@ -511,12 +521,12 @@ package body Jason.Tickets.Beans is
                      Item.Closed.Time  := Item.Closed.Time + Time;
                      Item.Closed.Done  := Item.Closed.Done + Done;
                      Item.Closed.Remain := Item.Closed.Remain + Remain;
-                  elsif Priority <= 1 then
+                  elsif Priority <= 3 then
                      Item.High.Count := Item.High.Count + Count;
                      Item.High.Time := Item.High.Time + Time;
                      Item.High.Done := Item.High.Done + Done;
                      Item.High.Remain := Item.High.Remain + Remain;
-                  elsif Priority >= 5 then
+                  elsif Priority > 4 then
                      Item.Low.Count := Item.Low.Count + Count;
                      Item.Low.Time := Item.Low.Time + Time;
                      Item.Low.Done := Item.Low.Done + Done;

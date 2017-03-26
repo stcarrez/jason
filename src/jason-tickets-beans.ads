@@ -95,6 +95,7 @@ package Jason.Tickets.Beans is
       --  Whether the ticket type filter is enabled.
       Type_Filter   : Boolean := False;
       Status_Filter : Ada.Strings.Unbounded.Unbounded_String;
+      Priority_Filter : Ada.Strings.Unbounded.Unbounded_String;
    end record;
    type Ticket_List_Bean_Access is access all Ticket_List_Bean'Class;
 
