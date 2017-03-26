@@ -60,6 +60,8 @@
                 $('#button-list').panel_box();
                 $('#ticket-list').ticket_list({
                     itemPrefix: 't_',
+                    priority: '#{ticketList.priority}',
+                    kind: '#{ticketList.ticket_kind}',
                     project: #{project.id},
                     url: "#{contextPath}/tickets/list/#{project.id}"
                 });

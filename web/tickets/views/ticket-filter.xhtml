@@ -8,20 +8,13 @@
         <label for="sort">Filter:</label>
     </li>
     <li class="awa-nav-left" id="ticket-nav-sort">
-        <w:chosen id="sort" value="#{sort}">
-            <f:selectItem itemValue="newest" itemLabel="Newest"/>
-            <f:selectItem itemValue="oldest" itemLabel="Oldest"/>
-            <f:selectItem itemValue="popular" itemLabel="#{projectMsg.project_sort_by_popular}"/>
-            <f:selectItem itemValue="recent" itemLabel="#{projectMsg.project_sort_by_recent}"/>
-            <f:selectItem itemValue="not-recent" itemLabel="#{projectMsg.project_sort_by_not_recent}"/>
+        <w:chosen id="ticket-status" value="#{sort}">
+            <f:selectItem itemValue="all" itemLabel="All"/>
+            <f:selectItems value="#{ticketStatusList}"/>
             <f:facet name="options">width: "60%",disable_search: true</f:facet>
             <f:facet name="events">.bind("change", function() {
-                if ("#{page_link}" == "") {
-                document.location = $(this).val();
-                } else {
-                document.location = "../" + $(this).val() + "#{page_link}";
-                }
-                })
+                $('#ticket-list').ticket_list("setStatus", $(this).val());
+            })
             </f:facet>
         </w:chosen>
     </li>
@@ -43,7 +36,7 @@
         <label for="priority">Priority</label>
     </li>
     <li class="awa-nav-left" id="ticket-nav-priority">
-        <w:chosen id="priority" value="#{priority}">
+        <w:chosen id="ticket-priority" value="#{priority}">
             <f:selectItem itemValue="all" itemLabel="All"/>
             <f:selectItem itemValue="high" itemLabel="High"/>
             <f:selectItem itemValue="medium" itemLabel="Medium"/>

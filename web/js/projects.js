@@ -68,7 +68,8 @@ var Jason = {};
     $.widget("ui.ticket_list", $.ui.list, {
         options: {
             priority: "all",
-            kind: "all"
+            kind: "all",
+            status: "all"
         },
         _create: function() {
             var self = this;
@@ -82,12 +83,20 @@ var Jason = {};
             this.refresh();
         },
         refresh: function() {
-            var url = this.options.url + "?kind=" + this.options.kind + "&priority=";
-            url += this.options.priority;
+            var url = this.options.url + "?kind=" + this.options.kind;
+            url += "&priority=" + this.options.priority;
+            url += "&status=" + this.options.status;
+            $('#ticket-type').val(this.options.kind).trigger("liszt:updated");
+            $('#ticket-priority').val(this.options.priority).trigger("liszt:updated");
+            $('#ticket-status').val(this.options.status).trigger("liszt:updated");
             ASF.Update(this.element, url);
         },
         setPriority: function(prio) {
             this.options.priority = prio;
+            this.refresh();
+        },
+        setStatus: function(status) {
+            this.options.status = status;
             this.refresh();
         },
         setTicketType: function(kind) {
