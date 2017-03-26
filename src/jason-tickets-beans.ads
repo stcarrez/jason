@@ -91,6 +91,9 @@ package Jason.Tickets.Beans is
 
       --  List of tags associated with the tickets.
       Tags          : AWA.Tags.Beans.Entity_Tag_Map;
+
+      --  Whether the ticket type filter is enabled.
+      Type_Filter   : Boolean := False;
    end record;
    type Ticket_List_Bean_Access is access all Ticket_List_Bean'Class;
 

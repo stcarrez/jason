@@ -196,13 +196,42 @@ package body Jason.Tickets.Beans is
       end if;
    end Get_Value;
 
+   function To_Priority (Value : in Util.Beans.Objects.Object) return Integer is
+      S : constant String := Util.Beans.Objects.To_String (Value);
+   begin
+      if S = "all" or S = "" then
+         return 0;
+      elsif S = "high" then
+         return -3;
+      elsif S = "medium" then
+         return 4;
+      elsif S = "low" then
+         return 5;
+      else
+         return Integer'Value (S);
+      end if;
+
+   exception
+      when Constraint_Error =>
+         return 0;
+   end To_Priority;
+
    --  Set the value identified by the name.
    overriding
    procedure Set_Value (From  : in out Ticket_List_Bean;
                         Name  : in String;
                         Value : in Util.Beans.Objects.Object) is
    begin
-      if not Util.Beans.Objects.Is_Empty (Value) or else Name = "tags" then
+      if Name = "priority" then
+         From.Priority := To_Priority (Value);
+      elsif Name = "ticket_kind" then
+         if Util.Beans.Objects.To_String (Value) /= "all" then
+            From.Ticket_Kind := Jason.Tickets.Models.Ticket_Type_Objects.To_Value (Value);
+            From.Type_Filter := True;
+         else
+            From.Type_Filter := False;
+         end if;
+      elsif not Util.Beans.Objects.Is_Empty (Value) or else Name = "tags" then
          Jason.Tickets.Models.Ticket_List_Bean (From).Set_Value (Name, Value);
       end if;
    end Set_Value;
@@ -250,9 +279,19 @@ package body Jason.Tickets.Beans is
          Query.Bind_Param (Name  => "order1",
                            Value => ADO.Parameters.Token '("ticket.ident DESC"));
       end if;
-      if Bean.Priority > 0 then
-         Ada.Strings.Unbounded.Append (Filter, "ticket.priority = ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Bean.Priority));
+      if Bean.Priority /= 0 then
+         if Bean.Priority < 0 then
+            Ada.Strings.Unbounded.Append (Filter, "ticket.priority < ");
+            Ada.Strings.Unbounded.Append (Filter, Natural'Image (-Bean.Priority));
+         else
+            Ada.Strings.Unbounded.Append (Filter, "ticket.priority = ");
+            Ada.Strings.Unbounded.Append (Filter, Natural'Image (Bean.Priority));
+         end if;
+         Ada.Strings.Unbounded.Append (Filter, " AND ");
+      end if;
+      if Bean.Type_Filter then
+         Ada.Strings.Unbounded.Append (Filter, "ticket.ticket_type = ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Ticket_Type'Pos (Bean.Ticket_Kind)));
          Ada.Strings.Unbounded.Append (Filter, " AND ");
       end if;
       if Bean.Status /= Jason.Tickets.Models.OPEN then
@@ -261,7 +300,7 @@ package body Jason.Tickets.Beans is
       else
          Ada.Strings.Unbounded.Append (Filter, "ticket.status >= 0");
       end if;
-      Query.Bind_Param (Name => "ticket_filter",
+       Query.Bind_Param (Name => "ticket_filter",
                         Value => ADO.Parameters.Token (To_String (Filter)));
       Count_Query.Bind_Param (Name => "ticket_filter",
                               Value => ADO.Parameters.Token (To_String (Filter)));
