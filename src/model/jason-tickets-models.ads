@@ -554,7 +554,7 @@ package Jason.Tickets.Models is
       Priority : Integer;
 
       --  the ticket type
-      Ticket_Type : Ticket_Type;
+      Ticket_Kind : Ticket_Type;
    end record;
 
    --  This bean provides some methods that can be used in a Method_Expression.
