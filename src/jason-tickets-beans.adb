@@ -31,6 +31,8 @@ with AWA.Helpers.Selectors;
 with Jason.Projects.Models;
 package body Jason.Tickets.Beans is
 
+   use type Ada.Strings.Unbounded.Unbounded_String;
+
    function Create_From_Status is
      new AWA.Helpers.Selectors.Create_From_Enum (Jason.Tickets.Models.Status_Type,
                                                  "ticket_status");
@@ -225,12 +227,19 @@ package body Jason.Tickets.Beans is
       if Name = "priority" then
          From.Priority := To_Priority (Value);
       elsif Name = "ticket_kind" then
-         if Util.Beans.Objects.To_String (Value) /= "all" then
+         if Util.Beans.Objects.To_String (Value) /= "all" and not Util.Beans.Objects.Is_Empty (Value) then
             From.Ticket_Kind := Jason.Tickets.Models.Ticket_Type_Objects.To_Value (Value);
             From.Type_Filter := True;
          else
             From.Type_Filter := False;
          end if;
+      elsif Name = "status" then
+         From.Status_Filter := Util.Beans.Objects.To_Unbounded_String (Value);
+         if From.Status_Filter /= "all" and From.Status_Filter /= "pending"
+           and From.Status_Filter /= "done" and From.Status_Filter /= "" then
+            From.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
+         end if;
+
       elsif not Util.Beans.Objects.Is_Empty (Value) or else Name = "tags" then
          Jason.Tickets.Models.Ticket_List_Bean (From).Set_Value (Name, Value);
       end if;
@@ -294,13 +303,24 @@ package body Jason.Tickets.Beans is
          Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Ticket_Type'Pos (Bean.Ticket_Kind)));
          Ada.Strings.Unbounded.Append (Filter, " AND ");
       end if;
-      if Bean.Status /= Jason.Tickets.Models.OPEN then
+      if Bean.Status_Filter = "done" then
+         Ada.Strings.Unbounded.Append (Filter, "(ticket.status = ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.CLOSED)));
+         Ada.Strings.Unbounded.Append (Filter, " OR ticket.status = ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.REJECTED)));
+         Ada.Strings.Unbounded.Append (Filter, ")");
+      elsif Bean.Status_Filter = "all" or Bean.Status_Filter = "" then
+         Ada.Strings.Unbounded.Append (Filter, "ticket.status >= 0");
+      elsif Bean.Status_Filter = "pending" then
+         Ada.Strings.Unbounded.Append (Filter, "ticket.status != ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.CLOSED)));
+         Ada.Strings.Unbounded.Append (Filter, " AND ticket.status != ");
+         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.REJECTED)));
+      else
          Ada.Strings.Unbounded.Append (Filter, "ticket.status = ");
          Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Bean.Status)));
-      else
-         Ada.Strings.Unbounded.Append (Filter, "ticket.status >= 0");
       end if;
-       Query.Bind_Param (Name => "ticket_filter",
+      Query.Bind_Param (Name => "ticket_filter",
                         Value => ADO.Parameters.Token (To_String (Filter)));
       Count_Query.Bind_Param (Name => "ticket_filter",
                               Value => ADO.Parameters.Token (To_String (Filter)));
@@ -350,7 +370,7 @@ package body Jason.Tickets.Beans is
       Object.Page_Size  := 20;
       Object.Count      := 0;
       Object.Page       := 1;
-      Object.Priority   := -1;
+      Object.Priority   := 0;
       Object.Project_Id := ADO.NO_IDENTIFIER;
       Object.Status     := Jason.Tickets.Models.OPEN;
       Object.Tickets_Bean := Object.Tickets'Access;
