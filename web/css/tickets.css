@@ -58,12 +58,12 @@
     width: 98%;
     padding: 1%;
 }
-.ticket-info dt {
+.ticket-info dt, .ticket-progress-info dt {
     float: left;
     clear: both;
     width: 20%;
 }
-.ticket-info dd {
+.ticket-info dd, .ticket-progress-info dd {
     float: left;
     width: 80%;
 }

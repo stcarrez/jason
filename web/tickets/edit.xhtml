@@ -4,7 +4,7 @@
                 xmlns:c="http://java.sun.com/jstl/core"
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{ticketMsg.tickets_title}" />
-    <ui:param name="pageStyle" value=""/>
+    <ui:param name="pageStyle" value="page-tickets"/>
     <ui:param name="top_nav" value="projects"/>
 
     <!-- Main page body -->
@@ -13,10 +13,7 @@
             <f:viewAction action='#{ticket.load}'/>
         </f:metadata>
         <div id='awa-content'>
-            <ui:include src="/tickets/views/ticket-nav.xhtml">
-                <ui:param name="project_id" value="#{ticket.project_id}"/>
-                <ui:param name="sort" value="recent"/>
-            </ui:include>
+            <ui:include src="/projects/views/project-header.xhtml"/>
             <ui:include src="forms/edit-form.xhtml"/>
         </div>
     </ui:define>

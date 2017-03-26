@@ -62,27 +62,11 @@
                     </dd>
                 </dl>
             </div>
-            <util:script>
-                function set_priority(val) {
-                    var labels = ["Emergency", "Critical", "High", "Medium", "Low"];
-                    $( "#priority" ).val(val);
-                    $("#p-value").text(labels[val - 1]);
-                }
-    $( "#slider" ).slider({
-      value: #{ticket.priority},
-      min: 1,
-      max: 5,
-      step: 1,
-      slide: function( event, ui ) {
-                set_priority(ui.value);
-      }
-    });
-  </util:script>
             <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
                 <dt>
                     <label for='text'>#{ticketMsg.ticket_description_label}</label>
                 </dt>
-                <dd>
+                <dd class="wiki-text">
                     <h:inputTextarea id='description' rows='20' required='true'
                                      value='#{ticket.description}'/>
                 </dd>
@@ -95,6 +79,24 @@
                 </li>
             </ul>
         </div>
+        <util:script>
+            function set_priority(val) {
+                var labels = ["Emergency", "Critical", "High", "Medium", "Low"];
+                $( "#priority" ).val(val);
+                $("#p-value").text(labels[val - 1]);
+            }
+$( "#slider" ).slider({
+  value: #{ticket.priority},
+  min: 1,
+  max: 5,
+  step: 1,
+  slide: function( event, ui ) {
+            set_priority(ui.value);
+  }
+});
+                $('#description').trumbowyg({ btns: ['formatting', '|', 'link', '|', 'image',
+                  'btnGrp-justify', '|', 'btnGrp-lists']});
+</util:script>
     </h:form>
 
 </div>
