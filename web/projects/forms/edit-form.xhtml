@@ -27,7 +27,7 @@
                 <dt>
                     <label for='text'>#{projectMsg.project_description_label}</label>
                 </dt>
-                <dd>
+                <dd class="wiki-text">
                     <h:inputTextarea id='description' rows='20' required='true'
                                      value='#{project.description}'/>
                 </dd>
@@ -40,6 +40,10 @@
                 </li>
             </ul>
         </div>
+        <util:script>
+            $('#description').trumbowyg({ btns: ['formatting', '|', 'link', '|', 'image',
+              'btnGrp-justify', '|', 'btnGrp-lists']});
+        </util:script>
     </h:form>
 
 </div>

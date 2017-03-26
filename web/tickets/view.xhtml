@@ -16,9 +16,8 @@
         </f:metadata>
         <div id='awa-content'>
             <ui:include src="/projects/views/project-header.xhtml"/>
-            <ui:include src="/tickets/views/ticket-nav.xhtml">
-                <ui:param name="project_id" value="#{ticket.project_id}"/>
-                <ui:param name="sort" value="recent"/>
+            <ui:include src="/projects/views/project-actions.xhtml">
+                <ui:param name="project_id" value="#{project.id}"/>
             </ui:include>
             <div class="ticket-title ticket-icon-#{ticket.ticket_type}">
                 <ul class="awa-page-actions">
