@@ -62,6 +62,7 @@ package Jason.Tickets.Modules is
    procedure Save (Model   : in Ticket_Module;
                    Entity  : in out Jason.Tickets.Models.Ticket_Ref'Class;
                    Comment : in String);
+
 private
 
    type Ticket_Module is new AWA.Modules.Module with null record;

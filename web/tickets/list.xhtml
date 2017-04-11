@@ -5,6 +5,7 @@
     <f:metadata>
         <f:viewParam id='priority' value='#{ticketList.priority}' required="false"/>
         <f:viewParam id='status' value='#{ticketList.status}' required="false"/>
+        <f:viewParam id='kind' value='#{ticketList.ticket_kind}' required="false"/>
         <f:viewParam id='page' value='#{ticketList.page}' required="false"/>
         <f:viewAction action='#{ticketList.load}'/>
     </f:metadata>

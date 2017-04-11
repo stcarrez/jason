@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-body.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2017 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -1539,6 +1539,8 @@ package body Jason.Tickets.Models is
          return Status_Type_Objects.To_Object (From.Status);
       elsif Name = "priority" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Priority));
+      elsif Name = "ticket_kind" then
+         return Ticket_Type_Objects.To_Object (From.Ticket_Kind);
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1568,6 +1570,8 @@ package body Jason.Tickets.Models is
          Item.Status := Status_Type_Objects.To_Value (Value);
       elsif Name = "priority" then
          Item.Priority := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "ticket_kind" then
+         Item.Ticket_Kind := Ticket_Type_Objects.To_Value (Value);
       end if;
    end Set_Value;
 

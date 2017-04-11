@@ -102,13 +102,25 @@
     float: left;
     width: 100%;
     clear: both;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 .project-sum-col {
-    width: 15%;
+    width: 12%;
     height: 1em;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 .project-title-col {
     width: 25%;
     display: block;
     height: 1em;
+}
+.project-remain, .project-done {
+    background-color: #eee;
+    text-align: center;
+}
+.project-sum-list .awa-list-item {
+    padding-top: 0;
+    padding-bottom: 0;
 }

@@ -2,6 +2,7 @@
      xmlns:f="http://java.sun.com/jsf/core"
      xmlns:awa="http://code.google.com/p/ada-awa/jsf"
      xmlns:w="http://code.google.com/p/ada-asf/widget"
+     xmlns:util="http://code.google.com/p/ada-asf/util"
      xmlns:h="http://java.sun.com/jsf/html">
 
     <h:form id='edit-form'>
@@ -26,7 +27,7 @@
                 <dt>
                     <label for='text'>#{projectMsg.project_description_label}</label>
                 </dt>
-                <dd>
+                <dd class="wiki-text">
                     <h:inputTextarea id='description' rows='20' required='true'
                                      value='#{project.description}'/>
                 </dd>
@@ -39,6 +40,10 @@
                 </li>
             </ul>
         </div>
+        <util:script>
+            $('#description').trumbowyg({ btns: ['formatting', '|', 'link', '|', 'image',
+              'btnGrp-justify', '|', 'btnGrp-lists']});
+        </util:script>
     </h:form>
 
 </div>

@@ -25,9 +25,11 @@
     <ui:param name="title" value="#{wikiMsg.wiki_admin_page_list_title}"/>
     <ui:param name="pageStyle" value="page-wiki"/>
 
-    <f:metadata>
-        <f:viewAction action="#{project.load_wiki}"/>
-    </f:metadata>
+    <ui:define name="pageHeader">
+        <f:metadata>
+            <f:viewAction action="#{project.load_wiki}"/>
+        </f:metadata>
+    </ui:define>
 
     <!-- Main page body -->
     <ui:define name="pageBody">

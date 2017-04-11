@@ -7,6 +7,7 @@
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{ticketMsg.tickets_page_title}" />
     <ui:param name="pageStyle" value="page-tickets"/>
+    <ui:param name="top_nav" value="projects"/>
 
     <!-- Main page body -->
     <ui:define name="pageBody">
@@ -15,9 +16,8 @@
         </f:metadata>
         <div id='awa-content'>
             <ui:include src="/projects/views/project-header.xhtml"/>
-            <ui:include src="/tickets/views/ticket-nav.xhtml">
-                <ui:param name="project_id" value="#{ticket.project_id}"/>
-                <ui:param name="sort" value="recent"/>
+            <ui:include src="/projects/views/project-actions.xhtml">
+                <ui:param name="project_id" value="#{project.id}"/>
             </ui:include>
             <div class="ticket-title ticket-icon-#{ticket.ticket_type}">
                 <ul class="awa-page-actions">
@@ -88,7 +88,7 @@
             <div class="ticket-info">
                 <h3>Description</h3>
                 <awa:wiki styleClass='wiki-text'
-                          value="#{ticket.description}"
+                          value="#{ticket.description}" format="mediawiki"
                           toc="false"/>
             </div>
             <div class="post-comments">

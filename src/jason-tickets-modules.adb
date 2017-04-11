@@ -29,6 +29,8 @@ with AWA.Services.Contexts;
 with ADO.Sessions.Entities;
 package body Jason.Tickets.Modules is
 
+   use type ADO.Identifier;
+
    Log : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("Jason.Tickets.Module");
 
    package Register is new AWA.Modules.Beans (Module => Ticket_Module,
@@ -86,11 +88,19 @@ package body Jason.Tickets.Modules is
       DB    : ADO.Sessions.Session := Model.Get_Session;
       Found : Boolean;
    begin
-      Ticket.Load (DB, Id, Found);
+      if Id /= ADO.NO_IDENTIFIER then
+         Ticket.Load (DB, Id, Found);
+         if Found then
+            Project.Load (DB, Ticket.Get_Project.Get_Id, Found);
+         end if;
+      else
+         Project.Load (DB, Project.Get_Id, Found);
+      end if;
 --      Jason.Projects.Models.Project_Ref (Project) := ;
 --      Ticket.Get_Project.Copy (Projects.Models.Project_Ref (Project));
-      Project.Load (DB, Ticket.Get_Project.Get_Id, Found);
-      Tags.Load_Tags (DB, Id);
+      if Id /= ADO.NO_IDENTIFIER and Found then
+         Tags.Load_Tags (DB, Id);
+      end if;
    end Load_Ticket;
 
    --  ------------------------------

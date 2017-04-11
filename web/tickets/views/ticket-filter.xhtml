@@ -1,0 +1,54 @@
+<ul xmlns:auth="http://code.google.com/p/ada-awa/auth"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:w="http://code.google.com/p/ada-asf/widget"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    class='awa-nav ticket-nav-filter'>
+    <li class="awa-nav-left">
+        <label for="sort">Filter:</label>
+    </li>
+    <li class="awa-nav-left" id="ticket-nav-sort">
+        <w:chosen id="ticket-status" value="#{sort}">
+            <f:selectItem itemValue="all" itemLabel="All"/>
+            <f:selectItem itemValue="pending" itemLabel="Pending"/>
+            <f:selectItem itemValue="done" itemLabel="Done"/>
+            <f:selectItems value="#{ticketStatusList}"/>
+            <f:facet name="options">width: "60%",disable_search: true</f:facet>
+            <f:facet name="events">.bind("change", function() {
+                $('#ticket-list').ticket_list("setStatus", $(this).val());
+            })
+            </f:facet>
+        </w:chosen>
+    </li>
+    <li class="awa-nav-left">
+        <label for="ticket-type">Ticket type</label>
+    </li>
+    <li class="awa-nav-left" id="ticket-nav-type">
+        <w:chosen id="ticket-type" value="#{sort}">
+            <f:selectItem itemValue="all" itemLabel="All"/>
+            <f:selectItems value="#{ticketTypeList}"/>
+            <f:facet name="options">width: "60%",disable_search: true</f:facet>
+            <f:facet name="events">.bind("change", function() {
+                $('#ticket-list').ticket_list("setTicketType", $(this).val());
+            })
+            </f:facet>
+        </w:chosen>
+    </li>
+    <li class="awa-nav-left">
+        <label for="priority">Priority</label>
+    </li>
+    <li class="awa-nav-left" id="ticket-nav-priority">
+        <w:chosen id="ticket-priority" value="#{priority}">
+            <f:selectItem itemValue="all" itemLabel="All"/>
+            <f:selectItem itemValue="high" itemLabel="High"/>
+            <f:selectItem itemValue="medium" itemLabel="Medium"/>
+            <f:selectItem itemValue="low" itemLabel="Low"/>
+            <f:facet name="options">width: "60%",disable_search: true</f:facet>
+            <f:facet name="events">.bind("change", function() {
+                $('#ticket-list').ticket_list("setPriority", $(this).val());
+            })
+            </f:facet>
+        </w:chosen>
+    </li>
+
+</ul>

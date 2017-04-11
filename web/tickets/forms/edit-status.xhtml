@@ -43,7 +43,7 @@
             <div class="grid_4">
                 <dl class="awa-required#{util:hasMessage('priority') ? ' awa-error' : ''}">
                     <dt>
-                        <label for='priority'>#{ticketMsg.ticket_priority_label} (<span id="p-value"></span>)</label>
+                        <label for='priority'>#{ticketMsg.ticket_priority_label} (<span id="p-value">#{ticket.priority}</span>)</label>
                     </dt>
                     <dd id="slider">
 
@@ -68,7 +68,7 @@
             </util:script>
             <dl class="awa-required#{util:hasMessage('description') ? ' awa-error' : ''}">
                 <dt>
-                    <label for='text'>Reason</label>
+                    <label for='text'>Update reason</label>
                 </dt>
                 <dd>
                     <h:inputTextarea id='comment' rows='5' required='true'

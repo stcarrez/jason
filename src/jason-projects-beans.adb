@@ -81,12 +81,13 @@ package body Jason.Projects.Beans is
    procedure Load_Wiki (Bean    : in out Project_Bean;
                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
       use type ADO.Identifier;
-      Wiki : AWA.Wikis.Beans.Wiki_Space_Bean_Access
-        := AWA.Wikis.Beans.Get_Wiki_Space_Bean ("adminWikiSpace");
+      Page : AWA.Wikis.Beans.Wiki_View_Bean_Access
+        := AWA.Wikis.Beans.Get_Wiki_View_Bean ("wikiView");
    begin
-      if not Wiki.Is_Null then
+      --  Page.Load (Outcome);
+      if not Page.Wiki_Space.Is_Null then
          Bean.Module.Load_Project (Bean, Bean.Wiki_Space, Bean.Tags, ADO.NO_IDENTIFIER,
-                                   Wiki.Get_Id);
+                                   Page.Wiki_Space.Get_Id);
       end if;
       Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("loaded");
    end Load_Wiki;

@@ -5,16 +5,22 @@
                 template="/WEB-INF/layouts/layout.xhtml">
     <ui:param name="title" value="#{ticketMsg.tickets_title}" />
     <ui:param name="pageStyle" value="page-tickets"/>
+    <ui:param name="top_nav" value="projects"/>
 
     <!-- Main page body -->
     <ui:define name="pageBody">
         <f:metadata>
-            <f:viewParam id='id' value='#{ticket.id}'/>-+
+            <f:viewAction action='#{ticket.load}'/>
         </f:metadata>
         <div id='awa-content'>
             <ui:include src="/projects/views/project-header.xhtml"/>
             <ui:include src="forms/create-form.xhtml"/>
         </div>
+    </ui:define>
+
+    <ui:define name="pageScript">
+        <script type="text/javascript" src="#{jquery.chosenPath}"></script>
+        <script type="text/javascript" src="#{contextPath}/js/projects.js"></script>
     </ui:define>
 
 </ui:composition>

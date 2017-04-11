@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-spec.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2017 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -552,6 +552,9 @@ package Jason.Tickets.Models is
 
       --  the ticket priority filter.
       Priority : Integer;
+
+      --  the ticket type
+      Ticket_Kind : Ticket_Type;
    end record;
 
    --  This bean provides some methods that can be used in a Method_Expression.

@@ -242,6 +242,14 @@
     </navigation-rule>
 
     <navigation-rule>
+        <from-view-id>/tickets/forms/edit-progress.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/tickets/forms/edit-progress-response.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
         <from-view-id>/tickets/edit.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>loaded</from-outcome>
