@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-modules -- Module projects
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2017 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,8 @@ with Ada.Calendar;
 with AWA.Modules.Beans;
 with AWA.Modules.Get;
 with AWA.Permissions.Services;
+with AWA.Workspaces.Models;
+with AWA.Workspaces.Modules;
 with Util.Log.Loggers;
 with Jason.Projects.Beans;
 with ADO.Sessions;
@@ -81,16 +83,19 @@ package body Jason.Projects.Modules is
       Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
       User  : constant ADO.Identifier := Ctx.Get_User_Identifier;
       DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      WS    : AWA.Workspaces.Models.Workspace_Ref;
    begin
       Ctx.Start;
+      AWA.Workspaces.Modules.Get_Workspace (DB, Ctx, WS);
       Entity.Set_Create_Date (Ada.Calendar.Clock);
       Entity.Set_Owner (Ctx.Get_User);
       Entity.Save (DB);
 
       --  Add the permission for the user to use the new project.
-      AWA.Permissions.Services.Add_Permission (Session => DB,
-                                               User    => User,
-                                               Entity  => Entity);
+      AWA.Permissions.Services.Add_Permission (Session   => DB,
+                                               User      => User,
+                                               Entity    => Entity,
+                                               Workspace => WS.Get_Id);
       Ctx.Commit;
       Log.Info ("Project {0} created for user {1}",
                 ADO.Identifier'Image (Entity.Get_Id), ADO.Identifier'Image (User));
