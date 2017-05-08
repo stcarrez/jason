@@ -209,6 +209,8 @@ package body Jason.Tickets.Beans is
          else
             return Util.Beans.Objects.To_Object (From.Priority_Filter);
          end if;
+      elsif Name = "ticket_kind" and not From.Type_Filter then
+         return Util.Beans.Objects.To_Object (String '(""));
       else
          return Jason.Tickets.Models.Ticket_List_Bean (From).Get_Value (Name);
       end if;
