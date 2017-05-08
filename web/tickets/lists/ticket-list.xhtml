@@ -38,6 +38,12 @@
             <div class='awa-list-col ticket-list-status'>
                 #{u:translate(ticketMsg,'ticket_status_',ticket.status)}
             </div>
+            <div class='awa-list-col ticket-list-progress'>
+                <div class="ticket-progress-bar">
+                    <span class="ticket-progress-status" style="width: #{ticket.progress}%"/>
+                </div>
+                <span class="ticket-list-duration">#{ticket.duration}</span>
+            </div>
             <div class='awa-list-col ticket-list-create-date'>
                 <h:outputText value="#{ticket.create_date}"/>
             </div>
