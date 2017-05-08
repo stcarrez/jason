@@ -12,7 +12,7 @@ CREATE TABLE jason_attribute_definition (
   /*  */
   `project_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /* The project describes the base information for the project management.
  */
 CREATE TABLE jason_project (
@@ -37,7 +37,7 @@ CREATE TABLE jason_project (
   /* the project owner. */
   `owner_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*  */
 CREATE TABLE jason_attribute (
   /*  */
@@ -51,7 +51,7 @@ CREATE TABLE jason_attribute (
   /*  */
   `ticket_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*  */
 CREATE TABLE jason_ticket (
   /* the ticket identifier. */
@@ -83,7 +83,7 @@ CREATE TABLE jason_ticket (
   /*  */
   `creator_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO entity_type (name) VALUES
 ("jason_attribute_definition")
 ,("jason_project")
