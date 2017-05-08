@@ -1167,6 +1167,10 @@ package body Jason.Tickets.Models is
          return Jason.Tickets.Models.Status_Type_Objects.To_Object (From.Status);
       elsif Name = "ticket_type" then
          return Jason.Tickets.Models.Ticket_Type_Objects.To_Object (From.Ticket_Type);
+      elsif Name = "duration" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Duration));
+      elsif Name = "progress" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Progress));
       elsif Name = "creator" then
          return Util.Beans.Objects.To_Object (From.Creator);
       end if;
@@ -1198,6 +1202,10 @@ package body Jason.Tickets.Models is
          Item.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
       elsif Name = "ticket_type" then
          Item.Ticket_Type := Jason.Tickets.Models.Ticket_Type_Objects.To_Value (Value);
+      elsif Name = "duration" then
+         Item.Duration := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "progress" then
+         Item.Progress := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "creator" then
          Item.Creator := Util.Beans.Objects.To_Unbounded_String (Value);
       end if;
@@ -1235,7 +1243,9 @@ package body Jason.Tickets.Models is
          Into.Update_Date := Stmt.Get_Time (5);
          Into.Status := Jason.Tickets.Models.Status_Type'Val (Stmt.Get_Integer (6));
          Into.Ticket_Type := Jason.Tickets.Models.Ticket_Type'Val (Stmt.Get_Integer (7));
-         Into.Creator := Stmt.Get_Unbounded_String (8);
+         Into.Duration := Stmt.Get_Integer (8);
+         Into.Progress := Stmt.Get_Integer (9);
+         Into.Creator := Stmt.Get_Unbounded_String (10);
       end Read;
    begin
       Stmt.Execute;
