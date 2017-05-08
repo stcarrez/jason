@@ -29,6 +29,12 @@
         <property type='Jason.Tickets.Models.Ticket_Type' name="ticket_type">
             <comment>the ticket type.</comment>
         </property>
+        <property type='int' name="duration">
+            <comment>the ticket duration.</comment>
+        </property>
+        <property type='int' name="progress">
+            <comment>the ticket progress.</comment>
+        </property>
         <property type='String' name="creator">
             <comment>the ticket creator's name.</comment>
         </property>
@@ -47,6 +53,8 @@
       ticket.update_date,
       ticket.status,
       ticket.ticket_type,
+      ticket.duration,
+      ticket.progress,
       user.name
     FROM jason_ticket AS ticket
     INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
