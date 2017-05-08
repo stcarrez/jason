@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-tickets-beans -- Beans for module tickets
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2017 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,6 +32,7 @@ with Jason.Projects.Models;
 package body Jason.Tickets.Beans is
 
    use type Ada.Strings.Unbounded.Unbounded_String;
+   package ASC renames AWA.Services.Contexts;
 
    function Create_From_Status is
      new AWA.Helpers.Selectors.Create_From_Enum (Jason.Tickets.Models.Status_Type,
@@ -40,6 +41,10 @@ package body Jason.Tickets.Beans is
    function Create_From_Ticket_Type is
      new AWA.Helpers.Selectors.Create_From_Enum (Jason.Tickets.Models.Ticket_Type,
                                                  "ticket_type");
+
+   procedure Append (Into  : in out Ada.Strings.Unbounded.Unbounded_String;
+                     Value : in Jason.Tickets.Models.Status_Type);
+   function To_Priority (Value : in Util.Beans.Objects.Object) return Integer;
 
    --  ------------------------------
    --  Get a select item list which contains a list of ticket status.
@@ -73,6 +78,7 @@ package body Jason.Tickets.Beans is
    overriding
    procedure Create (Bean    : in out Ticket_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Create (Bean, Bean.Project.Get_Id);
       Bean.Tags.Update_Tags (Bean.Get_Id);
@@ -82,6 +88,7 @@ package body Jason.Tickets.Beans is
    overriding
    procedure Save (Bean    : in out Ticket_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Save (Bean, Ada.Strings.Unbounded.To_String (Bean.Comment));
       Bean.Tags.Update_Tags (Bean.Get_Id);
@@ -91,6 +98,7 @@ package body Jason.Tickets.Beans is
    overriding
    procedure Save_Status (Bean    : in out Ticket_Bean;
                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Save (Bean, Ada.Strings.Unbounded.To_String (Bean.Comment));
    end Save_Status;
@@ -236,7 +244,9 @@ package body Jason.Tickets.Beans is
          From.Priority_Filter := Util.Beans.Objects.To_Unbounded_String (Value);
          From.Priority := To_Priority (Value);
       elsif Name = "ticket_kind" then
-         if Util.Beans.Objects.To_String (Value) /= "all" and not Util.Beans.Objects.Is_Empty (Value) then
+         if Util.Beans.Objects.To_String (Value) /= "all"
+           and not Util.Beans.Objects.Is_Empty (Value)
+         then
             From.Ticket_Kind := Jason.Tickets.Models.Ticket_Type_Objects.To_Value (Value);
             From.Type_Filter := True;
          else
@@ -245,7 +255,8 @@ package body Jason.Tickets.Beans is
       elsif Name = "status" then
          From.Status_Filter := Util.Beans.Objects.To_Unbounded_String (Value);
          if From.Status_Filter /= "all" and From.Status_Filter /= "pending"
-           and From.Status_Filter /= "done" and From.Status_Filter /= "" then
+           and From.Status_Filter /= "done" and From.Status_Filter /= ""
+         then
             From.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
          end if;
 
@@ -253,6 +264,12 @@ package body Jason.Tickets.Beans is
          Jason.Tickets.Models.Ticket_List_Bean (From).Set_Value (Name, Value);
       end if;
    end Set_Value;
+
+   procedure Append (Into  : in out Ada.Strings.Unbounded.Unbounded_String;
+                     Value : in Jason.Tickets.Models.Status_Type) is
+   begin
+      Ada.Strings.Unbounded.Append (Into, Natural'Image (Models.Status_Type'Pos (Value)));
+   end Append;
 
    --  Load list of tickets.
    overriding
@@ -262,7 +279,7 @@ package body Jason.Tickets.Beans is
       use Ada.Strings.Unbounded;
       use Jason.Tickets.Models;
 
-      Ctx         : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      Ctx         : constant ASC.Service_Context_Access := ASC.Current;
       User        : constant ADO.Identifier := Ctx.Get_User_Identifier;
       Session     : ADO.Sessions.Session := Bean.Module.Get_Session;
       Query       : ADO.Queries.Context;
@@ -309,25 +326,26 @@ package body Jason.Tickets.Beans is
       end if;
       if Bean.Type_Filter then
          Ada.Strings.Unbounded.Append (Filter, "ticket.ticket_type = ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Ticket_Type'Pos (Bean.Ticket_Kind)));
+         Ada.Strings.Unbounded.Append (Filter,
+                                       Natural'Image (Models.Ticket_Type'Pos (Bean.Ticket_Kind)));
          Ada.Strings.Unbounded.Append (Filter, " AND ");
       end if;
       if Bean.Status_Filter = "done" then
          Ada.Strings.Unbounded.Append (Filter, "(ticket.status = ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.CLOSED)));
+         Append (Filter, Jason.Tickets.Models.CLOSED);
          Ada.Strings.Unbounded.Append (Filter, " OR ticket.status = ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.REJECTED)));
+         Append (Filter, Jason.Tickets.Models.REJECTED);
          Ada.Strings.Unbounded.Append (Filter, ")");
       elsif Bean.Status_Filter = "all" or Bean.Status_Filter = "" then
          Ada.Strings.Unbounded.Append (Filter, "ticket.status >= 0");
       elsif Bean.Status_Filter = "pending" then
          Ada.Strings.Unbounded.Append (Filter, "ticket.status != ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.CLOSED)));
+         Append (Filter, Jason.Tickets.Models.CLOSED);
          Ada.Strings.Unbounded.Append (Filter, " AND ticket.status != ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Jason.Tickets.Models.REJECTED)));
+         Append (Filter, Jason.Tickets.Models.REJECTED);
       else
          Ada.Strings.Unbounded.Append (Filter, "ticket.status = ");
-         Ada.Strings.Unbounded.Append (Filter, Natural'Image (Jason.Tickets.Models.Status_Type'Pos (Bean.Status)));
+         Append (Filter, Bean.Status);
       end if;
       Query.Bind_Param (Name => "ticket_filter",
                         Value => ADO.Parameters.Token (To_String (Filter)));
@@ -457,7 +475,8 @@ package body Jason.Tickets.Beans is
             From.Current_Pos := From.Current_Pos + 1;
          end loop;
       end if;
-      Ticket_Stat_Bean (From.Element) := Ticket_Stat_Vectors.Element (From.Report, From.Current_Pos);
+      Ticket_Stat_Bean (From.Element) := Ticket_Stat_Vectors.Element (From.Report,
+                                                                      From.Current_Pos);
    end Set_Row_Index;
 
    --  ------------------------------
@@ -469,22 +488,22 @@ package body Jason.Tickets.Beans is
       return From.Row;
    end Get_Row;
 
+   --  ------------------------------
    --  Load the information for the tickets.
+   --  ------------------------------
    overriding
    procedure Load (Bean    : in out Ticket_Report_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
-      package ASC renames AWA.Services.Contexts;
+      pragma Unreferenced (Outcome);
       use AWA.Services;
       use type ADO.Identifier;
 
-      Session : ADO.Sessions.Session := Bean.Module.Get_Session;
-      Query   : ADO.Queries.Context;
-
+      Session    : constant ADO.Sessions.Session := Bean.Module.Get_Session;
+      Query      : ADO.Queries.Context;
       Empty      : constant Jason.Tickets.Models.Stat_Bean := (Kind => Models.WORK,
                                                                others => 0);
       Ctx        : constant ASC.Service_Context_Access := ASC.Current;
       User       : constant AWA.Users.Models.User_Ref := Ctx.Get_User;
-      Found      : Boolean;
    begin
       Query.Set_Query (Jason.Tickets.Models.Query_Stats);
       Query.Bind_Param ("project_id", Bean.Project.Get_Id);
@@ -574,7 +593,9 @@ package body Jason.Tickets.Beans is
       end;
    end Load;
 
+   --  ------------------------------
    --  Create the Tickets_Report_Bean bean instance.
+   --  ------------------------------
    function Create_Ticket_Report_Bean (Module : in Jason.Tickets.Modules.Ticket_Module_Access)
                                      return Util.Beans.Basic.Readonly_Bean_Access is
       Object  : constant Ticket_Report_Bean_Access := new Ticket_Report_Bean;
@@ -583,13 +604,13 @@ package body Jason.Tickets.Beans is
       Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
       Object.Row := Util.Beans.Objects.To_Object (Object.Element'Unchecked_Access,
                                                   Util.Beans.Objects.STATIC);
-      Object.Element.Low_Bean := Util.Beans.Objects.To_Object (Object.Element.Low'Unchecked_Access,
+      Object.Element.Low_Bean := Util.Beans.Objects.To_Object (Object.Element.Low'Access,
                                                                Util.Beans.Objects.STATIC);
-      Object.Element.High_Bean := Util.Beans.Objects.To_Object (Object.Element.High'Unchecked_Access,
+      Object.Element.High_Bean := Util.Beans.Objects.To_Object (Object.Element.High'Access,
                                                                 Util.Beans.Objects.STATIC);
-      Object.Element.Medium_Bean := Util.Beans.Objects.To_Object (Object.Element.Medium'Unchecked_Access,
+      Object.Element.Medium_Bean := Util.Beans.Objects.To_Object (Object.Element.Medium'Access,
                                                                   Util.Beans.Objects.STATIC);
-      Object.Element.Closed_Bean := Util.Beans.Objects.To_Object (Object.Element.Closed'Unchecked_Access,
+      Object.Element.Closed_Bean := Util.Beans.Objects.To_Object (Object.Element.Closed'Access,
                                                                   Util.Beans.Objects.STATIC);
       return Object.all'Access;
    end Create_Ticket_Report_Bean;
