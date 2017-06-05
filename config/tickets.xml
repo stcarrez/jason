@@ -193,6 +193,7 @@
        SELECT acl.id FROM awa_acl AS acl
        WHERE acl.entity_type = :entity_type
        AND acl.user_id = :user_id
+       AND acl.permission = $permission[ticket-create]
     </sql>
   </entity-permission>
 
@@ -201,7 +202,8 @@
     <entity-type>jason_project</entity-type>
     <sql>
        SELECT acl.id FROM jason_ticket AS ticket
-       INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :entity_type AND acl.user_id = :user_id
+       INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :entity_type
+           AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
        WHERE ticket.id = :entity_id
     </sql>
   </entity-permission>
@@ -211,7 +213,8 @@
     <entity-type>jason_project</entity-type>
     <sql>
        SELECT acl.id FROM jason_ticket AS ticket
-       INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :entity_type AND acl.user_id = :user_id
+       INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :entity_type
+          AND acl.user_id = :user_id AND acl.permission = $permission[ticket-delete]
        WHERE ticket.id = :entity_id
     </sql>
   </entity-permission>
