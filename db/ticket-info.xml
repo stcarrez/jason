@@ -58,7 +58,8 @@
       project.name,
       user.name
     FROM jason_ticket AS ticket
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :table
+       AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
     INNER JOIN jason_project AS project ON ticket.project_id = project.id
     INNER JOIN awa_user AS user ON ticket.creator_id = user.id
     WHERE ticket.id = :id
