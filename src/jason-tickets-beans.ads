@@ -126,10 +126,11 @@ package Jason.Tickets.Beans is
    use type Jason.Tickets.Models.Ticket_Type;
 
    type Ticket_Stat_Bean is new Models.Stat_Bean with record
-      Low    : aliased Models.Stat_Bean;
-      High   : aliased Models.Stat_Bean;
-      Medium : aliased Models.Stat_Bean;
-      Closed : aliased Models.Stat_Bean;
+      Low      : aliased Models.Stat_Bean;
+      High     : aliased Models.Stat_Bean;
+      Medium   : aliased Models.Stat_Bean;
+      Closed   : aliased Models.Stat_Bean;
+      Progress : Natural := 0;
    end record;
 
    package Ticket_Stat_Vectors is
