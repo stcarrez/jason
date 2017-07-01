@@ -31,7 +31,8 @@
       project.create_date,
       (SELECT COUNT(*) FROM jason_ticket AS ticket WHERE ticket.project_id = project.id)
     FROM jason_project AS project
-    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
     ORDER BY project.create_date DESC
     LIMIT :count OFFSET :first
        </sql>
@@ -39,7 +40,8 @@
     SELECT
       count(project.id)
     FROM jason_project AS project
-    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
        </sql-count>
     </query>
 
@@ -53,7 +55,8 @@
       project.create_date
     FROM jason_project AS project
     INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = project.id AND e.entity_type = :project_table AND e.tag_id = :tag
-    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table
+       AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
     ORDER BY project.create_date DESC
     LIMIT :first, :last
        </sql>
@@ -62,7 +65,8 @@
       count(ticket.id)
     FROM jason_ticket AS ticket
     INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
     WHERE ticket.project_id = :project_id AND :ticket_filter
        </sql-count>
     </query>

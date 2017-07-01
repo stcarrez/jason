@@ -57,7 +57,8 @@
       ticket.progress,
       user.name
     FROM jason_ticket AS ticket
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
     INNER JOIN awa_user AS user ON ticket.creator_id = user.id
     WHERE ticket.project_id = :project_id AND :ticket_filter
     ORDER BY :order1
@@ -67,7 +68,8 @@
     SELECT
       count(ticket.id)
     FROM jason_ticket AS ticket
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.project_id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
     WHERE ticket.project_id = :project_id AND :ticket_filter
        </sql-count>
     </query>
@@ -87,7 +89,8 @@
       user.name
     FROM jason_ticket AS ticket
     INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
     INNER JOIN awa_user AS user ON ticket.creator_id = user.id
     WHERE ticket.project_id = :project_id AND :ticket_filter
     ORDER BY :order1
@@ -98,7 +101,8 @@
       count(ticket.id)
     FROM jason_ticket AS ticket
     INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = ticket.project_id AND e.entity_type = :ticket_table AND e.tag_id = :tag
-    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = ticket.id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
     WHERE ticket.project_id = :project_id AND :ticket_filter
        </sql-count>
     </query>
