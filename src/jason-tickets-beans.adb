@@ -421,6 +421,8 @@ package body Jason.Tickets.Beans is
          return From.High_Bean;
       elsif Name = "closed" then
          return From.Closed_Bean;
+      elsif Name = "progress" then
+         return Util.Beans.Objects.To_Object (From.Progress);
       else
          return Jason.Tickets.Models.Stat_Bean (From).Get_Value (Name);
       end if;
@@ -585,10 +587,21 @@ package body Jason.Tickets.Beans is
          end loop;
       end;
       declare
-         Iter : Ticket_Stat_Map.Cursor := Bean.List.First;
+         Iter   : Ticket_Stat_Map.Cursor := Bean.List.First;
+         Info   : Ticket_Stat_Bean;
+         Done   : Integer;
+         Remain : Integer;
       begin
          while Ticket_Stat_Map.Has_Element (Iter) loop
-            Bean.Report.Append (Ticket_Stat_Map.Element (Iter));
+            Info := Ticket_Stat_Map.Element (Iter);
+            Done := Info.Low.Done + Info.Medium.Done + Info.High.Done + Info.Closed.Done;
+            Remain := Info.Low.Remain + Info.Medium.Remain + Info.High.Remain + Info.Closed.Remain;
+            if Done + Remain = 0 then
+               Info.Progress := 100;
+            else
+               Info.Progress := (Done * 100) / (Done + Remain);
+            end if;
+            Bean.Report.Append (Info);
             Ticket_Stat_Map.Next (Iter);
          end loop;
          --  Sort_Tasks.Sort (Into.Tasks);
