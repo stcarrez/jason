@@ -42,8 +42,10 @@
     font-size: 1.1em;
 }
 .project-list-title {
-    width: 40%;
+    width: 30%;
 }
+.project-list-done,
+.project-list-progress,
 .project-list-status {
     width: 10%;
 }
