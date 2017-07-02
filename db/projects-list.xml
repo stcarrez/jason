@@ -17,8 +17,17 @@
         <property type='Date' name="create_date">
             <comment>the project creation date.</comment>
         </property>
-        <property type='Natural' name="ticket_count">
-            <comment>the number of tickets created on the project.</comment>
+        <property type='Natural' name="total_duration">
+            <comment>the total duration for tickets.</comment>
+        </property>
+        <property type='Natural' name="total_done">
+            <comment>the total progress time.</comment>
+        </property>
+        <property type='Natural' name="close_count">
+            <comment>the number of tickets closed.</comment>
+        </property>
+        <property type='Natural' name="open_count">
+            <comment>the number of tickets opened.</comment>
         </property>
     </class>
     <query name='list'>
@@ -29,10 +38,15 @@
       project.name,
       project.status,
       project.create_date,
-      (SELECT COUNT(*) FROM jason_ticket AS ticket WHERE ticket.project_id = project.id)
+      SUM(ticket.duration),
+      CONVERT(SUM((ticket.duration * ticket.progress) / 100), INTEGER),
+      SUM(ticket.status = 6),
+      SUM(ticket.status &lt; 6)
     FROM jason_project AS project
     INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table
        AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
+    LEFT JOIN jason_ticket AS ticket ON project.id = ticket.project_id
+    GROUP BY project.id
     ORDER BY project.create_date DESC
     LIMIT :count OFFSET :first
        </sql>
@@ -52,11 +66,17 @@
       project.id,
       project.name,
       project.status,
-      project.create_date
+      project.create_date,
+      SUM(ticket.duration),
+      CONVERT(SUM((ticket.duration * ticket.progress) / 100), INTEGER),
+      SUM(ticket.status = 6),
+      SUM(ticket.status &lt; 6)
     FROM jason_project AS project
     INNER JOIN awa_tagged_entity AS e ON e.for_entity_id = project.id AND e.entity_type = :project_table AND e.tag_id = :tag
     INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :table
        AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
+    LEFT JOIN jason_ticket AS ticket ON project.id = ticket.project_id
+    GROUP BY project.id
     ORDER BY project.create_date DESC
     LIMIT :first, :last
        </sql>
