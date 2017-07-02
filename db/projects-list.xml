@@ -38,10 +38,10 @@
       project.name,
       project.status,
       project.create_date,
-      SUM(ticket.duration),
-      CONVERT(SUM((ticket.duration * ticket.progress) / 100), INTEGER),
-      SUM(ticket.status = 6),
-      SUM(ticket.status &lt; 6)
+      COALESCE(SUM(ticket.duration), 0),
+      CONVERT(COALESCE(SUM((ticket.duration * ticket.progress) / 100), 0), INTEGER),
+      COALESCE(SUM(ticket.status = 6), 0),
+      COALESCE(SUM(ticket.status &lt; 6), 0)
     FROM jason_project AS project
     INNER JOIN awa_acl AS acl ON acl.entity_id = project.id AND acl.entity_type = :project_table
        AND acl.user_id = :user_id AND acl.permission = $permission[project-update]
