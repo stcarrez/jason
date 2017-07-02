@@ -1,5 +1,5 @@
 <!-- List of projects
-  -  Copyright (C) 2016 Stephane Carrez
+  -  Copyright (C) 2016, 2017 Stephane Carrez
   -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
   -
   -  Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,8 +32,16 @@
             <div class='awa-list-col project-list-create-date'>
                 <h:outputText value="#{prj.create_date}"/>
             </div>
+            <div class='awa-list-col project-list-close-count'>
+                <h:outputText value="#{prj.close_count}"/>
+            </div>
+            <div class='awa-list-col project-list-open-count'>
+                <h:outputText value="#{prj.open_count}"/>
+            </div>
             <div class='awa-list-col project-list-ticket-count'>
-                <h:outputText value="#{prj.ticket_count}"/>
+                <h:outputText value="#{prj.total_duration - prj.total_done}"/>
+                -
+                <h:outputText value="#{(prj.total_done * 100) / prj.total_duration}"/>
             </div>
         </div>
     </h:list>

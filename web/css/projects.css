@@ -42,7 +42,7 @@
     font-size: 1.1em;
 }
 .project-list-title {
-    width: 60%;
+    width: 40%;
 }
 .project-list-status {
     width: 10%;
@@ -50,7 +50,8 @@
 .project-list-create-date {
     width: 20%;
 }
-.project-list-ticket-count {
+.project-list-open-count,
+.project-list-close-count {
     width: 10%;
 }
 .project-tickets .awa-page-actions {
