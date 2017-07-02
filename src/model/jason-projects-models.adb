@@ -1054,8 +1054,14 @@ package body Jason.Projects.Models is
          return Jason.Projects.Models.Status_Type_Objects.To_Object (From.Status);
       elsif Name = "create_date" then
          return Util.Beans.Objects.Time.To_Object (From.Create_Date);
-      elsif Name = "ticket_count" then
-         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Ticket_Count));
+      elsif Name = "total_duration" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Total_Duration));
+      elsif Name = "total_done" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Total_Done));
+      elsif Name = "close_count" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Close_Count));
+      elsif Name = "open_count" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Open_Count));
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -1077,8 +1083,14 @@ package body Jason.Projects.Models is
          Item.Status := Jason.Projects.Models.Status_Type_Objects.To_Value (Value);
       elsif Name = "create_date" then
          Item.Create_Date := Util.Beans.Objects.Time.To_Time (Value);
-      elsif Name = "ticket_count" then
-         Item.Ticket_Count := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "total_duration" then
+         Item.Total_Duration := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "total_done" then
+         Item.Total_Done := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "close_count" then
+         Item.Close_Count := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "open_count" then
+         Item.Open_Count := Util.Beans.Objects.To_Integer (Value);
       end if;
    end Set_Value;
 
@@ -1110,7 +1122,10 @@ package body Jason.Projects.Models is
          Into.Title := Stmt.Get_Unbounded_String (1);
          Into.Status := Jason.Projects.Models.Status_Type'Val (Stmt.Get_Integer (2));
          Into.Create_Date := Stmt.Get_Time (3);
-         Into.Ticket_Count := Stmt.Get_Natural (4);
+         Into.Total_Duration := Stmt.Get_Natural (4);
+         Into.Total_Done := Stmt.Get_Natural (5);
+         Into.Close_Count := Stmt.Get_Natural (6);
+         Into.Open_Count := Stmt.Get_Natural (7);
       end Read;
    begin
       Stmt.Execute;

@@ -329,8 +329,17 @@ package Jason.Projects.Models is
       --  the project creation date.
       Create_Date : Ada.Calendar.Time;
 
-      --  the number of tickets created on the project.
-      Ticket_Count : Natural;
+      --  the total duration for tickets.
+      Total_Duration : Natural;
+
+      --  the total progress time.
+      Total_Done : Natural;
+
+      --  the number of tickets closed.
+      Close_Count : Natural;
+
+      --  the number of tickets opened.
+      Open_Count : Natural;
    end record;
 
    --  Get the bean attribute identified by the name.
@@ -591,7 +600,7 @@ private
 
    package File_1 is
       new ADO.Queries.Loaders.File (Path => "projects-list.xml",
-                                    Sha1 => "9D99AA442AD57D2A1C22EED981AB261FBBF416A3");
+                                    Sha1 => "CE91D882D33B3398C8198F00CE105E2FBDE8872F");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",
