@@ -1232,7 +1232,7 @@ package body Jason.Tickets.Models is
 
       Stmt : ADO.Statements.Query_Statement
           := Session.Create_Statement (Context);
-      Pos  : Natural := 0;
+      Pos  : Positive := 1;
       procedure Read (Into : in out List_Info) is
       begin
          Into.Id := Stmt.Get_Identifier (0);
