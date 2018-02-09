@@ -26,25 +26,27 @@
             <div class='awa-list-col project-list-title'>
                 <a href="#{contextPath}/projects/view/#{prj.id}">#{prj.title}</a>
             </div>
-            <div class='awa-list-col project-list-status'>
-                <h:outputText value="#{prj.status}"/>
-            </div>
             <div class='awa-list-col project-list-create-date'>
-                <h:outputText value="#{prj.create_date}"/>
+                <h:outputText value="#{prj.create_date}">
+                    <f:convertDateTime dateStyle="short"/>
+                </h:outputText>
             </div>
             <div class='awa-list-col project-list-open-count'>
-                <h:outputText value="#{prj.open_count}"/>
+                <h:outputText rendered="#{prj.open_count ne 0}" value="#{prj.open_count}"/>
             </div>
             <div class='awa-list-col project-list-close-count'>
-                <h:outputText value="#{prj.close_count}"/>
-            </div>
-            <div class='awa-list-col project-list-done'>
-                <h:outputText value="#{prj.total_done}"/>
+                <h:outputText rendered="#{prj.close_count ne 0}" value="#{prj.close_count}"/>
             </div>
             <div class='awa-list-col project-list-progress'>
-                <div class="ticket-progress-bar">
-                    <span class="ticket-progress-status" style="width: #{prj.total_duration == 0 ? 100 : (prj.total_done * 100) / prj.total_duration}%"/>
-                </div>
+                 <div class="ticket-progress-bar">
+                     <span class="ticket-progress-status" style="width: #{prj.total_duration == 0 ? 100 : (prj.total_done * 100) / prj.total_duration}%"/>
+                 </div>
+             </div>
+            <div class='awa-list-col project-list-remain'>
+                <h:outputText value="#{prj.total_duration - prj.total_done}"/>
+            </div>
+            <div class='awa-list-col project-list-done'>
+                <h:outputText rendered="#{prj.total_done ne 0}" value="#{prj.total_done}"/>
             </div>
         </div>
     </h:list>
