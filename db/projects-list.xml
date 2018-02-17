@@ -39,7 +39,7 @@
       project.status,
       project.create_date,
       COALESCE(SUM(ticket.duration), 0),
-      CONVERT(COALESCE(SUM((ticket.duration * ticket.progress) / 100), 0), INTEGER),
+      COALESCE(SUM((ticket.duration * ticket.progress) / 100), 0),
       COALESCE(SUM(ticket.status = 6), 0),
       COALESCE(SUM(ticket.status &lt; 6), 0)
     FROM jason_project AS project
@@ -68,7 +68,7 @@
       project.status,
       project.create_date,
       SUM(ticket.duration),
-      CONVERT(SUM((ticket.duration * ticket.progress) / 100), INTEGER),
+      SUM((ticket.duration * ticket.progress) / 100),
       SUM(ticket.status = 6),
       SUM(ticket.status &lt; 6)
     FROM jason_project AS project
