@@ -100,5 +100,5 @@ AC_SUBST(AWA_DIR)
 AM_UTIL_CHECK_INSTALL
 
 AC_OUTPUT(
-Makefile jason.gpr jason_server.gpr tests.gpr rules.mk
+Makefile jason.gpr jason_server.gpr jason_tests.gpr rules.mk
 )
