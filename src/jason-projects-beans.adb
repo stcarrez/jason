@@ -33,6 +33,7 @@ package body Jason.Projects.Beans is
    overriding
    procedure Create (Bean    : in out Project_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Create (Bean);
       Bean.Tags.Update_Tags (Bean.Get_Id);
@@ -43,7 +44,8 @@ package body Jason.Projects.Beans is
    --  ------------------------------
    overriding
    procedure Save (Bean    : in out Project_Bean;
-                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Save (Bean);
       Bean.Tags.Update_Tags (Bean.Get_Id);
@@ -55,9 +57,7 @@ package body Jason.Projects.Beans is
    overriding
    procedure Load (Bean    : in out Project_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
-
       use type ADO.Identifier;
-
    begin
       if Bean.Id = ADO.NO_IDENTIFIER then
          Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("failed");
@@ -73,11 +73,14 @@ package body Jason.Projects.Beans is
    overriding
    procedure Create_Wiki (Bean    : in out Project_Bean;
                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Create_Wiki (Bean, Bean.Wiki_Space);
    end Create_Wiki;
 
+   --  ------------------------------
    --  Load the project if it is associated with the current wiki space.
+   --  ------------------------------
    overriding
    procedure Load_Wiki (Bean    : in out Project_Bean;
                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
@@ -148,7 +151,9 @@ package body Jason.Projects.Beans is
       return Object.all'Access;
    end Create_Project_Bean;
 
+   --  ------------------------------
    --  Get the value identified by the name.
+   --  ------------------------------
    overriding
    function Get_Value (From : in Project_List_Bean;
                        Name : in String) return Util.Beans.Objects.Object is
@@ -174,7 +179,9 @@ package body Jason.Projects.Beans is
       end if;
    end Get_Value;
 
+   --  ------------------------------
    --  Set the value identified by the name.
+   --  ------------------------------
    overriding
    procedure Set_Value (From  : in out Project_List_Bean;
                         Name  : in String;
@@ -185,7 +192,9 @@ package body Jason.Projects.Beans is
       end if;
    end Set_Value;
 
+   --  ------------------------------
    --  Load list of projects.
+   --  ------------------------------
    overriding
    procedure Load (Bean    : in out Project_List_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
@@ -239,7 +248,9 @@ package body Jason.Projects.Beans is
       end;
    end Load;
 
+   --  ------------------------------
    --  Create the Project_List_Bean bean instance.
+   --  ------------------------------
    function Create_Project_List_Bean (Module : in Jason.Projects.Modules.Project_Module_Access)
                                      return Util.Beans.Basic.Readonly_Bean_Access is
       Object  : constant Project_List_Bean_Access := new Project_List_Bean;
