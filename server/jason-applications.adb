@@ -1,7 +1,6 @@
 -----------------------------------------------------------------------
 --  jason -- jason applications
------------------------------------------------------------------------
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2018 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +23,9 @@ with Util.Properties;
 
 with ASF.Applications;
 with ASF.Applications.Main;
-with ASF.Applications.Main.Configs;
 
 with AWA.Applications.Factory;
 
---  with Jason.XXX.Module;
 package body Jason.Applications is
 
    use AWA.Applications;
@@ -146,10 +143,6 @@ package body Jason.Applications is
                 URI    => "storages",
                 Module => App.Storage_Module'Access);
 
-      Register (App    => App.Self.all'Access,
-                Name   => AWA.Blogs.Modules.NAME,
-                URI    => "blogs",
-                Module => App.Blog_Module'Access);
       Register (App    => App.Self.all'Access,
                 Name   => Jason.Projects.Modules.NAME,
                 URI    => "projects",

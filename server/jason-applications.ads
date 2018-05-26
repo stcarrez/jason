@@ -1,7 +1,6 @@
 -----------------------------------------------------------------------
 --  jason -- jason applications
------------------------------------------------------------------------
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2018 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,10 +16,10 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 with ASF.Servlets.Faces;
-with ASF.Servlets.Files;
+with Servlet.Core.Files;
 with ASF.Servlets.Ajax;
 with ASF.Filters.Dump;
-with ASF.Servlets.Measures;
+with Servlet.Core.Measures;
 
 with ASF.Security.Servlets;
 
@@ -28,7 +27,6 @@ with AWA.Users.Servlets;
 with AWA.Users.Modules;
 with AWA.Mail.Modules;
 with AWA.Comments.Modules;
-with AWA.Blogs.Modules;
 with AWA.Tags.Modules;
 with AWA.Storages.Modules;
 with AWA.Applications;
@@ -75,10 +73,10 @@ private
       --  Application servlets and filters (add new servlet and filter instances here).
       Faces             : aliased ASF.Servlets.Faces.Faces_Servlet;
       Ajax              : aliased ASF.Servlets.Ajax.Ajax_Servlet;
-      Files             : aliased ASF.Servlets.Files.File_Servlet;
+      Files             : aliased Servlet.Core.Files.File_Servlet;
       Dump              : aliased ASF.Filters.Dump.Dump_Filter;
       Service_Filter    : aliased AWA.Services.Filters.Service_Filter;
-      Measures          : aliased ASF.Servlets.Measures.Measure_Servlet;
+      Measures          : aliased Servlet.Core.Measures.Measure_Servlet;
 
       --  Authentication servlet and filter.
       Auth              : aliased ASF.Security.Servlets.Request_Auth_Servlet;
@@ -87,7 +85,6 @@ private
       --  The application modules.
       User_Module       : aliased AWA.Users.Modules.User_Module;
       Workspace_Module  : aliased AWA.Workspaces.Modules.Workspace_Module;
-      Blog_Module       : aliased AWA.Blogs.Modules.Blog_Module;
       Mail_Module       : aliased AWA.Mail.Modules.Mail_Module;
       Comment_Module    : aliased AWA.Comments.Modules.Comment_Module;
       Storage_Module    : aliased AWA.Storages.Modules.Storage_Module;
