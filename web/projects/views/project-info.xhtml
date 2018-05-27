@@ -6,16 +6,22 @@
         xmlns:c="http://java.sun.com/jstl/core"
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
-    <dl>
-        <dt></dt>
-        <dd><span>Created on: #{project.create_date}</span>
-            <span>Last updated on: #{project.update_date}</span>
+    <dl class="project-info">
+        <dt>Created on</dt>
+        <dd>#{project.create_date}</dd>
+        <dt>
+            Last updated on
+        </dt>
+        <dd>
+            #{project.update_date}
+        </dd>
+        <dt>
+            Status
+        </dt>
+        <dd>
+            #{project.status}
         </dd>
     </dl>
-    <div class="project-description">
-        Status: #{project.status}
-        Wiki: #{project.wiki}
-    </div>
     <div class="project-description">
         <awa:wiki styleClass='wiki-text' format="mediawiki"
                   value="#{project.description}"

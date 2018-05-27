@@ -1,18 +1,20 @@
 .ticket-title {
     float: left;
     clear: both;
-    width: 95%;
+    width: 100%;
     margin-top: 15px;
     border-bottom: 2px solid #47C;
     padding-bottom: 2px;
-    padding-left: 48px;
+    padding-left: 1%;
+    padding-right: 1%;
 }
 .ticket-title h2 {
     line-height: 1.33em;
     font-size: 1.33em;
 }
-.ticket-title {
+.ticket-title h2 {
     background: url(../images/tickets/ticket-icon-26.png) no-repeat;
+    padding-left: 26px;
 }
 .ticket-list-ident, .ticket-list-priority {
     width: 80px;
@@ -91,13 +93,13 @@
     width: 8%;
     height: 28px;
 }
-.ticket-ISSUE .ticket-list-type, .ticket-icon-ISSUE {
+.ticket-ISSUE .ticket-list-type h2, .ticket-icon-ISSUE h2 {
     background: url(../images/tickets/icon-ticket-issue-26.png) no-repeat;
 }
-.ticket-WORK .ticket-list-type, .ticket-icon-WORK {
+.ticket-WORK .ticket-list-type h2, .ticket-icon-WORK h2 {
     background: url(../images/tickets/icon-task-26.png) no-repeat;
 }
-.ticket-INCIDENT .ticket-list-type, .ticket-icon-INCIDENT {
+.ticket-INCIDENT .ticket-list-type h2, .ticket-icon-INCIDENT h2 {
     background: url(../images/tickets/icon-ticket-incident-26.png) no-repeat;
 }
 .ticket-nav-filter {

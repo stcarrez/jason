@@ -8,7 +8,8 @@
 .project-title {
     float: left;
     clear: both;
-    width: 95%;
+    width: 100%;
+    margin-left: 1%;
     padding-bottom: 2px;
     padding-left: 48px;
 }
@@ -19,16 +20,21 @@
 .project-title {
     background: url(../images/projects/icon-project-manager-26.png) no-repeat;
 }
+.project-title-info {
+    width: 100%;
+    padding-left: 1%;
+    padding-right: 1%;
+}
 .project-description {
     float: left;
     padding: 1%;
-    width: 98%;
+    width: 100%;
 }
 .project-ticket-list, .project-list {
     float: left;
     padding-left: 1%;
     padding-right: 1%;
-    width: 98%;
+    width: 100%;
     margin-top: 1em;
 }
 .project-tickets {
@@ -74,7 +80,7 @@
     list-style-type: none;
     float: left;
     background: #eee;
-    width: 98%;
+    width: 100%;
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 0.5em;
@@ -114,14 +120,15 @@
 }
 .project-sum-col {
     width: 10%;
-    height: 1em;
+    line-height: 1.5em;
     padding-top: 5px;
     padding-bottom: 5px;
 }
 .project-title-col {
     width: 25%;
     display: block;
-    height: 1em;
+    height: 1.5em;
+    line-height: 1.5em;
 }
 .project-remain, .project-done {
     background-color: #eee;
@@ -130,4 +137,17 @@
 .project-sum-list .awa-list-item {
     padding-top: 0;
     padding-bottom: 0;
+}
+.project-info {
+    float: left;
+    width: 100%;
+    padding: 1%;
+}
+.project-info dt {
+    float: left;
+    width: 15%;
+}
+.project-info dd {
+    float: left;
+    width: 35%;
 }
