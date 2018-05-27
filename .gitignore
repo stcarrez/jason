@@ -14,9 +14,14 @@ ChangeLog
 configure.lineno
 Makefile
 autom4te.cache
+jason_tests.gpr
+jason-tests.xml
+jason.gpr
+jason_server.gpr
 *.txt
 *.gcov
 *.mat
+rules.mk
 stamp-aws
 stamp-configure
 stamp-xmlada
