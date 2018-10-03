@@ -1,5 +1,5 @@
 <!-- List of projects
-  -  Copyright (C) 2016 Stephane Carrez
+  -  Copyright (C) 2016, 2017, 2018 Stephane Carrez
   -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
   -
   -  Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,6 +19,7 @@
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:c="http://java.sun.com/jstl/core"
+        xmlns:util="http://code.google.com/p/ada-asf/util"
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
     <h:list var="prj" value="#{projectList.projects}">
@@ -26,18 +27,31 @@
             <div class='awa-list-col project-list-title'>
                 <a href="#{contextPath}/projects/view/#{prj.id}">#{prj.title}</a>
             </div>
-            <div class='awa-list-col project-list-status'>
-                <h:outputText value="#{prj.status}"/>
-            </div>
             <div class='awa-list-col project-list-create-date'>
-                <h:outputText value="#{prj.create_date}"/>
+                <h:outputText value="#{prj.create_date}">
+                    <f:convertDateTime dateStyle="short"/>
+                </h:outputText>
             </div>
-            <div class='awa-list-col project-list-ticket-count'>
-                <h:outputText value="#{prj.ticket_count}"/>
+            <div class='awa-list-col project-list-open-count'>
+                <h:outputText rendered="#{prj.open_count ne 0}" value="#{prj.open_count}"/>
+            </div>
+            <div class='awa-list-col project-list-close-count'>
+                <h:outputText rendered="#{prj.close_count ne 0}" value="#{prj.close_count}"/>
+            </div>
+            <div class='awa-list-col project-list-progress'>
+                 <div class="ticket-progress-bar">
+                     <span class="ticket-progress-status" style="width: #{prj.total_duration == 0 ? 100 : (prj.total_done * 100) / prj.total_duration}%"/>
+                 </div>
+             </div>
+            <div class='awa-list-col project-list-remain'>
+                <h:outputText value="#{prj.total_duration - prj.total_done}"/>
+            </div>
+            <div class='awa-list-col project-list-done'>
+                <h:outputText rendered="#{prj.total_done ne 0}" value="#{prj.total_done}"/>
             </div>
         </div>
     </h:list>
-    <ul class='blog-pagination'>
+    <ul class='awa-pagination'>
         <li>
             <h:panelGroup rendered="#{projectList.page gt 1}">
                 <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page - 1}#{pageParam}"
@@ -49,11 +63,75 @@
                 <f:param value="#{projectList.page}"/>
             </h:outputFormat>
         </li>
-        <li>#{ticketList.page_count}
+        <li>
             <h:panelGroup rendered="#{projectList.page lt projectList.page_count}">
                 <a href="#{contextPath}/wikis/list/#{ticketList.wiki_id}/#{ticketList.sort}?page=#{ticketList.page + 1}#{pageParam}"
                    title="#{ticketMsg.ticket_next_page_title}">#{ticketMsg.ticket_next_page}</a>
             </h:panelGroup>
         </li>
     </ul>
+    <div class="grid_4">
+                        <div id='graph-total'/>
+                        <div id="graph-total-legend"/>
+                    </div>
+                    <div class="grid_8">
+                        <div id="graph-legend"/>
+                        <div id='graph-month'/>
+                    </div>
+    <util:script>
+    $(function() {
+        var series = [];
+        var total_series = [];
+        var pos = 1;
+        <h:list value="#{projectList.projects}" var="prj">
+            series.push({label: "#{prj.title}", hoverable: true,
+                data: [[pos, #{prj.total_duration - prj.total_done}]
+                    ]});
+            pos++;
+            total_series.push({label: "#{prj.title}", data: #{prj.total_duration} });
+        </h:list>
+
+        $.plot("#graph-month", series, {
+            series: {
+                stack: true,
+                bars: {
+                    show: true,
+                    barWidth: 0.6,
+                    align: "center"
+                }
+            },
+            legend: {
+                show: true, noColumns: 6, container: $("#graph-legend")
+            },
+            colors: [
+                "#66FF99",
+                "#47B26B",
+                "#A3FFC2",
+                "#66FFFF",
+                "#3D9999",
+                "#94FFFF",
+                "#FFFF66",
+                "#99993D",
+                // "#FFFFA3",
+                // "#FF6600",
+                "#993D00",
+                "#FF99FF",
+                "#99CCFF"
+            ],
+            xaxis: {
+                ticks: []
+            }
+        });
+        $.plot("#graph-total", total_series, {
+            series: {
+                pie: {
+                    show: true
+                }
+            },
+            legend: {
+                show: true, container: $("#graph-total-legend")
+            }
+        });
+    });
+    </util:script>
 </ui:composition>

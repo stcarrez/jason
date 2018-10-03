@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-tickets-modules -- Module tickets
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2017 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,7 @@ with ADO.Sessions.Entities;
 package body Jason.Tickets.Modules is
 
    use type ADO.Identifier;
+   package ASC renames AWA.Services.Contexts;
 
    Log : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("Jason.Tickets.Module");
 
@@ -111,8 +112,8 @@ package body Jason.Tickets.Modules is
                      Project_Id : in ADO.Identifier) is
       pragma Unreferenced (Model);
 
-      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
-      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      Ctx   : constant ASC.Service_Context_Access := ASC.Current;
+      DB    : ADO.Sessions.Master_Session := ASC.Get_Master_Session (Ctx);
       User  : constant ADO.Identifier := Ctx.Get_User_Identifier;
       Project : Jason.Projects.Models.Project_Ref;
    begin
@@ -144,8 +145,8 @@ package body Jason.Tickets.Modules is
                    Comment : in String) is
       pragma Unreferenced (Model);
 
-      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
-      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      Ctx   : constant ASC.Service_Context_Access := ASC.Current;
+      DB    : ADO.Sessions.Master_Session := ASC.Get_Master_Session (Ctx);
       Cmt   : AWA.Comments.Models.Comment_Ref;
       Now   : constant Ada.Calendar.Time := Ada.Calendar.Clock;
    begin
@@ -160,7 +161,7 @@ package body Jason.Tickets.Modules is
          Cmt.Set_Create_Date (Now);
          Cmt.Set_Message (Comment);
          Cmt.Set_Entity_Id (Entity.Get_Id);
-         Cmt.Set_Entity_Type (ADO.Sessions.Entities.Find_Entity_Type (DB, Jason.Tickets.Models.TICKET_TABLE));
+         Cmt.Set_Entity_Type (ADO.Sessions.Entities.Find_Entity_Type (DB, Models.TICKET_TABLE));
          Cmt.Save (DB);
       end if;
       Entity.Save (DB);

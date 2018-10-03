@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-modules -- Module projects
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2017 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,15 +18,20 @@
 with Ada.Calendar;
 with AWA.Modules.Beans;
 with AWA.Modules.Get;
-with AWA.Permissions.Services;
+with AWA.Permissions;
+with AWA.Workspaces.Models;
+with AWA.Workspaces.Modules;
 with Util.Log.Loggers;
 with Jason.Projects.Beans;
+with Jason.Tickets.Modules;
 with ADO.Sessions;
 with ADO.SQL;
 with AWA.Services.Contexts;
 package body Jason.Projects.Modules is
 
    Log : constant Util.Log.Loggers.Logger := Util.Log.Loggers.Create ("Jason.Projects.Module");
+
+   package ASC renames AWA.Services.Contexts;
 
    package Register is new AWA.Modules.Beans (Module => Project_Module,
                                               Module_Access => Project_Module_Access);
@@ -78,19 +83,29 @@ package body Jason.Projects.Modules is
                      Entity : in out Jason.Projects.Models.Project_Ref'Class) is
       pragma Unreferenced (Model);
 
-      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      use Jason.Tickets.Modules;
+
+      Ctx   : constant ASC.Service_Context_Access := ASC.Current;
       User  : constant ADO.Identifier := Ctx.Get_User_Identifier;
-      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      DB    : ADO.Sessions.Master_Session := ASC.Get_Master_Session (Ctx);
+      WS    : AWA.Workspaces.Models.Workspace_Ref;
    begin
       Ctx.Start;
+      AWA.Workspaces.Modules.Get_Workspace (DB, Ctx, WS);
       Entity.Set_Create_Date (Ada.Calendar.Clock);
       Entity.Set_Owner (Ctx.Get_User);
       Entity.Save (DB);
 
       --  Add the permission for the user to use the new project.
-      AWA.Permissions.Services.Add_Permission (Session => DB,
-                                               User    => User,
-                                               Entity  => Entity);
+      AWA.Workspaces.Modules.Add_Permission (Session   => DB,
+                                             User      => User,
+                                             Entity    => Entity,
+                                             Workspace => WS.Get_Id,
+                                             List => (ACL_Update_Projects.Permission,
+                                                      ACL_Delete_Projects.Permission,
+                                                      ACL_Create_Tickets.Permission,
+                                                      ACL_Delete_Tickets.Permission,
+                                                      ACL_Update_Tickets.Permission));
       Ctx.Commit;
       Log.Info ("Project {0} created for user {1}",
                 ADO.Identifier'Image (Entity.Get_Id), ADO.Identifier'Image (User));
@@ -103,8 +118,8 @@ package body Jason.Projects.Modules is
                    Entity : in out Jason.Projects.Models.Project_Ref'Class) is
       pragma Unreferenced (Model);
 
-      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
-      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      Ctx   : constant ASC.Service_Context_Access := ASC.Current;
+      DB    : ADO.Sessions.Master_Session := ASC.Get_Master_Session (Ctx);
    begin
       Log.Info ("Updating project {0}", ADO.Identifier'Image (Entity.Get_Id));
 
@@ -124,8 +139,8 @@ package body Jason.Projects.Modules is
    procedure Create_Wiki (Model  : in Project_Module;
                           Entity : in out Jason.Projects.Models.Project_Ref'Class;
                           Wiki   : in out AWA.Wikis.Models.Wiki_Space_Ref'Class) is
-      Ctx   : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
-      DB    : ADO.Sessions.Master_Session := AWA.Services.Contexts.Get_Master_Session (Ctx);
+      Ctx   : constant ASC.Service_Context_Access := ASC.Current;
+      DB    : ADO.Sessions.Master_Session := ASC.Get_Master_Session (Ctx);
    begin
       Log.Info ("Creating project wiki space {0}", ADO.Identifier'Image (Entity.Get_Id));
 

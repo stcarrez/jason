@@ -14,7 +14,8 @@
        SUM(ROUND(ticket.duration * ticket.progress / 100)),
        SUM(ROUND((ticket.duration * (100 - ticket.progress)) / 100))
     FROM jason_ticket AS ticket
-    INNER JOIN awa_acl AS acl ON acl.entity_id = :project_id AND acl.entity_type = :project_table AND acl.user_id = :user_id
+    INNER JOIN awa_acl AS acl ON acl.entity_id = :project_id AND acl.entity_type = :project_table
+       AND acl.user_id = :user_id AND acl.permission = $permission[ticket-update]
     WHERE ticket.project_id = :project_id
     GROUP BY ticket.status, ticket.ticket_type, ticket.priority
        </sql>

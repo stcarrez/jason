@@ -17,7 +17,6 @@
 -----------------------------------------------------------------------
 
 with AWA.Tests;
-with ASF.Server.Tests;
 with Jason.Applications;
 with Jason.Projects.Tests;
 with Jason.Tickets.Tests;

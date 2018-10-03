@@ -6,22 +6,28 @@
         xmlns:c="http://java.sun.com/jstl/core"
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
-    <dl>
-        <dt></dt>
-        <dd><span>Created on: #{project.create_date}</span>
-            <span>Last updated on: #{project.update_date}</span>
+    <dl class="project-info">
+        <dt>Created on</dt>
+        <dd>#{project.create_date}</dd>
+        <dt>
+            Last updated on
+        </dt>
+        <dd>
+            #{project.update_date}
+        </dd>
+        <dt>
+            Status
+        </dt>
+        <dd>
+            #{project.status}
         </dd>
     </dl>
-    <div class="project-description">
-        Status: #{project.status}
-        Wiki: #{project.wiki}
-    </div>
     <div class="project-description">
         <awa:wiki styleClass='wiki-text' format="mediawiki"
                   value="#{project.description}"
                   toc="false"/>
     </div>
-    <div class="grid_6">
+    <div class="grid_8">
 
     <div claass="project-sum-list">
         <div class="awa-list-header">
@@ -32,6 +38,7 @@
             <div class="awa-header-col project-sum-col">Closed</div>
             <div class="awa-header-col project-sum-col">Remain</div>
             <div class="awa-header-col project-sum-col">Done</div>
+            <div class="awa-header-col project-sum-col">Progress</div>
         </div>
         <h:list var="stat" value="#{ticketReport}">
             <div class="awa-list-item ui-list-item project-sum-type">
@@ -64,13 +71,14 @@
                 <div class="awa-list-col project-sum-col project-done">
                     #{stat.high.done + stat.medium.done + stat.low.done + stat.closed.done}
                 </div>
+                <div class='awa-list-col project-sum-col project-progress'>
+                    <div class="ticket-progress-bar">
+                        <span class="ticket-progress-status" style="width: #{stat.progress}%"/>
+                    </div>
+                    <span class="ticket-list-duration"></span>
+                </div>
             </div>
         </h:list>
      </div>
-    </div>
-    <div class="grid_6">
-        <h3>Tickets</h3>
-        <ajax:include id="ticket-list" styleClass="asf-container project-ticket-list" async="true"
-                      src="/tickets/list/#{project.id}"/>
     </div>
 </ui:composition>

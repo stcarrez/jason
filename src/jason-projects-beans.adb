@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-beans -- Beans for module projects
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2017, 2018 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +23,9 @@ with ADO.Sessions.Entities;
 with ADO.Queries;
 with ADO.Utils;
 with ADO.Datasets;
-with ADO.Parameters;
 package body Jason.Projects.Beans is
+
+   package ASC renames AWA.Services.Contexts;
 
    --  ------------------------------
    --  Create project action.
@@ -32,6 +33,7 @@ package body Jason.Projects.Beans is
    overriding
    procedure Create (Bean    : in out Project_Bean;
                      Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Create (Bean);
       Bean.Tags.Update_Tags (Bean.Get_Id);
@@ -42,7 +44,8 @@ package body Jason.Projects.Beans is
    --  ------------------------------
    overriding
    procedure Save (Bean    : in out Project_Bean;
-                     Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+                   Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Save (Bean);
       Bean.Tags.Update_Tags (Bean.Get_Id);
@@ -54,9 +57,7 @@ package body Jason.Projects.Beans is
    overriding
    procedure Load (Bean    : in out Project_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
-
       use type ADO.Identifier;
-
    begin
       if Bean.Id = ADO.NO_IDENTIFIER then
          Outcome := Ada.Strings.Unbounded.To_Unbounded_String ("failed");
@@ -72,16 +73,19 @@ package body Jason.Projects.Beans is
    overriding
    procedure Create_Wiki (Bean    : in out Project_Bean;
                           Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
    begin
       Bean.Module.Create_Wiki (Bean, Bean.Wiki_Space);
    end Create_Wiki;
 
+   --  ------------------------------
    --  Load the project if it is associated with the current wiki space.
+   --  ------------------------------
    overriding
    procedure Load_Wiki (Bean    : in out Project_Bean;
                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
       use type ADO.Identifier;
-      Page : AWA.Wikis.Beans.Wiki_View_Bean_Access
+      Page : constant AWA.Wikis.Beans.Wiki_View_Bean_Access
         := AWA.Wikis.Beans.Get_Wiki_View_Bean ("wikiView");
    begin
       --  Page.Load (Outcome);
@@ -103,11 +107,11 @@ package body Jason.Projects.Beans is
          return Util.Beans.Objects.To_Object (From.Count);
       elsif Name = "tags" then
          return Util.Beans.Objects.To_Object (From.Tags_Bean, Util.Beans.Objects.STATIC);
-      elsif NAme ="has_wiki" then
+      elsif Name = "has_wiki" then
          return Util.Beans.Objects.To_Object (not From.Wiki_Space.Is_Null);
       elsif Name = "wiki" then
          return From.Wiki_Space.Get_Value ("name");
-      elsif NAme ="wiki_id" then
+      elsif Name = "wiki_id" then
          return From.Wiki_Space.Get_Value ("id");
       else
          return Jason.Projects.Models.Project_Bean (From).Get_Value (Name);
@@ -147,7 +151,9 @@ package body Jason.Projects.Beans is
       return Object.all'Access;
    end Create_Project_Bean;
 
+   --  ------------------------------
    --  Get the value identified by the name.
+   --  ------------------------------
    overriding
    function Get_Value (From : in Project_List_Bean;
                        Name : in String) return Util.Beans.Objects.Object is
@@ -173,7 +179,9 @@ package body Jason.Projects.Beans is
       end if;
    end Get_Value;
 
+   --  ------------------------------
    --  Set the value identified by the name.
+   --  ------------------------------
    overriding
    procedure Set_Value (From  : in out Project_List_Bean;
                         Name  : in String;
@@ -184,22 +192,24 @@ package body Jason.Projects.Beans is
       end if;
    end Set_Value;
 
+   --  ------------------------------
    --  Load list of projects.
+   --  ------------------------------
    overriding
    procedure Load (Bean    : in out Project_List_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
       use type ADO.Identifier;
       use Ada.Strings.Unbounded;
       use Jason.Projects.Models;
 
-      Ctx         : constant AWA.Services.Contexts.Service_Context_Access := AWA.Services.Contexts.Current;
+      Ctx         : constant ASC.Service_Context_Access := ASC.Current;
       User        : constant ADO.Identifier := Ctx.Get_User_Identifier;
       Session     : ADO.Sessions.Session := Bean.Module.Get_Session;
       Query       : ADO.Queries.Context;
       Count_Query : ADO.Queries.Context;
       Tag_Id      : ADO.Identifier;
       First       : constant Natural  := (Bean.Page - 1) * Bean.Page_Size;
-      Filter      : Ada.Strings.Unbounded.Unbounded_String;
    begin
       AWA.Tags.Modules.Find_Tag_Id (Session, Ada.Strings.Unbounded.To_String (Bean.Tag), Tag_Id);
       if Tag_Id /= ADO.NO_IDENTIFIER then
@@ -238,7 +248,9 @@ package body Jason.Projects.Beans is
       end;
    end Load;
 
+   --  ------------------------------
    --  Create the Project_List_Bean bean instance.
+   --  ------------------------------
    function Create_Project_List_Bean (Module : in Jason.Projects.Modules.Project_Module_Access)
                                      return Util.Beans.Basic.Readonly_Bean_Access is
       Object  : constant Project_List_Bean_Access := new Project_List_Bean;

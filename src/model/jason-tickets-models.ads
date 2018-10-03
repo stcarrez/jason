@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-spec.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2017 Stephane.Carrez
+--  Copyright (C) 2018 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -378,6 +378,12 @@ package Jason.Tickets.Models is
 
       --  the ticket type.
       Ticket_Type : Jason.Tickets.Models.Ticket_Type;
+
+      --  the ticket duration.
+      Duration : Integer;
+
+      --  the ticket progress.
+      Progress : Integer;
 
       --  the ticket creator's name.
       Creator : Ada.Strings.Unbounded.Unbounded_String;
@@ -826,7 +832,7 @@ private
 
    package File_2 is
       new ADO.Queries.Loaders.File (Path => "tickets-list.xml",
-                                    Sha1 => "A1EEE117F89DC5A760029875E84F3D601756AD80");
+                                    Sha1 => "CAACFA6C1DA5F383FEE688DE4001B6EBE3C658D0");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",

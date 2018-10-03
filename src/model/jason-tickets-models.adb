@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-body.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2017 Stephane.Carrez
+--  Copyright (C) 2018 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -1167,6 +1167,10 @@ package body Jason.Tickets.Models is
          return Jason.Tickets.Models.Status_Type_Objects.To_Object (From.Status);
       elsif Name = "ticket_type" then
          return Jason.Tickets.Models.Ticket_Type_Objects.To_Object (From.Ticket_Type);
+      elsif Name = "duration" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Duration));
+      elsif Name = "progress" then
+         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Progress));
       elsif Name = "creator" then
          return Util.Beans.Objects.To_Object (From.Creator);
       end if;
@@ -1198,6 +1202,10 @@ package body Jason.Tickets.Models is
          Item.Status := Jason.Tickets.Models.Status_Type_Objects.To_Value (Value);
       elsif Name = "ticket_type" then
          Item.Ticket_Type := Jason.Tickets.Models.Ticket_Type_Objects.To_Value (Value);
+      elsif Name = "duration" then
+         Item.Duration := Util.Beans.Objects.To_Integer (Value);
+      elsif Name = "progress" then
+         Item.Progress := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "creator" then
          Item.Creator := Util.Beans.Objects.To_Unbounded_String (Value);
       end if;
@@ -1224,7 +1232,7 @@ package body Jason.Tickets.Models is
 
       Stmt : ADO.Statements.Query_Statement
           := Session.Create_Statement (Context);
-      Pos  : Natural := 0;
+      Pos  : Positive := 1;
       procedure Read (Into : in out List_Info) is
       begin
          Into.Id := Stmt.Get_Identifier (0);
@@ -1235,7 +1243,9 @@ package body Jason.Tickets.Models is
          Into.Update_Date := Stmt.Get_Time (5);
          Into.Status := Jason.Tickets.Models.Status_Type'Val (Stmt.Get_Integer (6));
          Into.Ticket_Type := Jason.Tickets.Models.Ticket_Type'Val (Stmt.Get_Integer (7));
-         Into.Creator := Stmt.Get_Unbounded_String (8);
+         Into.Duration := Stmt.Get_Integer (8);
+         Into.Progress := Stmt.Get_Integer (9);
+         Into.Creator := Stmt.Get_Unbounded_String (10);
       end Read;
    begin
       Stmt.Execute;
