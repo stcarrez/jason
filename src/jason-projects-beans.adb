@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-beans -- Beans for module projects
---  Copyright (C) 2016, 2017, 2018 Stephane.Carrez
+--  Copyright (C) 2016, 2017, 2018, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -84,7 +84,6 @@ package body Jason.Projects.Beans is
    overriding
    procedure Load_Wiki (Bean    : in out Project_Bean;
                         Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
-      use type ADO.Identifier;
       Page : constant AWA.Wikis.Beans.Wiki_View_Bean_Access
         := AWA.Wikis.Beans.Get_Wiki_View_Bean ("wikiView");
    begin
@@ -200,7 +199,6 @@ package body Jason.Projects.Beans is
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
       pragma Unreferenced (Outcome);
       use type ADO.Identifier;
-      use Ada.Strings.Unbounded;
       use Jason.Projects.Models;
 
       Ctx         : constant ASC.Service_Context_Access := ASC.Current;

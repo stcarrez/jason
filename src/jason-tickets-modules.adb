@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-tickets-modules -- Module tickets
---  Copyright (C) 2016, 2017 Stephane.Carrez
+--  Copyright (C) 2016, 2017, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,6 @@ with Ada.Calendar;
 with AWA.Modules.Beans;
 with AWA.Modules.Get;
 with AWA.Permissions;
-with AWA.Users.Models;
 with AWA.Comments.Models;
 with Util.Log.Loggers;
 with Jason.Tickets.Beans;

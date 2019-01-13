@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-tickets-beans -- Beans for module tickets
---  Copyright (C) 2016, 2017 Stephane.Carrez
+--  Copyright (C) 2016, 2017, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -277,6 +277,8 @@ package body Jason.Tickets.Beans is
    overriding
    procedure Load (Bean    : in out Ticket_List_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
+      pragma Unreferenced (Outcome);
+
       use type ADO.Identifier;
       use Ada.Strings.Unbounded;
       use Jason.Tickets.Models;
@@ -499,8 +501,6 @@ package body Jason.Tickets.Beans is
    procedure Load (Bean    : in out Ticket_Report_Bean;
                    Outcome : in out Ada.Strings.Unbounded.Unbounded_String) is
       pragma Unreferenced (Outcome);
-      use AWA.Services;
-      use type ADO.Identifier;
 
       Session    : constant ADO.Sessions.Session := Bean.Module.Get_Session;
       Query      : ADO.Queries.Context;
