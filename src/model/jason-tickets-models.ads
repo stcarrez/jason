@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-spec.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2018 Stephane.Carrez
+--  Copyright (C) 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -47,15 +47,30 @@ package Jason.Tickets.Models is
    package Actor_Type_Objects is
       new Util.Beans.Objects.Enums (Actor_Type);
 
+   type Nullable_Actor_Type is record
+      Is_Null : Boolean := True;
+      Value   : Actor_Type;
+   end record;
+
    type Status_Type is (OPEN, ASSIGNED, ACCEPTED, ON_HOLD, REOPEN, REJECTED, CLOSED);
    for Status_Type use (OPEN => 0, ASSIGNED => 1, ACCEPTED => 2, ON_HOLD => 3, REOPEN => 4, REJECTED => 5, CLOSED => 6);
    package Status_Type_Objects is
       new Util.Beans.Objects.Enums (Status_Type);
 
+   type Nullable_Status_Type is record
+      Is_Null : Boolean := True;
+      Value   : Status_Type;
+   end record;
+
    type Ticket_Type is (INCIDENT, ISSUE, WORK, ENHANCEMENT, LIMITATION, CHANGE_REQUEST);
    for Ticket_Type use (INCIDENT => 0, ISSUE => 1, WORK => 2, ENHANCEMENT => 3, LIMITATION => 4, CHANGE_REQUEST => 5);
    package Ticket_Type_Objects is
       new Util.Beans.Objects.Enums (Ticket_Type);
+
+   type Nullable_Ticket_Type is record
+      Is_Null : Boolean := True;
+      Value   : Ticket_Type;
+   end record;
 
    type Ticket_Ref is new ADO.Objects.Object_Ref with null record;
 
@@ -679,8 +694,8 @@ private
    COL_13_1_NAME : aliased constant String := "creator_id";
 
    TICKET_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 14,
-      Table => TICKET_NAME'Access,
+     (Count   => 14,
+      Table   => TICKET_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
          2 => COL_1_1_NAME'Access,
@@ -695,11 +710,11 @@ private
          11 => COL_10_1_NAME'Access,
          12 => COL_11_1_NAME'Access,
          13 => COL_12_1_NAME'Access,
-         14 => COL_13_1_NAME'Access
-)
+         14 => COL_13_1_NAME'Access)
      );
    TICKET_TABLE : constant ADO.Schemas.Class_Mapping_Access
       := TICKET_DEF'Access;
+
 
    Null_Ticket : constant Ticket_Ref
       := Ticket_Ref'(ADO.Objects.Object_Ref with null record);
@@ -762,18 +777,18 @@ private
    COL_4_2_NAME : aliased constant String := "ticket_id";
 
    ATTRIBUTE_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 5,
-      Table => ATTRIBUTE_NAME'Access,
+     (Count   => 5,
+      Table   => ATTRIBUTE_NAME'Access,
       Members => (
          1 => COL_0_2_NAME'Access,
          2 => COL_1_2_NAME'Access,
          3 => COL_2_2_NAME'Access,
          4 => COL_3_2_NAME'Access,
-         5 => COL_4_2_NAME'Access
-)
+         5 => COL_4_2_NAME'Access)
      );
    ATTRIBUTE_TABLE : constant ADO.Schemas.Class_Mapping_Access
       := ATTRIBUTE_DEF'Access;
+
 
    Null_Attribute : constant Attribute_Ref
       := Attribute_Ref'(ADO.Objects.Object_Ref with null record);

@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-spec.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2018 Stephane.Carrez
+--  Copyright (C) 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,11 @@ package Jason.Projects.Models is
    for Status_Type use (OPEN => 0, CLOSED => 1, ON_HOLD => 2);
    package Status_Type_Objects is
       new Util.Beans.Objects.Enums (Status_Type);
+
+   type Nullable_Status_Type is record
+      Is_Null : Boolean := True;
+      Value   : Status_Type;
+   end record;
 
    type Project_Ref is new ADO.Objects.Object_Ref with null record;
 
@@ -465,8 +470,8 @@ private
    COL_9_1_NAME : aliased constant String := "owner_id";
 
    PROJECT_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 10,
-      Table => PROJECT_NAME'Access,
+     (Count   => 10,
+      Table   => PROJECT_NAME'Access,
       Members => (
          1 => COL_0_1_NAME'Access,
          2 => COL_1_1_NAME'Access,
@@ -477,11 +482,11 @@ private
          7 => COL_6_1_NAME'Access,
          8 => COL_7_1_NAME'Access,
          9 => COL_8_1_NAME'Access,
-         10 => COL_9_1_NAME'Access
-)
+         10 => COL_9_1_NAME'Access)
      );
    PROJECT_TABLE : constant ADO.Schemas.Class_Mapping_Access
       := PROJECT_DEF'Access;
+
 
    Null_Project : constant Project_Ref
       := Project_Ref'(ADO.Objects.Object_Ref with null record);
@@ -540,18 +545,18 @@ private
    COL_4_2_NAME : aliased constant String := "project_id";
 
    ATTRIBUTE_DEFINITION_DEF : aliased constant ADO.Schemas.Class_Mapping :=
-     (Count => 5,
-      Table => ATTRIBUTE_DEFINITION_NAME'Access,
+     (Count   => 5,
+      Table   => ATTRIBUTE_DEFINITION_NAME'Access,
       Members => (
          1 => COL_0_2_NAME'Access,
          2 => COL_1_2_NAME'Access,
          3 => COL_2_2_NAME'Access,
          4 => COL_3_2_NAME'Access,
-         5 => COL_4_2_NAME'Access
-)
+         5 => COL_4_2_NAME'Access)
      );
    ATTRIBUTE_DEFINITION_TABLE : constant ADO.Schemas.Class_Mapping_Access
       := ATTRIBUTE_DEFINITION_DEF'Access;
+
 
    Null_Attribute_Definition : constant Attribute_Definition_Ref
       := Attribute_Definition_Ref'(ADO.Objects.Object_Ref with null record);

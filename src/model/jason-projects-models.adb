@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-body.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2018 Stephane.Carrez
+--  Copyright (C) 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,6 @@ package body Jason.Projects.Models is
 
    use type ADO.Objects.Object_Record_Access;
    use type ADO.Objects.Object_Ref;
-   use type ADO.Objects.Object_Record;
 
    pragma Warnings (Off, "formal parameter * is not referenced");
 
