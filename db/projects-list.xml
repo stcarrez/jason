@@ -20,7 +20,7 @@
         <property type='Natural' name="total_duration">
             <comment>the total duration for tickets.</comment>
         </property>
-        <property type='Natural' name="total_done">
+        <property type='float' name="total_done" not-null="true">
             <comment>the total progress time.</comment>
         </property>
         <property type='Natural' name="close_count">
