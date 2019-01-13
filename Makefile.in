@@ -22,7 +22,7 @@ post-generate:
 	done
 
 build-tests: build
-	$(GNATMAKE) -p $(MAKE_ARGS) -Ptests
+	$(GNATMAKE) -p $(MAKE_ARGS) -Pjason_tests
 
 runtest:
 	bin/jason_harness -config jason.properties
