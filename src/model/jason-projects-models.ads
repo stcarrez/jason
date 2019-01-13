@@ -338,7 +338,7 @@ package Jason.Projects.Models is
       Total_Duration : Natural;
 
       --  the total progress time.
-      Total_Done : Natural;
+      Total_Done : Float;
 
       --  the number of tickets closed.
       Close_Count : Natural;
@@ -605,7 +605,7 @@ private
 
    package File_1 is
       new ADO.Queries.Loaders.File (Path => "projects-list.xml",
-                                    Sha1 => "CE91D882D33B3398C8198F00CE105E2FBDE8872F");
+                                    Sha1 => "E126AC9B625FA8FD3B0E06D629189B96BB880B5C");
 
    package Def_Listinfo_List is
       new ADO.Queries.Loaders.Query (Name => "list",

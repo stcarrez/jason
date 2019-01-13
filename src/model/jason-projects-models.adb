@@ -1056,7 +1056,7 @@ package body Jason.Projects.Models is
       elsif Name = "total_duration" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Total_Duration));
       elsif Name = "total_done" then
-         return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Total_Done));
+         return Util.Beans.Objects.To_Object (From.Total_Done);
       elsif Name = "close_count" then
          return Util.Beans.Objects.To_Object (Long_Long_Integer (From.Close_Count));
       elsif Name = "open_count" then
@@ -1085,7 +1085,7 @@ package body Jason.Projects.Models is
       elsif Name = "total_duration" then
          Item.Total_Duration := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "total_done" then
-         Item.Total_Done := Util.Beans.Objects.To_Integer (Value);
+         Item.Total_Done := Util.Beans.Objects.To_Float (Value);
       elsif Name = "close_count" then
          Item.Close_Count := Util.Beans.Objects.To_Integer (Value);
       elsif Name = "open_count" then
@@ -1122,7 +1122,7 @@ package body Jason.Projects.Models is
          Into.Status := Jason.Projects.Models.Status_Type'Val (Stmt.Get_Integer (2));
          Into.Create_Date := Stmt.Get_Time (3);
          Into.Total_Duration := Stmt.Get_Natural (4);
-         Into.Total_Done := Stmt.Get_Natural (5);
+         Into.Total_Done := Stmt.Get_Float (5);
          Into.Close_Count := Stmt.Get_Natural (6);
          Into.Open_Count := Stmt.Get_Natural (7);
       end Read;
