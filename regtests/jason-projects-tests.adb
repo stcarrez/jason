@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-tests -- Tests for projects
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 --  limitations under the License.
 -----------------------------------------------------------------------
 with Ada.Strings.Unbounded;
-with Util.Tests;
 with Util.Test_Caller;
 with AWA.Tests.Helpers.Users;
 with Security.Contexts;

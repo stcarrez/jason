@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  Jason-test -- Unit tests
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
 -----------------------------------------------------------------------
 
 with Util.Tests;
-with AWA.Tests;
 with Jason.Testsuite;
 
 procedure Jason_Harness is
