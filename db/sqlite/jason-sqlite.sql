@@ -13,8 +13,7 @@ CREATE TABLE jason_attribute_definition (
   `project_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
-/* The project describes the base information for the project management.
- */
+/* The project describes the base information for the project management. */
 CREATE TABLE jason_project (
   /* the project identifier */
   `id` BIGINT NOT NULL,
