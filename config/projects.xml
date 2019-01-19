@@ -131,9 +131,16 @@
     <view-id>/projects/tags.html</view-id>
   </url-mapping>
 
-  <auth-permission>
+  <entity-permission>
     <name>project-create</name>
-  </auth-permission>
+    <entity-type>workspace</entity-type>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND acl.permission = $permission[project-create]
+    </sql>
+  </entity-permission>
 
   <entity-permission>
     <name>project-update</name>
