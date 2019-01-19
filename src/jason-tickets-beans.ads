@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-tickets-beans -- Beans for module tickets
---  Copyright (C) 2016, 2017 Stephane.Carrez
+--  Copyright (C) 2016, 2017, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -149,6 +149,8 @@ package Jason.Tickets.Beans is
       Medium_Bean : Util.Beans.Objects.Object;
       Closed_Bean : Util.Beans.Objects.Object;
    end record;
+
+   procedure Initialize (Object : in out Ticket_Raw_Stat_Bean);
 
    --  Get the value identified by the name.
    overriding
