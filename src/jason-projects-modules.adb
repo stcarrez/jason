@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-modules -- Module projects
---  Copyright (C) 2016, 2017 Stephane.Carrez
+--  Copyright (C) 2016, 2017, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -84,6 +84,7 @@ package body Jason.Projects.Modules is
       pragma Unreferenced (Model);
 
       use Jason.Tickets.Modules;
+      use AWA.Wikis.Modules;
 
       Ctx   : constant ASC.Service_Context_Access := ASC.Current;
       User  : constant ADO.Identifier := Ctx.Get_User_Identifier;
@@ -92,6 +93,11 @@ package body Jason.Projects.Modules is
    begin
       Ctx.Start;
       AWA.Workspaces.Modules.Get_Workspace (DB, Ctx, WS);
+
+      --  Check that the user has the create permission on the workspace.
+      AWA.Permissions.Check (Permission => ACL_Create_Projects.Permission,
+                             Entity     => WS);
+
       Entity.Set_Create_Date (Ada.Calendar.Clock);
       Entity.Set_Owner (Ctx.Get_User);
       Entity.Save (DB);
@@ -105,7 +111,8 @@ package body Jason.Projects.Modules is
                                                       ACL_Delete_Projects.Permission,
                                                       ACL_Create_Tickets.Permission,
                                                       ACL_Delete_Tickets.Permission,
-                                                      ACL_Update_Tickets.Permission));
+                                                      ACL_Update_Tickets.Permission,
+                                                      ACL_Create_Wiki_Space.Permission));
       Ctx.Commit;
       Log.Info ("Project {0} created for user {1}",
                 ADO.Identifier'Image (Entity.Get_Id), ADO.Identifier'Image (User));
