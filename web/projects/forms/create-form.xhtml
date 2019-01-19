@@ -11,8 +11,9 @@
             <div class='awa-messages'>
                 <h:message styleClass='awa-error'/>
             </div>
-            <w:inputText styleClass="awa-required"
+            <w:inputText styleClass="awa-required ui-corner-all"
                          id='title' size='50' required='true' value='#{project.name}'
+                         placeholder="#{projectMsg.projects_edit_title_placeholder}"
                          title='#{projectMsg.projects_edit_title_label}'/>
             <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
                 <dt>
@@ -27,8 +28,9 @@
                 <dt>
                     <label for='text'>#{projectMsg.project_description_label}</label>
                 </dt>
-                <dd>
+                <dd class="wiki-text">
                     <h:inputTextarea id='description' rows='20' required='true'
+                                     styleClass="ui-corner-all"
                                      value='#{project.description}'/>
                 </dd>
             </dl>
@@ -41,5 +43,8 @@
             </ul>
         </div>
     </h:form>
-
+    <util:script>
+        $('#description').trumbowyg({ btns: ['formatting', '|', 'link', '|', 'image',
+          'btnGrp-justify', '|', 'btnGrp-semantic', '|', 'btnGrp-lists']});
+    </util:script>
 </div>

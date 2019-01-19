@@ -1,17 +1,18 @@
-<div class='awa-post ui-widget ui-widget-content ui-corner-all awa-form'
+<div class='awa-form'
      xmlns:f="http://java.sun.com/jsf/core"
      xmlns:awa="http://code.google.com/p/ada-awa/jsf"
      xmlns:w="http://code.google.com/p/ada-asf/widget"
      xmlns:util="http://code.google.com/p/ada-asf/util"
      xmlns:h="http://java.sun.com/jsf/html">
 
-    <h2>Create a new ticket</h2>
     <h:form id='create-form'>
         <h:inputHidden id='entity-id' value='#{ticket.id}' required='false'/>
         <h:inputHidden id='project-id' value='#{ticket.project_id}' required='true'/>
         <div class='container_12'>
+            <h2>#{ticketMsg.ticket_creation_title}</h2>
             <w:inputText styleClass="awa-required ui-corner-all"
                          id='summary' size='50' required='true' value='#{ticket.summary}'
+                         placeholder="#{ticketMsg.ticket_summary_placeholder}"
                          title='#{ticketMsg.ticket_summary_label}'/>
             <dl class="awa-required#{util:hasMessage('ptags') ? ' awa-error' : ''}">
                 <dt>
@@ -41,6 +42,7 @@
                 </dt>
                 <dd class="wiki-text">
                     <h:inputTextarea id='description' rows='20' required='true'
+                                     placeholder="#{ticketMsg.ticket_description_placeholder}"
                                      value='#{ticket.description}'/>
                 </dd>
             </dl>
