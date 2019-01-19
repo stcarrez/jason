@@ -410,6 +410,18 @@ package body Jason.Tickets.Beans is
       return Object.all'Access;
    end Create_Ticket_List_Bean;
 
+   procedure Initialize (Object : in out Ticket_Raw_Stat_Bean) is
+   begin
+      Object.Low_Bean := Util.Beans.Objects.To_Object (Object.Low'Access,
+                                                       Util.Beans.Objects.STATIC);
+      Object.High_Bean := Util.Beans.Objects.To_Object (Object.High'Access,
+                                                        Util.Beans.Objects.STATIC);
+      Object.Medium_Bean := Util.Beans.Objects.To_Object (Object.Medium'Access,
+                                                          Util.Beans.Objects.STATIC);
+      Object.Closed_Bean := Util.Beans.Objects.To_Object (Object.Closed'Access,
+                                                          Util.Beans.Objects.STATIC);
+   end Initialize;
+
    --  Get the value identified by the name.
    overriding
    function Get_Value (From : in Ticket_Raw_Stat_Bean;
@@ -619,14 +631,8 @@ package body Jason.Tickets.Beans is
       Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
       Object.Row := Util.Beans.Objects.To_Object (Object.Element'Unchecked_Access,
                                                   Util.Beans.Objects.STATIC);
-      Object.Element.Low_Bean := Util.Beans.Objects.To_Object (Object.Element.Low'Access,
-                                                               Util.Beans.Objects.STATIC);
-      Object.Element.High_Bean := Util.Beans.Objects.To_Object (Object.Element.High'Access,
-                                                                Util.Beans.Objects.STATIC);
-      Object.Element.Medium_Bean := Util.Beans.Objects.To_Object (Object.Element.Medium'Access,
-                                                                  Util.Beans.Objects.STATIC);
-      Object.Element.Closed_Bean := Util.Beans.Objects.To_Object (Object.Element.Closed'Access,
-                                                                  Util.Beans.Objects.STATIC);
+      Initialize (Object.Element);
+
       return Object.all'Access;
    end Create_Ticket_Report_Bean;
 
