@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason-projects-modules -- Module projects
---  Copyright (C) 2016 Stephane.Carrez
+--  Copyright (C) 2016, 2019 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,7 @@ with AWA.Wikis.Models;
 with AWA.Wikis.Modules;
 with Jason.Projects.Models;
 with Security.Permissions;
+private with ASF.Converters.Numbers;
 package Jason.Projects.Modules is
 
    --  The name under which the module is registered.
@@ -72,7 +73,9 @@ package Jason.Projects.Modules is
 private
 
    type Project_Module is new AWA.Modules.Module with record
-      Wiki : AWA.Wikis.Modules.Wiki_Module_Access;
+      Wiki              : AWA.Wikis.Modules.Wiki_Module_Access;
+      Percent_Converter : aliased ASF.Converters.Numbers.Number_Converter;
+      Hour_Converter    : aliased ASF.Converters.Numbers.Number_Converter;
    end record;
 
 end Jason.Projects.Modules;
