@@ -1,5 +1,5 @@
 <!-- List of projects
-  -  Copyright (C) 2016, 2017, 2018 Stephane Carrez
+  -  Copyright (C) 2016, 2017, 2018, 2019 Stephane Carrez
   -  Written by Stephane Carrez (Stephane.Carrez@gmail.com)
   -
   -  Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,10 +44,14 @@
                  </div>
              </div>
             <div class='awa-list-col project-list-remain'>
-                <h:outputText value="#{prj.total_duration - prj.total_done}"/>
+                <h:outputText rendered="#{prj.total_duration ne prj.total_done}" value="#{prj.total_duration - prj.total_done}">
+                    <f:converter converterId="durationConverter"/>
+                </h:outputText>
             </div>
             <div class='awa-list-col project-list-done'>
-                <h:outputText rendered="#{prj.total_done ne 0}" value="#{prj.total_done}"/>
+                <h:outputText rendered="#{prj.total_done ne 0}" value="#{prj.total_done}">
+                    <f:converter converterId="durationConverter"/>
+                </h:outputText>
             </div>
         </div>
     </h:list>
@@ -71,13 +75,13 @@
         </li>
     </ul>
     <div class="grid_4">
-                        <div id='graph-total'/>
-                        <div id="graph-total-legend"/>
-                    </div>
-                    <div class="grid_8">
-                        <div id="graph-legend"/>
-                        <div id='graph-month'/>
-                    </div>
+        <div id='graph-total'/>
+        <div id="graph-total-legend"/>
+    </div>
+    <div class="grid_8">
+        <div id="graph-legend"/>
+        <div id='graph-month'/>
+    </div>
     <util:script>
     $(function() {
         var series = [];
