@@ -57,7 +57,12 @@
     display: inline-block;
     width: 8%;
     height: 20px;
+    text-align: right;
 }
+.project-list-status {
+    text-align: left;
+}
+
 .project-list-create-date {
     width: 15%;
 }
