@@ -422,7 +422,9 @@ package body Jason.Tickets.Beans is
                                                           Util.Beans.Objects.STATIC);
    end Initialize;
 
+   --  ------------------------------
    --  Get the value identified by the name.
+   --  ------------------------------
    overriding
    function Get_Value (From : in Ticket_Raw_Stat_Bean;
                        Name : in String) return Util.Beans.Objects.Object is
@@ -451,6 +453,8 @@ package body Jason.Tickets.Beans is
    begin
       if name = "count" then
          return Util.Beans.Objects.To_Object (Natural (From.Report.Length));
+      elsif name = "total" then
+         return From.Total_Bean;
       end if;
       return Util.Beans.Objects.Null_Object;
    end Get_Value;
@@ -599,11 +603,45 @@ package body Jason.Tickets.Beans is
          end loop;
       end;
       declare
+         procedure Add (Into : in out Ticket_Raw_Stat_Bean;
+                        Value : in Ticket_Stat_Bean);
+
+         procedure Add (Into : in out Ticket_Raw_Stat_Bean;
+                        Value : in Ticket_Stat_Bean) is
+         begin
+            Into.Count := Into.Count + Value.Count;
+            Into.Done := Into.Done + Value.Done;
+            Into.High.Count := Into.High.Count + Value.High.Count;
+            Into.High.Time := Into.High.Time + Value.High.Time;
+            Into.High.Remain := Into.High.Remain + Value.High.Remain;
+            Into.High.Done := Into.High.Done + Value.High.Done;
+            Into.Medium.Count := Into.Medium.Count + Value.Medium.Count;
+            Into.Medium.Time := Into.Medium.Time + Value.Medium.Time;
+            Into.Medium.Remain := Into.Medium.Remain + Value.Medium.Remain;
+            Into.Medium.Done := Into.Medium.Done + Value.Medium.Done;
+            Into.Low.Count := Into.Low.Count + Value.Low.Count;
+            Into.Low.Time := Into.Low.Time + Value.Low.Time;
+            Into.Low.Remain := Into.Low.Remain + Value.Low.Remain;
+            Into.Low.Done := Into.Low.Done + Value.Low.Done;
+            Into.Closed.Count := Into.Closed.Count + Value.Closed.Count;
+            Into.Closed.Time := Into.Closed.Time + Value.Closed.Time;
+            Into.Closed.Remain := Into.Closed.Remain + Value.Closed.Remain;
+            Into.Closed.Done := Into.Closed.Done + Value.Closed.Done;
+            Into.Remain := Into.Remain + Value.Remain;
+         end Add;
+
          Iter   : Ticket_Stat_Map.Cursor := Bean.List.First;
          Info   : Ticket_Stat_Bean;
          Done   : Integer;
          Remain : Integer;
       begin
+         Bean.Total.Count := 0;
+         Bean.Total.Remain := 0;
+         Bean.Total.Time := 0;
+         Bean.Total.High := Empty;
+         Bean.Total.Medium := Empty;
+         Bean.Total.Low := Empty;
+         Bean.Total.Closed := Empty;
          while Ticket_Stat_Map.Has_Element (Iter) loop
             Info := Ticket_Stat_Map.Element (Iter);
             Done := Info.Low.Done + Info.Medium.Done + Info.High.Done + Info.Closed.Done;
@@ -613,9 +651,17 @@ package body Jason.Tickets.Beans is
             else
                Info.Progress := (Done * 100) / (Done + Remain);
             end if;
+            Add (Bean.Total, Info);
             Bean.Report.Append (Info);
             Ticket_Stat_Map.Next (Iter);
          end loop;
+         Done := Bean.Total.Low.Done + Bean.Total.Medium.Done + Bean.Total.High.Done + Bean.Total.Closed.Done;
+         Remain := Bean.Total.Low.Remain + Bean.Total.Medium.Remain + Bean.Total.High.Remain + Bean.Total.Closed.Remain;
+         if Done + Remain = 0 then
+            Bean.Total.Progress := 100;
+         else
+            Bean.Total.Progress := (Done * 100) / (Done + Remain);
+         end if;
          --  Sort_Tasks.Sort (Into.Tasks);
       end;
    end Load;
@@ -629,10 +675,12 @@ package body Jason.Tickets.Beans is
    begin
       Object.Module     := Module;
       Object.Project := Jason.Projects.Beans.Get_Project_Bean ("project");
-      Object.Row := Util.Beans.Objects.To_Object (Object.Element'Unchecked_Access,
+      Object.Row := Util.Beans.Objects.To_Object (Object.Element'Access,
                                                   Util.Beans.Objects.STATIC);
+      Object.Total_Bean := Util.Beans.Objects.To_Object (Object.Total'Access,
+                                                         Util.Beans.Objects.STATIC);
       Initialize (Object.Element);
-
+      Initialize (Object.Total);
       return Object.all'Access;
    end Create_Ticket_Report_Bean;
 
