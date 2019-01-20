@@ -133,7 +133,7 @@
 
   <entity-permission>
     <name>project-create</name>
-    <entity-type>workspace</entity-type>
+    <entity-type>awa_workspace</entity-type>
     <sql>
        SELECT acl.id FROM awa_acl AS acl
        WHERE acl.entity_type = :entity_type
