@@ -165,6 +165,8 @@ package Jason.Tickets.Beans is
       Current     : Ticket_Stat_Vectors.Cursor;
       Current_Pos : Natural := 0;
       Element     : aliased Ticket_Raw_Stat_Bean;
+      Total       : aliased Ticket_Raw_Stat_Bean;
+      Total_Bean  : Util.Beans.Objects.Object;
       List        : Ticket_Stat_Map.Map;
       Report      : Ticket_Stat_Vectors.Vector;
    end record;
