@@ -48,6 +48,12 @@ package body Jason.Projects.Modules is
 
       --  Setup the resource bundles.
       App.Register ("projectMsg", "projects");
+      Plugin.Percent_Converter.Set_Picture ("ZZ9.9");
+      App.Add_Converter (Name      => "percentConverter",
+                         Converter => Plugin.Percent_Converter'Unchecked_Access);
+      Plugin.Hour_Converter.Set_Picture ("ZZ9");
+      App.Add_Converter (Name      => "durationConverter",
+                         Converter => Plugin.Hour_Converter'Unchecked_Access);
 
       --  Register here any bean class, servlet, filter.
       Register.Register (Plugin => Plugin,
