@@ -143,12 +143,25 @@
   </entity-permission>
 
   <entity-permission>
+    <name>project-view</name>
+    <entity-type>jason_project</entity-type>
+    <sql>
+       SELECT acl.id FROM awa_acl AS acl
+       WHERE acl.entity_type = :entity_type
+       AND acl.user_id = :user_id
+       AND acl.entity_id = :entity_id
+       AND acl.permission = $permission[project-view]
+    </sql>
+  </entity-permission>
+
+  <entity-permission>
     <name>project-update</name>
     <entity-type>jason_project</entity-type>
     <sql>
        SELECT acl.id FROM awa_acl AS acl
        WHERE acl.entity_type = :entity_type
        AND acl.user_id = :user_id
+       AND acl.entity_id = :entity_id
        AND acl.permission = $permission[project-update]
     </sql>
   </entity-permission>
@@ -160,6 +173,7 @@
        SELECT acl.id FROM awa_acl AS acl
        WHERE acl.entity_type = :entity_type
        AND acl.user_id = :user_id
+       AND acl.entity_id = :entity_id
        AND acl.permission = $permission[project-delete]
     </sql>
   </entity-permission>
