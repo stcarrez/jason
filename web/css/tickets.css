@@ -79,6 +79,9 @@
     width: 98%;
     padding: 1%;
 }
+#ticket-info, #ticket-progress-info {
+    cursor: pointer;
+}
 .ticket-info dt, .ticket-progress-info dt {
     float: left;
     clear: both;
