@@ -29,6 +29,7 @@ package Jason.Projects.Modules is
    --  The name under which the module is registered.
    NAME : constant String := "projects";
 
+   package ACL_View_Projects is new Security.Permissions.Definition ("project-view");
    package ACL_Create_Projects is new Security.Permissions.Definition ("project-create");
    package ACL_Delete_Projects is new Security.Permissions.Definition ("project-delete");
    package ACL_Update_Projects is new Security.Permissions.Definition ("project-update");
