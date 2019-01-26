@@ -115,6 +115,7 @@ package body Jason.Projects.Modules is
                                              Workspace => WS.Get_Id,
                                              List => (ACL_Update_Projects.Permission,
                                                       ACL_Delete_Projects.Permission,
+                                                      ACL_View_Projects.Permission,
                                                       ACL_Create_Tickets.Permission,
                                                       ACL_Delete_Tickets.Permission,
                                                       ACL_Update_Tickets.Permission,
@@ -184,11 +185,12 @@ package body Jason.Projects.Modules is
       Found : Boolean;
       Query : ADO.SQL.Query;
    begin
-      --  Check that the user has the view page permission on the given wiki page.
-      --  AWA.Permissions.Check (Permission => ACL_View_Wiki_Page.Permission,
-      --                       Entity     => Id);
 
       if Id /= ADO.NO_IDENTIFIER then
+         --  Check that the user has the view project permission on the given project.
+         AWA.Permissions.Check (Permission => ACL_View_Projects.Permission,
+                                Entity     => Id);
+
          Project.Load (DB, Id, Found);
          if Found and then not Project.Get_Wiki.Is_Null then
             Wiki.Load (DB, Project.Get_Wiki.Get_Id, Found);
@@ -198,6 +200,11 @@ package body Jason.Projects.Modules is
          Query.Bind_Param (1, Wiki_Id);
          Query.Set_Filter ("o.wiki_id = ?");
          Project.Find (DB, Query, Found);
+
+         --  Check that the user has the view project permission on the given project.
+         AWA.Permissions.Check (Permission => ACL_View_Projects.Permission,
+                                Entity     => Project.Get_Id);
+
          if Found then
             Wiki.Load (DB, Wiki_Id);
             Tags.Load_Tags (DB, Project.Get_Id);
