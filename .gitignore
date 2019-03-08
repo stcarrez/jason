@@ -12,7 +12,7 @@ acc.xml
 ChangeLog
 .settings
 configure.lineno
-Makefile
+Makefile.conf
 autom4te.cache
 jason_tests.gpr
 jason-tests.xml
