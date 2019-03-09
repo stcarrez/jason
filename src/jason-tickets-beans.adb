@@ -412,13 +412,13 @@ package body Jason.Tickets.Beans is
 
    procedure Initialize (Object : in out Ticket_Raw_Stat_Bean) is
    begin
-      Object.Low_Bean := Util.Beans.Objects.To_Object (Object.Low'Access,
+      Object.Low_Bean := Util.Beans.Objects.To_Object (Object.Low'Unchecked_Access,
                                                        Util.Beans.Objects.STATIC);
-      Object.High_Bean := Util.Beans.Objects.To_Object (Object.High'Access,
+      Object.High_Bean := Util.Beans.Objects.To_Object (Object.High'Unchecked_Access,
                                                         Util.Beans.Objects.STATIC);
-      Object.Medium_Bean := Util.Beans.Objects.To_Object (Object.Medium'Access,
+      Object.Medium_Bean := Util.Beans.Objects.To_Object (Object.Medium'Unchecked_Access,
                                                           Util.Beans.Objects.STATIC);
-      Object.Closed_Bean := Util.Beans.Objects.To_Object (Object.Closed'Access,
+      Object.Closed_Bean := Util.Beans.Objects.To_Object (Object.Closed'Unchecked_Access,
                                                           Util.Beans.Objects.STATIC);
    end Initialize;
 
