@@ -95,6 +95,7 @@
             total_series.push({label: "#{prj.title}", data: #{prj.total_duration} });
         </h:list>
 
+        var legendContainer = document.getElementById("graph-legend");
         $.plot("#graph-month", series, {
             series: {
                 stack: true,
@@ -105,7 +106,9 @@
                 }
             },
             legend: {
-                show: true, noColumns: 6, container: $("#graph-legend")
+        show: true, noColumns: 4, container: legendContainer,
+        backgroundOpacity: 0.5,
+        backgroundColor: null
             },
             colors: [
                 "#66FF99",
@@ -126,6 +129,7 @@
                 ticks: []
             }
         });
+        legendContainer = document.getElementById("graph-total-legend");
         $.plot("#graph-total", total_series, {
             series: {
                 pie: {
@@ -133,7 +137,7 @@
                 }
             },
             legend: {
-                show: true, container: $("#graph-total-legend")
+                show: true, container: legendContainer
             }
         });
     });

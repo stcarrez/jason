@@ -156,3 +156,6 @@
     float: left;
     width: 35%;
 }
+#graph-legend .background, #graph-total-legend .background {
+    display: none;
+}
