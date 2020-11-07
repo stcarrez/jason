@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-spec.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2019 Stephane.Carrez
+--  Copyright (C) 2020 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -199,7 +199,7 @@ package Jason.Projects.Models is
                    Into   : in out Project_Ref);
 
    package Project_Vectors is
-      new Ada.Containers.Vectors (Index_Type   => Natural,
+      new Ada.Containers.Vectors (Index_Type   => Positive,
                                   Element_Type => Project_Ref,
                                   "="          => "=");
    subtype Project_Vector is Project_Vectors.Vector;
@@ -307,7 +307,7 @@ package Jason.Projects.Models is
                    Into   : in out Attribute_Definition_Ref);
 
    package Attribute_Definition_Vectors is
-      new Ada.Containers.Vectors (Index_Type   => Natural,
+      new Ada.Containers.Vectors (Index_Type   => Positive,
                                   Element_Type => Attribute_Definition_Ref,
                                   "="          => "=");
    subtype Attribute_Definition_Vector is Attribute_Definition_Vectors.Vector;

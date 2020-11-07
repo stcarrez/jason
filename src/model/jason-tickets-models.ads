@@ -5,7 +5,7 @@
 --  Template used: templates/model/package-spec.xhtml
 --  Ada Generator: https://ada-gen.googlecode.com/svn/trunk Revision 1095
 -----------------------------------------------------------------------
---  Copyright (C) 2019 Stephane.Carrez
+--  Copyright (C) 2020 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -248,7 +248,7 @@ package Jason.Tickets.Models is
                    Into   : in out Ticket_Ref);
 
    package Ticket_Vectors is
-      new Ada.Containers.Vectors (Index_Type   => Natural,
+      new Ada.Containers.Vectors (Index_Type   => Positive,
                                   Element_Type => Ticket_Ref,
                                   "="          => "=");
    subtype Ticket_Vector is Ticket_Vectors.Vector;
@@ -352,7 +352,7 @@ package Jason.Tickets.Models is
                    Into   : in out Attribute_Ref);
 
    package Attribute_Vectors is
-      new Ada.Containers.Vectors (Index_Type   => Natural,
+      new Ada.Containers.Vectors (Index_Type   => Positive,
                                   Element_Type => Attribute_Ref,
                                   "="          => "=");
    subtype Attribute_Vector is Attribute_Vectors.Vector;
