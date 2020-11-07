@@ -1,6 +1,6 @@
 /* File generated automatically by dynamo */
 /*  */
-CREATE TABLE jason_attribute_definition (
+CREATE TABLE IF NOT EXISTS jason_attribute_definition (
   /* the attribute identifier. */
   `id` BIGINT NOT NULL,
   /* the optimistic lock version. */
@@ -14,7 +14,7 @@ CREATE TABLE jason_attribute_definition (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /* The project describes the base information for the project management. */
-CREATE TABLE jason_project (
+CREATE TABLE IF NOT EXISTS jason_project (
   /* the project identifier */
   `id` BIGINT NOT NULL,
   /* the optimistic lock version */
@@ -38,7 +38,7 @@ CREATE TABLE jason_project (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*  */
-CREATE TABLE jason_attribute (
+CREATE TABLE IF NOT EXISTS jason_attribute (
   /*  */
   `id` BIGINT NOT NULL,
   /*  */
@@ -52,7 +52,7 @@ CREATE TABLE jason_attribute (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*  */
-CREATE TABLE jason_ticket (
+CREATE TABLE IF NOT EXISTS jason_ticket (
   /* the ticket identifier. */
   `id` BIGINT NOT NULL,
   /* the optimistic lock version. */
@@ -83,9 +83,5 @@ CREATE TABLE jason_ticket (
   `creator_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO entity_type (name) VALUES
-("jason_attribute_definition")
-,("jason_project")
-,("jason_attribute")
-,("jason_ticket")
-;
+INSERT IGNORE INTO entity_type (name) VALUES
+("jason_attribute_definition"), ("jason_project"), ("jason_attribute"), ("jason_ticket");

@@ -54,6 +54,9 @@ DROP TABLE IF EXISTS `awa_application`;
 DROP TABLE IF EXISTS `awa_queue`;
 DROP TABLE IF EXISTS `awa_message_type`;
 DROP TABLE IF EXISTS `awa_message`;
+DROP TABLE IF EXISTS `awa_audit_field`;
+DROP TABLE IF EXISTS `awa_audit`;
 /* Copied from ado-drop-sqlite.sql*/
 /* File generated automatically by dynamo */
 DROP TABLE IF EXISTS `sequence`;
+DROP TABLE IF EXISTS `entity_type`;

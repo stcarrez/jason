@@ -1,6 +1,6 @@
 /* File generated automatically by dynamo */
 /*  */
-CREATE TABLE jason_attribute_definition (
+CREATE TABLE IF NOT EXISTS jason_attribute_definition (
   /* the attribute identifier. */
   `id` BIGINT NOT NULL,
   /* the optimistic lock version. */
@@ -14,7 +14,7 @@ CREATE TABLE jason_attribute_definition (
   PRIMARY KEY (`id`)
 );
 /* The project describes the base information for the project management. */
-CREATE TABLE jason_project (
+CREATE TABLE IF NOT EXISTS jason_project (
   /* the project identifier */
   `id` BIGINT NOT NULL,
   /* the optimistic lock version */
@@ -38,7 +38,7 @@ CREATE TABLE jason_project (
   PRIMARY KEY (`id`)
 );
 /*  */
-CREATE TABLE jason_attribute (
+CREATE TABLE IF NOT EXISTS jason_attribute (
   /*  */
   `id` BIGINT NOT NULL,
   /*  */
@@ -52,7 +52,7 @@ CREATE TABLE jason_attribute (
   PRIMARY KEY (`id`)
 );
 /*  */
-CREATE TABLE jason_ticket (
+CREATE TABLE IF NOT EXISTS jason_ticket (
   /* the ticket identifier. */
   `id` BIGINT NOT NULL,
   /* the optimistic lock version. */
@@ -83,7 +83,7 @@ CREATE TABLE jason_ticket (
   `creator_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 );
-INSERT INTO entity_type (name) VALUES ("jason_attribute_definition");
-INSERT INTO entity_type (name) VALUES ("jason_project");
-INSERT INTO entity_type (name) VALUES ("jason_attribute");
-INSERT INTO entity_type (name) VALUES ("jason_ticket");
+INSERT OR IGNORE INTO entity_type (name) VALUES ("jason_attribute_definition");
+INSERT OR IGNORE INTO entity_type (name) VALUES ("jason_project");
+INSERT OR IGNORE INTO entity_type (name) VALUES ("jason_attribute");
+INSERT OR IGNORE INTO entity_type (name) VALUES ("jason_ticket");
