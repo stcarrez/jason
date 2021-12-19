@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------
 --  jason -- jason applications
---  Copyright (C) 2016, 2018 Stephane.Carrez
+--  Copyright (C) 2016, 2018, 2021 Stephane.Carrez
 --  Written by Stephane.Carrez (Stephane.Carrez@gmail.com)
 --
 --  Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,6 @@ with Util.Log.Loggers;
 with Util.Properties;
 
 with ASF.Applications;
-with ASF.Applications.Main;
 
 with AWA.Applications.Factory;
 
