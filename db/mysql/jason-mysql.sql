@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS jason_ticket (
   /* the last ticket update date. */
   `update_date` DATETIME NOT NULL,
   /* the ticket type. */
-  `ticket_type` TINYINT NOT NULL,
+  `kind` TINYINT NOT NULL,
   /* the duration to resolve the ticket. */
   `duration` INTEGER NOT NULL,
   /* the progress percentation (0 .. 100). */
@@ -83,5 +83,6 @@ CREATE TABLE IF NOT EXISTS jason_ticket (
   `creator_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT IGNORE INTO entity_type (name) VALUES
+INSERT IGNORE INTO ado_entity_type (name) VALUES
 ("jason_attribute_definition"), ("jason_project"), ("jason_attribute"), ("jason_ticket");
+INSERT IGNORE INTO ado_version (name, version) VALUES ("jason", 2);

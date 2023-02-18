@@ -26,7 +26,7 @@
         <property type='Jason.Tickets.Models.Status_Type' name="status">
             <comment>the ticket status.</comment>
         </property>
-        <property type='Jason.Tickets.Models.Ticket_Type' name="ticket_type">
+        <property type='Jason.Tickets.Models.Ticket_Type' name="kind">
             <comment>the ticket type.</comment>
         </property>
         <property type='int' name="duration">
@@ -52,7 +52,7 @@
       ticket.create_date,
       ticket.update_date,
       ticket.status,
-      ticket.ticket_type,
+      ticket.kind,
       ticket.duration,
       ticket.progress,
       user.name

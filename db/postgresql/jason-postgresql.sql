@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS jason_ticket (
   /* the last ticket update date. */
   "update_date" TIMESTAMP NOT NULL,
   /* the ticket type. */
-  "ticket_type" SMALLINT NOT NULL,
+  "kind" SMALLINT NOT NULL,
   /* the duration to resolve the ticket. */
   "duration" INTEGER NOT NULL,
   /* the progress percentation (0 .. 100). */
@@ -83,6 +83,9 @@ CREATE TABLE IF NOT EXISTS jason_ticket (
   "creator_id" BIGINT NOT NULL,
   PRIMARY KEY ("id")
 );
-INSERT INTO entity_type (name) VALUES
+INSERT INTO ado_entity_type (name) VALUES
 ('jason_attribute_definition'), ('jason_project'), ('jason_attribute'), ('jason_ticket')
+  ON CONFLICT DO NOTHING;
+INSERT INTO ado_version (name, version)
+  VALUES ("jason", 2)
   ON CONFLICT DO NOTHING;
