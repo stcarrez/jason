@@ -22,12 +22,12 @@
         xmlns:u="http://code.google.com/p/ada-asf/util"
         xmlns:h="http://java.sun.com/jsf/html">
     <h:list var="ticket" value="#{ticketList.tickets}">
-        <div class='awa-list-item ui-list-item ticket-#{ticket.ticket_type}' id="t_#{ticket.id}">
+        <div class='awa-list-item ui-list-item ticket-#{ticket.kind}' id="t_#{ticket.id}">
             <div class="awa-list-col ticket-list-ident">
                 #{ticket.ident}
             </div>
             <div class='awa-list-col ticket-list-type'>
-                #{u:translate(ticketMsg,'ticket_type_',ticket.ticket_type)}
+                #{u:translate(ticketMsg,'ticket_type_',ticket.kind)}
             </div>
             <div class='awa-list-col ticket-list-priority ticket-prio-#{ticket.priority}' title="#{u:translate(ticketMsg,'ticket_priority_',ticket.priority)}">
                 <span>#{ticket.priority}</span>
