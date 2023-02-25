@@ -14,7 +14,6 @@
         <f:metadata>
             <f:viewAction action='#{ticket.load}'/>
         </f:metadata>
-        <div id='awa-content'>
             <ui:include src="/projects/views/project-header.xhtml"/>
             <ui:include src="/projects/views/project-actions.xhtml">
                 <ui:param name="project_id" value="#{project.id}"/>
@@ -43,7 +42,7 @@
                 <dd>#{ticket.update_date}
                 </dd>
             </dl>
-            <div class="grid_6">
+            <div class="col-sm-6">
                 <div id="ticket-info">
                     <ui:include src="views/ticket-info.xhtml"/>
                     <div class="ui-panel ui-widget ui-corner-all asf-panel-box">
@@ -60,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid_6">
+            <div class="col-sm-6">
                 <div id="ticket-progress-info">
                      <ui:include src="views/ticket-progress-info.xhtml"/>
                      <div class="ui-panel ui-widget ui-corner-all asf-panel-box">
@@ -96,7 +95,6 @@
                     <ui:param name="commentList" value="#{ticketComments}"/>
                 </ui:include>
             </div>
-        </div>
     </ui:define>
     <ui:define name="pageScript">
         <script type="text/javascript" src="#{jquery.chosenPath}"></script>

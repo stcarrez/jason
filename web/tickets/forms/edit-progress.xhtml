@@ -13,13 +13,13 @@
         <h:inputHidden id='entity-id' value='#{ticket.id}' required='false'/>
         <h:inputHidden id='project-id' value='#{ticket.project_id}' required='false'/>
         <h:inputHidden id='progress' value='#{ticket.progress}' required='false'/>
-        <div class='container_12'>
-            <div class="grid_4">
+        <div class='container'>
+            <div class="col-sm-4">
                 <w:inputText styleClass="awa-required"
                              id='duration' size='10' required='true' value='#{ticket.duration}'
                              title='#{ticketMsg.ticket_duration_label}'/>
             </div>
-            <div class="grid_4">
+            <div class="col-sm-4">
                 <dl class="awa-required#{util:hasMessage('status') ? ' awa-error' : ''}">
                     <dt>
                         <label for='status2'>#{ticketMsg.ticket_status_label}</label>
@@ -32,7 +32,7 @@
                     </dd>
                 </dl>
             </div>
-            <div class="grid_4">
+            <div class="col-sm-4">
                 <dl class="awa-required#{util:hasMessage('progress') ? ' awa-error' : ''}">
                     <dt>
                         <label for='progress'>Progress (<span id="prog-value">#{ticket.progress}</span>)</label>
