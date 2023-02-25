@@ -1,1 +1,1 @@
-ALTER TABLE jason_ticket RENAME COLUMN `ticket_type` TO `kind`;
+ALTER TABLE jason_ticket CHANGE COLUMN `ticket_type` `kind` TINYINT NOT NULL;
