@@ -1,4 +1,10 @@
 NAME=jason
+VERSION=1.0.0
+
+DIST_DIR=jason-$(VERSION)
+DIST_FILE=jason-$(VERSION).tar.gz
+
+MAKE_ARGS += -XJASON_BUILD=$(BUILD)
 
 -include Makefile.conf
 
@@ -11,8 +17,8 @@ SHARED_MAKE_ARGS += -XLIBRARY_TYPE=relocatable
 include Makefile.defaults
 
 # Build executables for all mains defined by the project.
-build-test::	setup
-	$(GNATMAKE) $(GPRFLAGS) -p -P$(NAME)_tests $(MAKE_ARGS)
+build-test::
+	cd regtests && $(BUILD_COMMAND) $(GPRFLAGS) $(MAKE_ARGS)
 
 # Build and run the unit tests
 test:	build

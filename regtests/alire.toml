@@ -1,0 +1,34 @@
+description = "Java Project and ticket Management (unit tests)"
+name = "jason_tests"
+version = "1.0.0"
+tags = ["web", "tickets", "projects", "framework", "management"]
+website = "https://gitlab.com/stcarrez/jason"
+
+licenses = "Apache-2.0"
+authors = ["Stephane.Carrez@gmail.com"]
+maintainers = ["Stephane.Carrez@gmail.com"]
+maintainers-logins = ["stcarrez"]
+long-description = """
+
+
+"""
+
+project-files = ["jason_tests.gpr"]
+
+[[depends-on]]
+utilada = "^2.7.0"
+utilada_xml = "^2.7.0"
+utilada_unit = "^2.7.0"
+jason = "*"
+wikiada = "^1.4.1"
+elada = "^1.8.6"
+security = "^1.5.0"
+serverfaces = "^1.6.0"
+servletada = "^1.7.0"
+servletada_aws = "^1.7.0"
+awa_unit = "*"
+ado_sqlite = "*"
+ado_all = "*"
+
+[[pins]]
+jason = { path = '..' }
