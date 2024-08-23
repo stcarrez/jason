@@ -3,19 +3,21 @@ MAKEFILE_DEFAULTS=1
 
 # You may edit this makefile as long as you keep these original 
 # target names defined.
-MODE?=distrib
+BUILD?=distrib
 GNATMAKE?=gprbuild
 GNATCLEAN?=gnatclean
 GPRINSTALL?=gprinstall
 INSTALL?=install
-DYNAMO?=dynamo
+PANDOC?=$(shell which pandoc)
+DYNAMO?=$(shell which dynamo)
 PROCESSORS?=1
 MKDIR?=mkdir
 CP?=cp
 LN?=ln -s
+ALR?=alr --non-interactive
+BUILD_COMMAND?=$(ALR) build --
 
 BUILDS_SHARED?=no
-COVERAGE?=no
 
 ifeq (${OS},Windows_NT)
 LIBEXT?=dll
@@ -38,8 +40,9 @@ libdir?=${prefix}/${infix_lib}
 alidir?=${prefix}/${infix_ali}
 samplesdir?=${prefix}/share/doc/${docdir}
 dynamodir=${prefix}/share/dynamo
+aliredir=${prefix}/alire-index
 
-MAKE_ARGS += -XMODE=$(MODE) -XCOVERAGE=$(COVERAGE) -XPROCESSORS=$(PROCESSORS)
+MAKE_ARGS +=
 
 build:: all
 
@@ -53,6 +56,7 @@ endif
 
 static::
 shared::
+install-data::
 
 # Not intended for manual invocation.
 # Invoked if automatic builds are enabled.
@@ -75,86 +79,104 @@ clean_tree:
 
 # Clean the root project of all build products.
 clean::
-	-rm -rf lib obj bin $(CLEAN_FILES)
+	-rm -rf lib obj bin autom4te.cache $(CLEAN_FILES)
 	-rm -rf regtests/result
 
-doc::
-	$(DYNAMO) build-doc -markdown wiki
+dist-clean:: clean
+	-rm -f *.log *~ config.status Makefile.conf
 
-dist:
+doc::
+ifneq (${DYNAMO},)
+	$(DYNAMO) build-doc -markdown wiki
+endif
+
+dist::
+	rm -f $(DIST_FILE)
 	git archive -o $(DIST_FILE) --prefix=$(DIST_DIR)/ HEAD
 
-install-info:
+install-info::
+ifeq (${VERBOSE},1)
 	@echo "Environment setup:"
 	@echo "  export ADA_PROJECT_PATH=${projectdir}:$$ADA_PROJECT_PATH"
+endif
 
 define ada_library
-  static:: setup
-	$(GNATMAKE) $(GPRFLAGS) -p -P$(2)$(1).gpr $(STATIC_MAKE_ARGS)
+# static:: setup
+#	$(BUILD_COMMAND) $(GPRFLAGS) -p -P$(2)$(1).gpr $(STATIC_MAKE_ARGS)
 
   install-static::
-	$(GPRINSTALL) -p -f --prefix=${prefix} \
+	cd $(2) && $(ALR) exec -- gprinstall -p -f --prefix=$(DESTDIR)${prefix} \
           $(STATIC_MAKE_ARGS) \
-          --build-name=static $(2)$(1).gpr  
+          --build-name=static $(1).gpr  
 
-  setup:: obj/$(1)/static
+  lib-setup:: obj/$(1)/static
 
   obj/$(1)/static:
 	$(MKDIR) -p obj/$(1)/static
 
 ifeq ($(BUILDS_SHARED),yes)
-  shared:: setup
-	$(GNATMAKE) $(GPRFLAGS) -p -P$(2)$(1).gpr $(SHARED_MAKE_ARGS)
+  shared:: lib-setup
+	cd $(2) && $(BUILD_COMMAND) $(GPRFLAGS) $(SHARED_MAKE_ARGS)
 
   install-shared::
-	$(GPRINSTALL) -p -f --prefix=${prefix} \
+	cd $(2) && $(ALR) exec -- gprinstall -p -f --prefix=$(DESTDIR)${prefix} \
           $(SHARED_MAKE_ARGS) \
-          --build-name=relocatable $(2)$(1).gpr
+          --build-name=relocatable $(1).gpr
 endif
 
   uninstall::
-	-$(GPRINSTALL) --uninstall -q -f --prefix=${prefix} $(MAKE_ARGS) $(1).gpr
+	-cd $(2) && $(ALR) exec -- gprinstall --uninstall -q -f --prefix=$(DESTDIR)${prefix} $(MAKE_ARGS) $(1).gpr
+
+endef
+
+define ada_program
+  all:: lib-setup
+	$(GNATMAKE) $(GPRFLAGS) -p -P$(2)$(1).gpr $(STATIC_MAKE_ARGS)
+
+  lib-setup:: obj/$(1)/static
+
+  obj/$(1)/static:
+	$(MKDIR) -p obj/$(1)/static
 
 endef
 
 define awa_install_dir
 
-install:: | $(dynamodir)/$(1)/$(2)
+install:: | $(DESTDIR)$(dynamodir)/$(1)/$(2)
 	(cd $(3) && tar --exclude='*~' -cf - $(2)) \
-       | (cd $(dynamodir)/$(1)/ && tar xf -)
+       | (cd $(DESTDIR)$(dynamodir)/$(1)/ && tar xf -)
 
-$(dynamodir)/$(1)/$(2):
-	$(MKDIR) -p $(dynamodir)/$(1)/$(2)
+$(DESTDIR)$(dynamodir)/$(1)/$(2):
+	$(MKDIR) -p $(DESTDIR)$(dynamodir)/$(1)/$(2)
 
 endef
 
 define awa_install_file
 
-install:: | $(dynamodir)/$(1)
-	$(CP) $(3)/$(2) $(dynamodir)/$(1)/$(2)
+install:: | $(DESTDIR)$(dynamodir)/$(1)
+	$(CP) $(3)/$(2) $(DESTDIR)$(dynamodir)/$(1)/$(2)
 
 endef
 
 define awa_install_plugin
 
 uninstall::
-	rm -rf $(dynamodir)/$(strip $(1))
+	rm -rf $(DESTDIR)$(dynamodir)/$(strip $(1))
 
 $(foreach dir,$($(1)_install_dirs),$(eval $(call awa_install_dir,$(strip $(1)),$(dir),$($(1)_dir))))
 
 $(foreach dir,$($(1)_install_files),$(eval $(call awa_install_file,$(strip $(1)),$(dir),$($(1)_dir))))
 
-$(dynamodir)/$(1):
-	$(MKDIR) -p $(dynamodir)/$(1)
+$(DESTDIR)$(dynamodir)/$(1):
+	$(MKDIR) -p $(DESTDIR)$(dynamodir)/$(1)
 
-install:: | $(dynamodir)/$(1)
-	$(CP) $($(1)_dir)/dynamo.xml $(dynamodir)/$(strip $(1))/dynamo.xml
+install:: | $(DESTDIR)$(dynamodir)/$(1)
+	$(CP) $($(1)_dir)/dynamo.xml $(DESTDIR)$(dynamodir)/$(strip $(1))/dynamo.xml
 
 endef
 
 define awa_plugin
 
-$(eval $(call ada_library,$(strip $(1)),$($(1)_dir)/))
 $(eval $(call awa_install_plugin,$(strip $(1))))
 
 ifdef $(1)_dynamo
@@ -168,6 +190,38 @@ clean::
 
 endef
 
+define alire_publish
+  publish::
+	-rm -f $(aliredir)/$(2)/$(3)
+	alr -f --no-tty publish --manifest $(1)
+	mkdir -p $(aliredir)/$(2)
+	cp alire/releases/$(3) $(aliredir)/$(2)/$(3)
+
+endef
+
+define pandoc_build
+
+ifneq (, ${PANDOC})
+
+doc::  docs/$(1).pdf docs/$(1).html
+ifneq (${DYNAMO},)
+	$(DYNAMO) build-doc -markdown wiki
+endif
+
+docs/$(1).pdf:  force
+ifneq (${DYNAMO},)
+	$(DYNAMO) build-doc -pandoc docs
+	$(3)
+endif
+	cd docs && $(PANDOC) $(DOC_OPTIONS) -o $(1).pdf --template=./eisvogel.tex $(2)
+
+docs/$(1).html: docs/$(1).pdf force
+	cd docs && $(PANDOC) $(HTML_OPTIONS) -o $(1).html $(2)
+
+endif
+
+endef
+
 force:
 
 build-test::
@@ -177,3 +231,13 @@ uninstall::
 install-static::
 
 endif
+
+ifdef DESTDIR
+
+.NOTPARALLEL:
+
+endif
+
+setup::
+	echo "BUILD=$(BUILD)" > Makefile.conf
+	echo "prefix=$(prefix)" >> Makefile.conf
