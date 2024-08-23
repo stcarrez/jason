@@ -1,5 +1,7 @@
 *~
 *.log
+bin/
+alire/
 auto.cgpr
 CHANGES
 access.xml
