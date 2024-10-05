@@ -1,27 +1,22 @@
 # Jason Project and ticket Management
 
-[![Build Status](https://img.shields.io/jenkins/s/http/jenkins.vacs.fr/Jason.svg)](http://jenkins.vacs.fr/job/Jason/)
+[![Build Status](https://img.shields.io/endpoint?url=https://porion.vacs.fr/porion/api/v1/projects/jason/badges/build.json)](https://porion.vacs.fr/porion/projects/view/jason/summary)
+[![Test Status](https://img.shields.io/endpoint?url=https://porion.vacs.fr/porion/api/v1/projects/jason/badges/tests.json)](https://porion.vacs.fr/porion/projects/view/jason/xunits)
+[![Coverage](https://img.shields.io/endpoint?url=https://porion.vacs.fr/porion/api/v1/projects/jason/badges/coverage.json)](https://porion.vacs.fr/porion/projects/view/jason/summary)
 [![License](http://img.shields.io/badge/license-APACHE2-blue.svg)](LICENSE)
-![Commits](https://img.shields.io/github/commits-since/stcarrez/jason/1.0.0.svg)
 
 Jason is a simple project and ticket management web application.
-It is built on top of the Ada Web Application framework.
+Jason comes as a plugin for the [Ada Web Application](https://github.com/stcarrez/ada-awa) so that
+it can easily be integrated in other project based on AWA.
 
-To build Jason you will need the following projects:
+# Building Jason
 
-* AWA           (https://github.com/stcarrez/ada-awa)
-* ASF           (https://github.com/stcarrez/ada-asf)
-* ADO           (https://github.com/stcarrez/ada-ado)
-* Ada Util      (https://github.com/stcarrez/ada-util)
-* Ada Wiki      (https://github.com/stcarrez/ada-wiki)
-* Ada EL        (https://github.com/stcarrez/ada-el)
-* Ada Security  (https://github.com/stcarrez/ada-security)
-* Dynamo        (https://github.com/stcarrez/dynamo)
+The project uses [Alire](https://github.com/alire-project/alire) to build and manage dependencies.
+To use Jason you your AWA project, you can add the `jason` crate dependency as follows:
 
-Jason relies on the following external projects:
-
-* AWS      (http://libre.adacore.com/libre/tools/aws/)
-* XMLAda   (http://libre.adacore.com/libre/tools/xmlada/)
+```
+alr with jason
+```
 
 Before building and configuring Jason, you should have configured, built and installed
 all of the above projects.
