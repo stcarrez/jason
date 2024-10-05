@@ -32,5 +32,6 @@ jason_dynamo=--package Jason.Projects.Models \
   db uml/jason.zargo
 jason_install_dirs=config db bundles web
 
+$(eval $(call ada_library,jason,.))
 $(eval $(call awa_plugin,jason))
 
