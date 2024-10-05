@@ -1,31 +1,31 @@
-with "config";
-with "@UTIL_DIR@utilada_sys";
-with "@EL_DIR@elada";
-with "@ASF_DIR@asf";
-with "@ASF_DIR@servletada_aws";
-with "@ADO_DIR@ado";
-with "@ADO_DIR@ado_all";
-with "@AWA_DIR@awa";
-with "@AWA_DIR@awa_workspaces";
-with "@AWA_DIR@awa_mail";
-with "@AWA_DIR@awa_comments";
-with "@AWA_DIR@awa_blogs";
-with "@AWA_DIR@awa_storages";
-with "@AWA_DIR@awa_tags";
-with "@AWA_DIR@awa_wikis";
+with "jason_config";
+with "utilada_sys";
+with "elada";
+with "asf";
+with "servletada_aws";
+with "ado";
+with "ado_all";
+with "awa";
+with "awa_workspaces";
+with "awa_mail";
+with "awa_comments";
+with "awa_blogs";
+with "awa_storages";
+with "awa_tags";
+with "awa_wikis";
 with "jason";
 
 project jason_server is
 
    Mains := ("jason-server.adb");
    for Main use Mains;
-   for Source_Dirs use ("server");
-   for Object_Dir use "./" & Config'Object_Dir & "/obj";
-   for Exec_Dir use "./" & Config'Exec_Dir & "/bin";
+   for Source_Dirs use ("src");
+   for Object_Dir use "../" & Jason_Config'Object_Dir & "/obj/server";
+   for Exec_Dir use "../" & Jason_Config'Exec_Dir & "/bin";
 
-   package Binder renames Config.Binder;
-   package Builder renames Config.Builder;
-   package Compiler renames Config.Compiler;
-   package Linker renames Config.Linker;
+   package Binder renames Jason_Config.Binder;
+   package Builder renames Jason_Config.Builder;
+   package Compiler renames Jason_Config.Compiler;
+   package Linker renames Jason_Config.Linker;
 
 end jason_server;
