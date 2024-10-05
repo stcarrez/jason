@@ -1,4 +1,4 @@
-description = "Java Project and ticket Management"
+description = "Project and ticket Management"
 name = "jason"
 version = "1.0.0"
 tags = ["web", "tickets", "projects", "framework", "management"]
@@ -16,8 +16,9 @@ long-description = """
 project-files = ["jason.gpr"]
 
 [[depends-on]]
-utilada = "^2.7.0"
-utilada_xml = "^2.7.0"
+awa = "^2.5.0"
+# utilada = "^2.7.0"
+# utilada_xml = "^2.7.0"
 ado = "^2.4.0"
 wikiada = "^1.4.1"
 elada = "^1.8.6"
