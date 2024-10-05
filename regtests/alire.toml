@@ -1,4 +1,4 @@
-description = "Java Project and ticket Management (unit tests)"
+description = "Project and ticket Management (unit tests)"
 name = "jason_tests"
 version = "1.0.0"
 tags = ["web", "tickets", "projects", "framework", "management"]
@@ -25,10 +25,11 @@ elada = "^1.8.6"
 security = "^1.5.0"
 serverfaces = "^1.6.0"
 servletada = "^1.7.0"
-servletada_aws = "^1.7.0"
-awa_unit = "*"
+# servletada_aws = "^1.7.0"
+awa_unit = "^2.5.0"
 ado_sqlite = "*"
 ado_all = "*"
 
 [[pins]]
 jason = { path = '..' }
+jason_server = { path = '../server' }
