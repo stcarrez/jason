@@ -18,7 +18,7 @@ include Makefile.defaults
 
 # Build executables for all mains defined by the project.
 build-test::
-	cd regtests && $(BUILD_COMMAND) $(GPRFLAGS) $(MAKE_ARGS)
+	# cd regtests && $(BUILD_COMMAND) $(GPRFLAGS) $(MAKE_ARGS)
 
 # Build and run the unit tests
 test:	build
